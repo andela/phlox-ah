@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/andela/phlox-ah.svg?branch=master)](https://travis-ci.org/andela/phlox-ah)
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
