@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/andela/phlox-ah.svg?branch=master)](https://travis-ci.org/andela/phlox-ah)
 
+[![Validated by Hound](https://img.shields.io/badge/Validated_By-Hound_CI-06576D.svg)](https://houndci.com)
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
