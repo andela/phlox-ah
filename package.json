@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "babel-node": "babel-node --presets=env",
-    "dev": "nodemon --exec npm run babel-node index.js",
-    "start": "node index.js",
+    "dev": "nodemon --exec npm run babel-node server/index.js",
+    "start": "node build/index.js",
+    "build": "babel server -d build && node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andela Simulations Programme",

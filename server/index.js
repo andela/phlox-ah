@@ -7,7 +7,7 @@ import cors from 'cors';
 import passport from 'passport';
 import errorhandler from 'errorhandler';
 import logger from 'morgan';
-import indexRouter from './server/routes/index';
+import indexRouter from './routes/index';
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // app.use(require("method-override")());
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.resolve('./public')));
 
 
 if (!isProduction) {
