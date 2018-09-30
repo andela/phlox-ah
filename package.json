@@ -8,6 +8,7 @@
     "dev": "nodemon --exec npm run babel-node server/index.js",
     "start": "node build/index.js",
     "build": "babel server -d build && node build/index.js",
+    "postinstall": "babel server -d build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andela Simulations Programme",
