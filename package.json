@@ -7,13 +7,15 @@
     "babel-node": "babel-node --presets=env",
     "dev": "nodemon --exec npm run babel-node index.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env process.env.NODE_ENV=test mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --timeout 50000 --exit || true",
+    "test:watch": "npm test --watch"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
@@ -26,12 +28,18 @@
     "pg-hstore": "^2.3.2",
     "request": "^2.87.0",
     "sequelize": "^4.39.0",
+    "sequelize-cli": "^4.1.1",
     "slug": "^0.9.1",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.4"
   }
 }
