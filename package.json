@@ -6,8 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel-node": "babel-node --presets=env",
-    "dev": "nodemon --exec npm run babel-node index.js",
-    "start": "node index.js",
+    "dev": "nodemon --exec npm run babel-node server/index.js",
+    "start": "node build/index.js",
+    "build": "babel server -d build && node build/index.js",
+    "postinstall": "babel server -d build",
     "eslint": "eslint . --fix --ignore-path .gitignore"
   },
   "author": "Andela Simulations Programme",
