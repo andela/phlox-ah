@@ -2,8 +2,7 @@ language: node_js
 
 node_js:
   - "stable"
-env:
-  - NODE_ENV=test
+
 services:
   - postgresql
 
