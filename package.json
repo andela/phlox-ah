@@ -4,12 +4,13 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "babel-node": "babel-node --presets=env",
-    "dev": "nodemon --exec npm run babel-node server/index.js",
+    "dev": "nodemon --exec npm run babel-node server/index.jys",
     "start": "node build/index.js",
     "build": "babel server -d build && node build/index.js",
     "postinstall": "babel server -d build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "eslint": "eslint . --fix --ignore-path .gitignore"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -18,6 +19,9 @@
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "errorhandler": "^1.5.0",
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "jsonwebtoken": "^8.3.0",
