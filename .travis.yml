@@ -6,8 +6,9 @@ env:
   - NODE_ENV=test
 services:
   - postgresql
+
 before_script:
   - psql -c 'create database authorhaven_test;' -U postgres
 
 after_success:
-  npm run coverage
+  - npm run coverage
