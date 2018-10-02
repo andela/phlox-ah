@@ -30,7 +30,7 @@ export default class UserController {
           const { userid } = user;
           const token = generateToken({ userid });
           res.status(201).json({
-            success: true, message: 'User successfully signed up', user, token
+            success: true, message: 'User successfully signed up', token
           });
         })
         .catch(error => res.status(400).send(error)));

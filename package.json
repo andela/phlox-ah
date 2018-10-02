@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "babel-node": "babel-node --presets=env",
+    "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
     "test": "cross-env process.env.NODE_ENV=test mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --exit || true",
     "test:watch": "npm test --watch",
     "dev": "nodemon --exec npm run babel-node server/index.js",

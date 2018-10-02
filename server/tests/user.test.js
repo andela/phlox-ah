@@ -4,19 +4,20 @@ import app from '../index';
 
 chai.use(chaiHttp);
 
-describe('Users', () => {
-  const user = {
-    email: 'sam@sammy.com',
-    password: 'password'
-  };
+const user = {
+  username: 'nelson@nnaji.comgj',
+  email: 'nelson@nnaji.comgu',
+  password: 'player009'
+};
 
+describe('Users', () => {
   it('Should signup a user', (done) => {
     chai.request(app)
       .post('/api/signup')
       .send(user)
       .end((err, res) => {
         expect(res.status).to.equal(201);
-        expect(res.body).to.have.property('id');
+        expect(res.body).to.have.property('token');
         expect(res.body).to.be.an('object');
         done();
       });
