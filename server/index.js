@@ -1,15 +1,17 @@
+/* eslint-disable no-unused-vars */
 import fs from 'fs';
 import http from 'http';
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+/* eslint-disable no-unused-vars */
 import passport from 'passport';
 import errorhandler from 'errorhandler';
 import logger from 'morgan';
 import indexRouter from './routes/index';
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Create global app object
 const app = express();
@@ -17,7 +19,7 @@ const app = express();
 app.use(cors());
 
 // Normal express config defaults
-app.use(logger("dev"));
+app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -33,18 +35,19 @@ if (!isProduction) {
 app.use('/', indexRouter);
 
 
-/// catch 404 and forward to error handler
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error("Not Found");
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-/// error handlers
+// / error handlers
 
 // development error handler
 // will print stacktrace
 if (!isProduction) {
+  /* eslint-disable no-unused-vars */
   app.use((err, req, res, next) => {
     console.log(err.stack);
 
@@ -73,7 +76,7 @@ app.use((err, req, res, next) => {
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
-  console.log("Listening on port " + server.address().port);
+  console.log(`Listening on port ${server.address().port}`);
 });
 
 export default app;
