@@ -21,17 +21,11 @@ export default class UserController {
   static create(req, res) {
     const { username, email, password } = req.body;
     bcrypt.hash(password, saltRounds)
-      .then(hashedPassword => User.create({
-        username,
-        email,
-        password: hashedPassword,
-      })
+      .then(hashedPassword => User.create({ username, email, password: hashedPassword, })
         .then((user) => {
-          const { userid } = user;
-          const token = generateToken({ userid });
-          res.status(201).json({
-            success: true, message: 'User successfully signed up', token
-          });
+          const { id } = user;
+          const token = generateToken({ id });
+          res.status(201).json({ success: true, message: 'User successfully signed up', token });
         })
         .catch(error => res.status(400).send(error)));
   }

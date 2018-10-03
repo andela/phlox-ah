@@ -12,28 +12,17 @@ export default {
   checkToken(req, res, next) {
     const token = req.body.token || req.headers['x-access-token'] || req.headers.bearer;
     if (!token) {
-      res.status(403)
-        .json({
-          success: false,
-          message: 'Missing Token'
-        });
+      res.status(403).json({ success: false, message: 'Missing Token' });
     } else {
       jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
         if (err) {
           if (err.message.includes('signature')) {
-            res.status(403)
-              .json({
-                message: 'Invalid token supplied',
-              });
+            res.status(403).json({ message: 'Invalid token supplied' });
           } else {
-            res.status(403)
-              .json({
-                message: err,
-              });
+            res.status(403).json({ message: err });
           }
         }
         req.user = decoded.user;
-
         next();
       });
     }
