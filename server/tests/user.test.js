@@ -39,7 +39,7 @@ describe('Access a protected route', () => {
 });
 
 describe('Access a protected route without any token', () => {
-  it('SShould throw an error 403', (done) => {
+  it('Should throw an error 403', (done) => {
     chai.request(app)
       .get('/api/test')
       .end((err, res) => {
