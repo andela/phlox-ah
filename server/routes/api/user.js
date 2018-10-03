@@ -14,5 +14,5 @@ router.get('/', (req, res, next) => res.json('welcome Author Haven'));
 router.post('/signup', UserController.create);
 
 /* Test route */
-router.get('/test', checkToken, (req, res) => res.json('Test Route'));
+router.get('/test', checkToken, (req, res) => res.status(200).json('This is a protected route'));
 export default router;
