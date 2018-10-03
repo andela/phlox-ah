@@ -3,12 +3,14 @@ import 'dotenv/config';
 
 export default {
   generateToken(user) {
-    const token = jwt.sign({ user }, process.env.JWTKEY, { expiresIn: '10000s' });
+    const token = jwt.sign({ user }, process.env.JWTKEY, {
+      expiresIn: process.env.TOKEN_EXPIRATION
+    });
     return token;
   },
 
   checkToken(req, res, next) {
-    const token = req.headers.bearer;
+    const token = req.body.token || req.headers['x-access-token'] || req.headers.bearer;
     if (!token) {
       res.status(403)
         .json({

@@ -26,7 +26,7 @@ app.use(express.static(path.resolve('./public')));
 
 
 if (!isProduction) {
-    app.use(errorhandler());
+  app.use(errorhandler());
 }
 
 /* Index router */
@@ -35,9 +35,9 @@ app.use('/', indexRouter);
 
 /// catch 404 and forward to error handler
 app.use((req, res, next) => {
-    const err = new Error("Not Found");
-    err.status = 404;
-    next(err);
+  const err = new Error("Not Found");
+  err.status = 404;
+  next(err);
 });
 
 /// error handlers
@@ -45,35 +45,35 @@ app.use((req, res, next) => {
 // development error handler
 // will print stacktrace
 if (!isProduction) {
-    app.use((err, req, res, next) => {
-        console.log(err.stack);
+  app.use((err, req, res, next) => {
+    console.log(err.stack);
 
-        res.status(err.status || 500);
+    res.status(err.status || 500);
 
-        res.json({
-            errors: {
-                message: err.message,
-                error: err
-            }
-        });
+    res.json({
+      errors: {
+        message: err.message,
+        error: err
+      }
     });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({
-        errors: {
-            message: err.message,
-            error: {}
-        }
-    });
+  res.status(err.status || 500);
+  res.json({
+    errors: {
+      message: err.message,
+      error: {}
+    }
+  });
 });
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
-    console.log("Listening on port " + server.address().port);
+  console.log("Listening on port " + server.address().port);
 });
 
 export default app;
