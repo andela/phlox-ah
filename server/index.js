@@ -47,8 +47,8 @@ app.use((req, res, next) => {
 // development error handler
 // will print stacktrace
 if (!isProduction) {
-  /* eslint-disable no-unused-vars */
   app.use((err, req, res, next) => {
+  /* eslint-disable no-console */
     console.log(err.stack);
 
     res.status(err.status || 500);
@@ -76,6 +76,7 @@ app.use((err, req, res, next) => {
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
+  /* eslint-disable no-console */
   console.log(`Listening on port ${server.address().port}`);
 });
 
