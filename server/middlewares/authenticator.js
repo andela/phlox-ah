@@ -23,7 +23,6 @@ export default {
           }
         }
         req.user = decoded.user;
-        console.log(req.user);
         next();
       });
     }
