@@ -40,7 +40,7 @@ describe('Users', () => {
         done();
       });
   });
-  it('Should access a protected route', (done) => {
+  it('Should access a protected route with a valid token', (done) => {
     chai.request(app)
       .get('/api/test')
       .set('x-access-token', token)
@@ -50,7 +50,7 @@ describe('Users', () => {
       });
   });
 
-  it('should access a protected route without any token', (done) => {
+  it('should not access a protected route without any token', (done) => {
     chai.request(app)
       .get('/api/test')
       .end((err, res) => {
