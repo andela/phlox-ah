@@ -1,22 +1,32 @@
+import bcrypt from 'bcrypt';
 import Model from '../models';
+import Authenticator from '../middlewares/authenticator';
 
 const { User } = Model;
+const { generateToken } = Authenticator;
+const saltRounds = 10;
 
+
+/**
+  * @class UserController
+  * @description CRUD operations on Users
+  */
 export default class UserController {
-
-  /* Create new controller */ 
+  /**
+  * @description -This method creates a new user on authors haven and returns a token
+  * @param {object} req - The request payload sent to the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status Message and logins user into authors haven
+  */
   static create(req, res) {
-    const {
-      email, password
-    } = req.body;
-
-    User.create({
-      email,
-      password
-    })
-    .then((user) => res.status(201).json(user))
-    .catch((err) => res.status(500).json(err));
+    const { username, email, password } = req.body;
+    bcrypt.hash(password, saltRounds)
+      .then(hashedPassword => User.create({ username, email, password: hashedPassword, })
+        .then((user) => {
+          const { id } = user;
+          const token = generateToken({ id });
+          res.status(201).json({ success: true, message: 'User successfully signed up', token });
+        })
+        .catch(error => res.status(400).send(error)));
   }
 }
-
-
