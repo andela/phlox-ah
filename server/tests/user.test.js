@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import faker from 'faker';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
@@ -19,7 +20,6 @@ describe('Users', () => {
       .post('/api/signup')
       .send(user)
       .end((err, res) => {
-        /* eslint-disable prefer-destructuring */
         token = res.body.token;
         done();
       });

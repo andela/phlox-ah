@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 import fs from 'fs';
 import http from 'http';
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-/* eslint-disable no-unused-vars */
 import passport from 'passport';
 import errorhandler from 'errorhandler';
 import logger from 'morgan';
@@ -48,7 +48,6 @@ app.use((req, res, next) => {
 // will print stacktrace
 if (!isProduction) {
   app.use((err, req, res, next) => {
-  /* eslint-disable no-console */
     console.log(err.stack);
 
     res.status(err.status || 500);
@@ -76,7 +75,6 @@ app.use((err, req, res, next) => {
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
-  /* eslint-disable no-console */
   console.log(`Listening on port ${server.address().port}`);
 });
 

@@ -20,7 +20,5 @@ export default (sequelize, DataTypes) => {
       }
     },
   }, {});
-  // User.associate = (models) => {
-  // };
   return User;
 };
