@@ -23,8 +23,7 @@ export default class UserController {
     bcrypt.hash(password, saltRounds)
       .then(hashedPassword => User.create({ username, email, password: hashedPassword, })
         .then((user) => {
-          const { id } = user;
-          const token = generateToken({ id });
+          const token = generateToken({ id: user.id, username: user.username, email: user.email });
           res.status(201).json({ success: true, message: 'User successfully signed up', token });
         })
         .catch(error => res.status(400).send(error)));

@@ -16,11 +16,10 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static createOrUpdate(req, res) {
-    const userId = req.user.id;
-    const body = ProfileController.updateReqBody(req, userId);
+    const body = ProfileController.updateReqBody(req, req.user);
 
     return Profile.findOne({
-      where: { userId },
+      where: { username: req.user.username },
     })
       .then((profile) => {
         if (profile) {
@@ -36,7 +35,7 @@ export default class ProfileController {
         }
         return res.status(200).json({ success: true, message: 'Profile updated successfully', profile: data });
       })
-      .catch(err => res.status(500).json({ error: 'Profile could not be updated' }));
+      .catch(err => res.status(500).json({ success: true, error: 'Profile could not be updated' }));
   }
 
   /**
@@ -47,16 +46,12 @@ export default class ProfileController {
   */
   static get(req, res) {
     return Profile.findOne({
-      where: { id: req.params.id },
-      include: [{
-        model: User,
-        attributes: ['email', 'username']
-      }]
+      where: { username: req.params.username },
     })
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
       })
-      .catch(err => res.status(500).json({ error: 'Failed to fetch profile' }));
+      .catch(err => res.status(500).json({ success: true, error: 'Failed to fetch profile' }));
   }
 
   /**
@@ -66,16 +61,11 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static getAll(req, res) {
-    return Profile.findAll({
-      include: [{
-        model: User,
-        attributes: ['email', 'username']
-      }]
-    })
+    return Profile.findAll()
       .then((profiles) => {
         res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
       })
-      .catch(err => res.status(500).json({ error: 'Failed to fetch profiles' }));
+      .catch(err => res.status(500).json({ success: true, error: 'Failed to fetch profiles' }));
   }
 
   /**
@@ -85,19 +75,14 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static getOne(req, res) {
-    const userId = req.user.id;
-
     return Profile.findOne({
-      where: { userId },
-      include: [{
-        model: User,
-        attributes: ['email', 'username']
-      }]
+      where: { username: req.user.username },
+
     })
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
       })
-      .catch(err => res.status(500).json({ error: 'Failed to fetch profile' }));
+      .catch(err => res.status(500).json({ success: true, error: 'Failed to fetch profile' }));
   }
 
   /**
@@ -107,11 +92,10 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static update(req, res) {
-    const userId = req.user.id;
-    const body = ProfileController.updateReqBody(req, userId);
+    const body = ProfileController.updateReqBody(req, req.user);
 
     return Profile.findOne({
-      where: { id: req.params.id },
+      where: { username: req.params.username },
     })
       .then((profile) => {
         if (profile) {
@@ -131,15 +115,16 @@ export default class ProfileController {
   /**
   * @description -This method add profile image url and userid to payload object
   * @param {object} req - The request payload sent from the router
-  * @param {object} userId - user of the logged in user
-  * @returns {object} - object contain userid and profile image url
+  * @param {object} user - user detail of the logged in user
+  * @returns {object} - object contain userid, username and profile image url
   */
-  static updateReqBody(req, userId) {
+  static updateReqBody(req, user) {
     const data = Object.assign(
       {},
       {
         profileImage: req.file ? req.file.secure_url : '',
-        userId
+        username: user.username,
+        userId: user.id,
       },
       req.body,
     );
@@ -151,4 +136,3 @@ export default class ProfileController {
     return data;
   }
 }
-

@@ -28,13 +28,12 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
 
-
   Profile.associate = (models) => {
-    // associations can be defined here
     Profile.belongsTo(models.User, {
-      foreignKey: 'userId',
+      foreignKey: 'username',
       onDelete: 'CASCADE',
     });
   };
+
   return Profile;
 };

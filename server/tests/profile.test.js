@@ -5,10 +5,9 @@ import app from '../index';
 chai.use(chaiHttp);
 
 let token = '';
-let profileId = null;
 
 const user = {
-  username: 'dimeji@ola.com',
+  username: 'dimeji',
   email: 'dimeji@ola.com',
   password: 'password009'
 };
@@ -48,7 +47,7 @@ describe('Users', () => {
 
   it('should not access update profile route without any token', (done) => {
     chai.request(app)
-      .put('/api/v1/profile/1')
+      .put(`/api/v1/profile/${user.username}`)
       .send(user)
       .end((err, res) => {
         expect(res.body).to.be.an('object');
@@ -87,7 +86,7 @@ describe('Users', () => {
 
   it('should not access get profile by id route without any token', (done) => {
     chai.request(app)
-      .get('/api/v1/profile/1')
+      .get(`/api/v1/profile/${user.username}`)
       .send(user)
       .end((err, res) => {
         expect(res.body).to.be.an('object');
@@ -105,7 +104,6 @@ describe('Users', () => {
       .set('x-access-token', token)
       .send(profileDetail)
       .end((err, res) => {
-        profileId = res.body.profile.id;
         expect(res).to.have.status(201);
         expect(res.body.success).to.equals(true);
         expect(res.body.message).to.equals('Profile created successfully');
@@ -124,7 +122,7 @@ describe('Users', () => {
 
   it('should be able to update profile by profile id', (done) => {
     chai.request(app)
-      .put(`/api/v1/profile/${profileId}`)
+      .put(`/api/v1/profile/${user.username}`)
       .set('x-access-token', token)
       .send({ firstName: 'nameChanged', gender: 'female' })
       .end((err, res) => {
@@ -188,7 +186,7 @@ describe('Users', () => {
 
   it('should be able to get profile by profile id', (done) => {
     chai.request(app)
-      .get(`/api/v1/profile/${profileId}`)
+      .get(`/api/v1/profile/${user.username}`)
       .set('x-access-token', token)
       .send()
       .end((err, res) => {
@@ -222,4 +220,3 @@ describe('Users', () => {
       });
   });
 });
-

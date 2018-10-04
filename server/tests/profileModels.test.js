@@ -15,7 +15,7 @@ describe('Create profile validation', () => {
   it('should not create profile', () => {
     db.Profile.create(validProfile)
       .catch((error) => {
-        expect(error.message).to.equal('null value in column "userId" violates not-null constraint');
+        expect(error.message).to.equal('null value in column "username" violates not-null constraint');
       });
   });
 });
@@ -28,7 +28,7 @@ describe('Update profile validation', () => {
       }
     })
       .catch((error) => {
-        expect(error.message).to.equal('null value in column "userId" violates not-null constraint');
+        expect(error.message).to.equal('null value in column "username" violates not-null constraint');
       });
   });
 });
@@ -41,7 +41,7 @@ describe('Update profile validation', () => {
       }
     })
       .catch((error) => {
-        expect(error.message).to.equal('null value in column "userId" violates not-null constraint');
+        expect(error.message).to.equal('null value in column "username" violates not-null constraint');
       });
   });
 });
@@ -54,7 +54,7 @@ describe('Get profile validation', () => {
       }
     })
       .catch((error) => {
-        expect(error.message).to.equal('null value in column "userId" violates not-null constraint');
+        expect(error.message).to.equal('null value in column "username" violates not-null constraint');
       });
   });
 });
@@ -63,11 +63,11 @@ describe('Get all profile validation', () => {
   it('should not get all profile', () => {
     db.Profile.findAll({
       where: {
-        userId: 1
+        username: 'random'
       }
     })
       .catch((error) => {
-        expect(error.message).to.equal('null value in column "userId" violates not-null constraint');
+        expect(error.message).to.equal('null value in column "username" violates not-null constraint');
       });
   });
 });

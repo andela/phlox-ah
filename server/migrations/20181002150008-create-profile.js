@@ -40,15 +40,15 @@ module.exports = {
       allowNull: false,
       type: Sequelize.DATE
     },
-    userId: {
+    username: {
       allowNull: false,
       unique: true,
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',
-        key: 'id',
-        as: 'userId',
+        key: 'username',
+        as: 'username',
       },
     },
   }),
