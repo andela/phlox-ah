@@ -17,7 +17,7 @@ const storage = cloudinaryStorage({
   folder: 'phlox',
   allowedFormats: ['jpg', 'png'],
   filename: (req, file, cb) => {
-    cb(undefined, `${Date.now()}_${file.originalname}`);
+    cb(undefined, `${Date.now()}_${file.originalname.replace(/\.png|\.jpg/g, '')}`);
   }
 });
 

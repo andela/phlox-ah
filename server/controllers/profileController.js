@@ -16,7 +16,7 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static createOrUpdate(req, res) {
-    const userId = req.user.id || req.body.userId;
+    const userId = req.user.id;
     const body = ProfileController.updateReqBody(req, userId);
 
     return Profile.findOne({
@@ -32,9 +32,9 @@ export default class ProfileController {
       })
       .then(({ created, data }) => {
         if (created) {
-          return res.status(201).json({ success: true, message: 'Profile created successfully', data });
+          return res.status(201).json({ success: true, message: 'Profile created successfully', profile: data });
         }
-        return res.status(200).json({ success: true, message: 'Profile updated successfully', data });
+        return res.status(200).json({ success: true, message: 'Profile updated successfully', profile: data });
       })
       .catch(err => res.status(500).json({ error: 'Profile could not be updated' }));
   }
@@ -53,7 +53,9 @@ export default class ProfileController {
         attributes: ['email', 'username']
       }]
     })
-      .then(profile => res.status(200).json({ profile }))
+      .then((profile) => {
+        res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
+      })
       .catch(err => res.status(500).json({ error: 'Failed to fetch profile' }));
   }
 
@@ -70,7 +72,9 @@ export default class ProfileController {
         attributes: ['email', 'username']
       }]
     })
-      .then(profiles => res.status(200).json({ profiles }))
+      .then((profiles) => {
+        res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
+      })
       .catch(err => res.status(500).json({ error: 'Failed to fetch profiles' }));
   }
 
@@ -81,7 +85,7 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static getOne(req, res) {
-    const userId = req.user.id || req.body.userId;
+    const userId = req.user.id;
 
     return Profile.findOne({
       where: { userId },
@@ -90,7 +94,9 @@ export default class ProfileController {
         attributes: ['email', 'username']
       }]
     })
-      .then(profile => res.status(200).json({ profile }))
+      .then((profile) => {
+        res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
+      })
       .catch(err => res.status(500).json({ error: 'Failed to fetch profile' }));
   }
 
@@ -101,7 +107,7 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static update(req, res) {
-    const userId = req.user.id || req.body.userId;
+    const userId = req.user.id;
     const body = ProfileController.updateReqBody(req, userId);
 
     return Profile.findOne({
@@ -119,7 +125,7 @@ export default class ProfileController {
         }
         return res.status(404).json({ success: false, message: 'Profile not found', profile });
       })
-      .catch(err => res.status(500).json({ error: 'Profile could not be updated' }));
+      .catch(err => res.status(500).json({ success: false, error: 'Profile could not be updated' }));
   }
 
   /**
