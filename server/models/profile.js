@@ -13,7 +13,6 @@ export default (sequelize, DataTypes) => {
     contact: {
       type: DataTypes.STRING,
       allowNull: true,
-      validate: { min: 10, max: 100 }
     },
     gender: {
       type: DataTypes.STRING,
@@ -22,7 +21,6 @@ export default (sequelize, DataTypes) => {
     bio: {
       type: DataTypes.TEXT,
       allowNull: true,
-      validate: { min: 10, max: 100 }
     },
     profileImage: {
       type: DataTypes.STRING,
@@ -40,5 +38,3 @@ export default (sequelize, DataTypes) => {
   };
   return Profile;
 };
-
-

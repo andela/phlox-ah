@@ -1,5 +1,5 @@
 import multer from 'multer';
-import cloudinary from "cloudinary";
+import cloudinary from 'cloudinary';
 import cloudinaryStorage from 'multer-storage-cloudinary';
 import dotenv from 'dotenv';
 
@@ -16,13 +16,10 @@ const storage = cloudinaryStorage({
   cloudinary,
   folder: 'phlox',
   allowedFormats: ['jpg', 'png'],
-  filename:  (req, file, cb) => {
-    cb(undefined, Date.now() + "_" + file.originalname);
+  filename: (req, file, cb) => {
+    cb(undefined, `${Date.now()}_${file.originalname.replace(/\.png|\.jpg/g, '')}`);
   }
 });
 
 
-export default multer({storage});
-
-
-
+export default multer({ storage });
