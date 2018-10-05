@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true,
     },
     email: {
       type: DataTypes.STRING,

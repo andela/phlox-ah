@@ -47,6 +47,10 @@ export default class ProfileController {
   static get(req, res) {
     return Profile.findOne({
       where: { username: req.params.username },
+      include: [{
+        model: User,
+        attributes: ['username', 'email', 'createdAt', 'updatedAt']
+      }]
     })
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
@@ -61,7 +65,12 @@ export default class ProfileController {
   * @returns {object} - status, message and profile detail
   */
   static getAll(req, res) {
-    return Profile.findAll()
+    return Profile.findAll({
+      include: [{
+        model: User,
+        attributes: ['username', 'email', 'createdAt', 'updatedAt']
+      }]
+    })
       .then((profiles) => {
         res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
       })
@@ -69,15 +78,18 @@ export default class ProfileController {
   }
 
   /**
-  * @description -This method get profile detail of a authenticated user
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and profile detail
-  */
+   * @description -This method get profile detail of a authenticated user
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and profile detail
+   */
   static getOne(req, res) {
     return Profile.findOne({
       where: { username: req.user.username },
-
+      include: [{
+        model: User,
+        attributes: ['username', 'email', 'createdAt', 'updatedAt']
+      }]
     })
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
@@ -86,11 +98,11 @@ export default class ProfileController {
   }
 
   /**
-  * @description -This method updates user profile
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and profile detail
-  */
+   * @description -This method updates user profile
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and profile detail
+   */
   static update(req, res) {
     const body = ProfileController.updateReqBody(req, req.user);
 
@@ -113,11 +125,11 @@ export default class ProfileController {
   }
 
   /**
-  * @description -This method add profile image url and userid to payload object
-  * @param {object} req - The request payload sent from the router
-  * @param {object} user - user detail of the logged in user
-  * @returns {object} - object contain userid, username and profile image url
-  */
+   * @description -This method add profile image url and userid to payload object
+   * @param {object} req - The request payload sent from the router
+   * @param {object} user - user detail of the logged in user
+   * @returns {object} - object contain userid, username and profile image url
+   */
   static updateReqBody(req, user) {
     const data = Object.assign(
       {},
