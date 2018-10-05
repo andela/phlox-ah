@@ -17,7 +17,7 @@ let token = '';
 describe('Users', () => {
   before((done) => {
     chai.request(app)
-      .post('/api/signup')
+      .post('/api/v1/signup')
       .send(user)
       .end((err, res) => {
         token = res.body.token;
@@ -28,7 +28,7 @@ describe('Users', () => {
   describe('signupUser', () => {
     it('Should not signup a user if email is invalid', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: 'sampleexample.com',
@@ -44,7 +44,7 @@ describe('Users', () => {
 
     it('Should not signup a user if email is empty', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: '',
@@ -60,7 +60,7 @@ describe('Users', () => {
 
     it('Should not signup a user if username is empty', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: '',
           email: faker.internet.email(),
@@ -76,7 +76,7 @@ describe('Users', () => {
 
     it('Should not signup a user if password is empty', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: faker.internet.email(),
@@ -92,7 +92,7 @@ describe('Users', () => {
 
     it('Should not signup a user if password is not alphanumeric', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: faker.internet.email(),
@@ -108,7 +108,7 @@ describe('Users', () => {
 
     it('Should not signup a user if password is less than 8 characters', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: faker.internet.email(),
@@ -124,7 +124,7 @@ describe('Users', () => {
 
     it('Should not signup a user if username is less than 2 characters', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: 'u',
           email: faker.internet.email(),
@@ -140,7 +140,7 @@ describe('Users', () => {
 
     it('Should signup a user if details are valid', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: faker.internet.email(),
@@ -156,7 +156,7 @@ describe('Users', () => {
 
     it('Should not signup a user if email already exists', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: faker.internet.userName(),
           email: user.email,
@@ -172,7 +172,7 @@ describe('Users', () => {
 
     it('Should not signup a user if username already exists', (done) => {
       chai.request(app)
-        .post('/api/signup')
+        .post('/api/v1/signup')
         .send({
           username: user.username,
           email: faker.internet.email(),
@@ -189,7 +189,7 @@ describe('Users', () => {
 
     it('Should access a protected route with a valid token', (done) => {
       chai.request(app)
-        .get('/api/test')
+        .get('/api/v1/test')
         .set('x-access-token', token)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -199,7 +199,7 @@ describe('Users', () => {
 
     it('should not access a protected route without any token', (done) => {
       chai.request(app)
-        .get('/api/test')
+        .get('/api/v1/test')
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(403);
