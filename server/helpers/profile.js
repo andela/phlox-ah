@@ -11,7 +11,8 @@ export default (req, res, next) => Profile.findOne({
       return next();
     }
     return res.status(404).json({
+      success: false,
       error: 'Profile does not exist'
     });
   })
-  .catch(err => res.status(500).json(err));
+  .catch(() => res.status(500).json({ success: false, error: 'Profile could not be fetched' }));

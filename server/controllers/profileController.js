@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 
 import Model from '../models';
 
@@ -15,8 +14,8 @@ export default class ProfileController {
   * @param {object} res - The response payload sent back from the controller
   * @returns {object} - status, message and profile detail
   */
-  static createOrUpdate(req, res) {
-    const body = ProfileController.updateReqBody(req, req.user);
+  static createOrUpdateProfile(req, res) {
+    const body = ProfileController.updateReqBody(req);
 
     return Profile.findOne({
       where: { username: req.user.username },
@@ -35,55 +34,16 @@ export default class ProfileController {
         }
         return res.status(200).json({ success: true, message: 'Profile updated successfully', profile: data });
       })
-      .catch(err => res.status(500).json({ success: true, error: 'Profile could not be updated' }));
+      .catch(() => res.status(500).json({ success: false, error: 'Profile could not be updated' }));
   }
 
   /**
-  * @description -This method get profile detail by id
-  * @param {object} req - The request payload sent to the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and profile detail
-  */
-  static get(req, res) {
-    return Profile.findOne({
-      where: { username: req.params.username },
-      include: [{
-        model: User,
-        attributes: ['username', 'email', 'createdAt', 'updatedAt']
-      }]
-    })
-      .then((profile) => {
-        res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
-      })
-      .catch(err => res.status(500).json({ success: true, error: 'Failed to fetch profile' }));
-  }
-
-  /**
-  * @description -This method get all profile details
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and profile detail
-  */
-  static getAll(req, res) {
-    return Profile.findAll({
-      include: [{
-        model: User,
-        attributes: ['username', 'email', 'createdAt', 'updatedAt']
-      }]
-    })
-      .then((profiles) => {
-        res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
-      })
-      .catch(err => res.status(500).json({ success: true, error: 'Failed to fetch profiles' }));
-  }
-
-  /**
-   * @description -This method get profile detail of a authenticated user
-   * @param {object} req - The request payload sent from the router
+   * @description -This method get profile detail by id
+   * @param {object} req - The request payload sent to the router
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and profile detail
    */
-  static getOne(req, res) {
+  static getProfile(req, res) {
     return Profile.findOne({
       where: { username: req.user.username },
       include: [{
@@ -94,7 +54,46 @@ export default class ProfileController {
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
       })
-      .catch(err => res.status(500).json({ success: true, error: 'Failed to fetch profile' }));
+      .catch(() => res.status(500).json({ success: false, error: 'Failed to fetch profile' }));
+  }
+
+  /**
+   * @description -This method get all profile details
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and profile detail
+   */
+  static getProfiles(req, res) {
+    return Profile.findAll({
+      include: [{
+        model: User,
+        attributes: ['username', 'email', 'createdAt', 'updatedAt']
+      }]
+    })
+      .then((profiles) => {
+        res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
+      })
+      .catch(() => res.status(500).json({ success: false, error: 'Failed to fetch profiles' }));
+  }
+
+  /**
+   * @description -This method get profile detail of a authenticated user
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and profile detail
+   */
+  static getProfileByUsername(req, res) {
+    return Profile.findOne({
+      where: { username: req.user.username },
+      include: [{
+        model: User,
+        attributes: ['username', 'email', 'createdAt', 'updatedAt']
+      }]
+    })
+      .then((profile) => {
+        res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
+      })
+      .catch(() => res.status(500).json({ success: false, error: 'Failed to fetch profile' }));
   }
 
   /**
@@ -103,7 +102,7 @@ export default class ProfileController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and profile detail
    */
-  static update(req, res) {
+  static updateProfile(req, res) {
     const body = ProfileController.updateReqBody(req, req.user);
 
     return Profile.findOne({
@@ -121,7 +120,7 @@ export default class ProfileController {
         }
         return res.status(404).json({ success: false, message: 'Profile not found', profile });
       })
-      .catch(err => res.status(500).json({ success: false, error: 'Profile could not be updated' }));
+      .catch(() => res.status(500).json({ success: false, error: 'Profile could not be updated' }));
   }
 
   /**
@@ -130,13 +129,13 @@ export default class ProfileController {
    * @param {object} user - user detail of the logged in user
    * @returns {object} - object contain userid, username and profile image url
    */
-  static updateReqBody(req, user) {
+  static updateReqBody(req) {
     const data = Object.assign(
       {},
       {
         profileImage: req.file ? req.file.secure_url : '',
-        username: user.username,
-        userId: user.id,
+        username: req.user.username,
+        userId: req.user.id,
       },
       req.body,
     );
