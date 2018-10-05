@@ -1,3 +1,4 @@
+/* eslint-disable import/no-dynamic-require */
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';

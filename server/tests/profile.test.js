@@ -23,7 +23,7 @@ const profileDetail = {
 describe('Users', () => {
   before((done) => {
     chai.request(app)
-      .post('/api/signup')
+      .post('/api/v1/signup')
       .send(user)
       .end((err, res) => {
         const { token: validToken } = res.body;

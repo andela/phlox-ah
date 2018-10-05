@@ -26,6 +26,6 @@ export default class UserController {
           const token = generateToken({ id: user.id, username: user.username, email: user.email });
           res.status(201).json({ success: true, message: 'User successfully signed up', token });
         })
-        .catch(error => res.status(400).send(error)));
+        .catch(error => res.status(409).json({ message: error.errors[0].message })));
   }
 }
