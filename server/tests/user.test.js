@@ -154,6 +154,39 @@ describe('Users', () => {
         });
     });
 
+    it('Should not signup a user if email already exists', (done) => {
+      chai.request(app)
+        .post('/api/signup')
+        .send({
+          username: faker.internet.userName(),
+          email: user.email,
+          password: 'password'
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(409);
+          expect(res.body).to.not.have.property('token');
+          expect(res.body.message).to.equal('this email already exists');
+          done();
+        });
+    });
+
+    it('Should not signup a user if username already exists', (done) => {
+      chai.request(app)
+        .post('/api/signup')
+        .send({
+          username: user.username,
+          email: faker.internet.email(),
+          password: 'password'
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(409);
+          expect(res.body).to.not.have.property('token');
+          expect(res.body.message).to.equal('this username already exists');
+          done();
+        });
+    });
+
+
     it('Should access a protected route with a valid token', (done) => {
       chai.request(app)
         .get('/api/test')
