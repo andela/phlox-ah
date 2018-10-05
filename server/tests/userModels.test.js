@@ -5,7 +5,7 @@ import db from '../models';
 
 const validUser = {
   username: faker.internet.userName(),
-  email: faker.internet.email(),
+  email: faker.internet.email().toLowerCase(),
   password: 'password'
 };
 
@@ -49,30 +49,36 @@ describe('User model validations', () => {
   describe('Email validation', () => {
     db.User.create(invalidEmail)
       .catch((error) => {
-        emailError = error.message;
+        emailError = error;
       });
     it('should ensure that email is  valid', () => {
-      expect(emailError).to.equal('Validation error: Validation isEmail on email failed');
+      const errorMessages = [];
+      emailError.errors.forEach(e => errorMessages.push(e.message));
+      expect(errorMessages).to.be.an('array').that.include('email must be a valid email');
     });
   });
 
   describe('Username validation', () => {
     db.User.create(noUsername)
       .catch((error) => {
-        usernameError = error.message;
+        usernameError = error;
       });
     it('should ensure that username is not null', () => {
-      expect(usernameError).to.equal('notNull Violation: User.username cannot be null');
+      const errorMessages = [];
+      usernameError.errors.forEach(e => errorMessages.push(e.message));
+      expect(errorMessages).to.be.an('array').that.include('User.username cannot be null');
     });
   });
 
   describe('Password validation', () => {
     db.User.create(noPassword)
       .catch((error) => {
-        passwordError = error.message;
+        passwordError = error;
       });
     it('should ensure that password is not null', () => {
-      expect(passwordError).to.equal('null value in column "password" violates not-null constraint');
+      const errorMessages = [];
+      passwordError.errors.forEach(e => errorMessages.push(e.message));
+      expect(errorMessages).to.be.an('array').that.include('User.password cannot be null');
     });
   });
 });
