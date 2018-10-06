@@ -78,5 +78,4 @@ describe('Article model validations', () => {
       expect(descriptionError).to.equal('notNull Violation: Article.description cannot be null');
     });
   });
-
 });
