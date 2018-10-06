@@ -16,9 +16,9 @@ class ArticleValidations {
    */
   static validateCreateArticle(req, res, next) {
     const joiSchema = {
-      title: Joi.string().required(),
-      body: Joi.string().required(),
-      description: Joi.string().required(),
+      title: Joi.string().min(6).max(150).required(),
+      body: Joi.string().min(6).required(),
+      description: Joi.string().min(6).max(250).required(),
     };
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
@@ -47,9 +47,9 @@ class ArticleValidations {
    */
   static validateUpdateArticle(req, res, next) {
     const joiSchema = {
-      title: Joi.string(),
-      body: Joi.string(),
-      description: Joi.string(),
+      title: Joi.string().min(6).max(150),
+      body: Joi.string().min(6),
+      description: Joi.string().min(6).max(250),
     };
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
