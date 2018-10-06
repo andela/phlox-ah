@@ -76,11 +76,18 @@ export default class ArticleController {
   * @returns {object} - status, message and articles details
   */
   static updateArticle(req, res) {
-    Article.update(req.body, {
+    const {
+      title, body, description
+    } = req.body;
+    const imgUrl = (req.file ? req.file.secure_url : '');
+    req.body.imgUrl = imgUrl;
+    const request = req.body;
+    Article.update(request, {
       where: {
         slug: req.params.slug,
         userId: req.user.id
-      }
+      },
+      returning: true,
     }).then(article => res.status(200).json({ article }))
       .catch(error => res.status(500).json(error));
   }
