@@ -6,8 +6,8 @@ const sendMail = (options) => {
     from: 'Authors Haven <no-reply@authorshaven.com>',
     to: options.email,
     subject: options.subject,
-    text: options.text,
-    html: options.html,
+    text: options.textMessage,
+    html: options.htmlMessage,
   };
 
   sgMail.send(mailMessage);

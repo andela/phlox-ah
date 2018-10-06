@@ -1,4 +1,6 @@
 'use strict';
+
+// add isVerified to the migration file, it will be use to check if the user is verified.
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Users', {
@@ -27,6 +29,15 @@ module.exports = {
         validate: {
           min: 5
         }
+      },
+      isVerified: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      verifyToken: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

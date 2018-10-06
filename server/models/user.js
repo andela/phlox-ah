@@ -1,3 +1,4 @@
+// add isVerified to the model file, it will be use to check if the user is verified.
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
@@ -19,6 +20,16 @@ export default (sequelize, DataTypes) => {
         min: 5
       }
     },
+    isVerified: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    verifyToken: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
   }, {});
   return User;
 };
+
