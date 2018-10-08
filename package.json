@@ -8,8 +8,9 @@
   },
   "scripts": {
     "babel-node": "babel-node --presets=env",
-    "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "migrate-undo": "sequelize db:migrate:undo:all",
     "migrate": "sequelize db:migrate",
+    "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
     "test": "cross-env process.env.NODE_ENV=test nyc mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --exit || true",
     "dev": "cross-env process.env.NODE_ENV=development npm run migrate && npm run eslint && npm run babel-node server/index.js",
@@ -25,6 +26,7 @@
     "@sendgrid/mail": "^6.3.1",
     "bcrypt": "^3.0.1",
     "body-parser": "^1.18.3",
+    "cloudinary": "^1.11.0",
     "cors": "^2.8.4",
     "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
@@ -38,6 +40,8 @@
     "joi": "^13.7.0",
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.0",
+    "multer": "^1.4.0",
+    "multer-storage-cloudinary": "^2.2.1",
     "npm-watch": "^0.4.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
@@ -47,7 +51,8 @@
     "sequelize": "^4.39.0",
     "sequelize-cli": "^4.1.1",
     "slug": "^0.9.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "uuid-random": "^1.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

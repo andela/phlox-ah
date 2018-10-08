@@ -15,8 +15,8 @@ const verifyUser = {
 };
 
 const user = {
-  username: faker.internet.userName(),
-  email: faker.internet.email(),
+  username: 'testuser',
+  email: 'testuser@andela.com',
   password: 'password'
 };
 
@@ -247,6 +247,43 @@ describe('Users', () => {
           expect(res).to.have.status(422);
           expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('Your account is already verified');
+          done();
+        });
+    });
+  });
+
+  describe('Login User', () => {
+    it('should login a user and return a token', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'testuser', password: 'password' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('token');
+          done();
+        });
+    });
+
+    it('Should return error message when user tries to login in with invalid email/username', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'wronguser', password: 'password' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Invalid Email/Username or password');
+          done();
+        });
+    });
+
+    it('Should return error message when user tries to login in with invalid password', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'testuser', password: 'wrongpassword' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Invalid Email/Username or password');
           done();
         });
     });

@@ -3,6 +3,7 @@ export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
+      primaryKey: true,
       unique: {
         msg: 'this username already exists'
       },
@@ -53,5 +54,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
   }, {});
+  User.associate = (models) => {
+    User.hasMany(models.Article, {
+      foreignKey: 'userId',
+      as: 'articles'
+    });
+  };
   return User;
 };

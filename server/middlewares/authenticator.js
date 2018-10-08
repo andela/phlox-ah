@@ -10,9 +10,8 @@ export default {
   },
 
   checkToken(req, res, next) {
-    // Remove req.headers.bearer and req.body.token because it wasn't needed
+    // add 'authorization' option to the request headers
     const token = req.headers['x-access-token'] || req.headers.authorization;
-
     if (!token) {
       res.status(403).json({ success: false, message: 'Missing Token' });
     } else {

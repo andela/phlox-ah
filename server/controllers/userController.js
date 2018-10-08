@@ -1,9 +1,11 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto'; // use node buildIn crypto to generate email verification token
+import Sequelize from 'sequelize';
 import Model from '../models';
 import Authenticator from '../middlewares/authenticator';
 import emailMessages from '../helpers/emailMessages';
 import sendMail from '../helpers/mail';
+
 
 const { User } = Model;
 const { generateToken } = Authenticator;
@@ -32,8 +34,9 @@ export default class UserController {
         username, email, password: hashedPassword, verifyToken
       })
         .then((user) => {
-          const { id } = user;
-          const token = generateToken({ id });
+          const token = generateToken({
+            id: user.dataValues.id, username: user.username, email: user.email
+          });
           // set the url
           const url = `http://${req.headers.host}/api/v1/users/verify/${verifyToken}`;
           // send verification mail to user
@@ -76,5 +79,40 @@ export default class UserController {
         return res.status(422).json({ success: false, message: 'Your account is already verified' });
       })
       .catch(() => res.status(500).json({ success: false, message: 'Internal Server Error. Please try again later!' }));
+  }
+
+  /**
+  * @description -This method logs in a user on authors haven and returns a token
+  * @param {object} req - The request payload sent to the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status Message and logins user into authors haven
+  */
+  static login(req, res) {
+    User.findOne({
+      where: {
+        [Sequelize.Op.or]: [
+          { username: req.body.emailOrUsername },
+          { email: req.body.emailOrUsername }]
+      }
+    })
+      .then((user) => {
+        if (!user) {
+          return res.status(404)
+            .send({ success: false, message: 'Invalid Email/Username or password' });
+        }
+        const { id, username } = user;
+        if (bcrypt.compareSync(req.body.password, user.password)) {
+          const token = generateToken({ id, username });
+          res.json({
+            success: true, message: 'Successfully logged in!', user, token
+          });
+        } else {
+          res.status(400).send({ success: false, message: 'Invalid Email/Username or password' });
+        }
+      })
+      .catch(() => {
+        res.status(400)
+          .send({ success: false, message: 'Invalid username/email or password' });
+      });
   }
 }
