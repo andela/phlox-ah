@@ -2,9 +2,11 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import Model from '../models';
 import Authenticator from '../middlewares/authenticator';
+import emailMessages from '../helpers/emailMessages';
 import sendMail from '../helpers/mail';
 
 const { User } = Model;
+const { resetPasswordMessageHtml, resetPasswordMessageText } = emailMessages;
 const { generateToken } = Authenticator;
 const saltRounds = 10;
 
@@ -42,43 +44,27 @@ export default class UserController {
     const { email } = req.body;
 
     User.findOne({ where: { email } })
-      .then((userFound) => {
-        const { username } = userFound;
-        if (!userFound) {
+      .then((user) => {
+        if (!user) {
           return res.status(400).json({ success: false, message: 'Email address is not registered' });
         }
+        const { username } = user;
         const resetToken = crypto.randomBytes(16).toString('hex');
+        const url = `http://${req.headers.host}/api/reset_password/${resetToken}`;
         const options = {
-          to: email,
+          email,
           subject: 'Password Reset',
-          html: `
-            <div>
-            <h3>Hi ${username},</h3>
-            <p>You are receiving this because you have requested a password reset <br>
-            Please click the link below or copy and paste it in your browser.</p>
-            <br/>
-            <a href="http://${req.headers.host}/api/reset_password/${resetToken}">http://${req.headers.host}/api/reset_password/${resetToken}</a>
-            <p>If you did not request this, Please ignore this mail, your password will remain unchanged</p>
-            </div>
-            <p>This password expires after 10 minutes</p>
-            `,
-          text: `
-            Hi ${username},
-            You are receiving this because you have requested a password reset
-            Please click the link below or copy and paste it in your browser.
-            <a href="${req.headers.host}/api/reset_password/${resetToken}">${req.headers.host}/api/reset_password/${resetToken}
-            If you did not request this, Please ignore this mail, your password will remain unchanged
-            `
+          htmlMessage: resetPasswordMessageHtml(username, url),
+          textMessage: resetPasswordMessageText(username, url)
         };
-        userFound.update({
+        user.update({
           resetToken, expireAt: new Date(new Date().getTime() + (10 * 60 * 1000))
         })
           .then(() => {
             sendMail(options);
             return res.status(200).json({ success: true, message: 'A password reset link has been sent ot your email' });
           });
-      })
-      .catch(error => res.status(400).send(error));
+      });
   }
 
   /**
@@ -91,19 +77,18 @@ export default class UserController {
     const resetToken = req.params.token;
     const { password } = req.body;
 
-    User.findOne({ where: { resetToken } })
-      .then((userFound) => {
-        if (!userFound) {
+    User.find({ where: { resetToken } })
+      .then((user) => {
+        if (!user) {
           return res.status(404).json({ success: false, message: 'This link is invalid' });
         }
 
-        if (!(userFound.expireAt >= new Date())) {
+        if (!(user.expireAt >= new Date())) {
           return res.status(400).json({ success: false, message: 'This link has expired' });
         }
 
-        userFound.update({ password, resetToken: null, expireAt: null })
-          .then(updatedUser => res.status(200).json({ success: true, message: 'Password has successfully been updated', updatedUser }));
-      })
-      .catch(error => res.status(400).send(error));
+        user.update({ password, resetToken: null, expireAt: null })
+          .then(updatedUser => res.status(200).json({ success: true, message: 'Password has been successfully updated', updatedUser }));
+      });
   }
 }

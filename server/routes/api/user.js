@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => res.json('welcome Author Haven'));
 
 /* User Endpoint */
 router.post('/signup', UserValidations.validateSignup, UserController.create);
-router.post('/forget', UserController.forgetPassword);
+router.post('/forgetPassword', UserController.forgetPassword);
 router.put('/reset_password/:token', UserController.resetPassword);
 
 /* Test route */

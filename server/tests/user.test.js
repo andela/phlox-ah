@@ -3,13 +3,23 @@ import faker from 'faker';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
+import Model from '../models';
 
 chai.use(chaiHttp);
 
 const user = {
   username: faker.internet.userName(),
   email: faker.internet.email(),
-  password: 'password'
+  password: 'password',
+  resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bddd',
+};
+
+const newUser = {
+  username: faker.internet.userName(),
+  email: 'john.doe@gmail.com',
+  password: 'password',
+  resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bd',
+  expireAt: new Date(new Date().getTime() + (10 * 60 * 1000))
 };
 
 let token = '';
@@ -21,6 +31,13 @@ describe('Users', () => {
       .send(user)
       .end((err, res) => {
         token = res.body.token;
+        done();
+      });
+  });
+
+  before((done) => {
+    Model.User.create(newUser)
+      .then(() => {
         done();
       });
   });
@@ -203,6 +220,54 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(403);
+          done();
+        });
+    });
+  });
+
+  describe('Password Reset', () => {
+    it('Should successfully reset user password', (done) => {
+      chai.request(app)
+        .put(`/api/v1/reset_password/${newUser.resetToken}`)
+        .send({ password: 'newPassword' })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to.equal('Password has been successfully updated');
+          done();
+        });
+    });
+
+    it('Should return error message if link is wrong', (done) => {
+      chai.request(app)
+        .put('/api/v1/reset_password/e4d67ba83bfb46e42d6397a2a325cf0bsawefrsawrf')
+        .send({ password: 'newPassword' })
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.body.message).to.equal('This link is invalid');
+          done();
+        });
+    });
+
+    it('should send the user url for password reset', (done) => {
+      chai.request(app)
+        .post('/api/v1/forgetPassword')
+        .send({ email: newUser.email })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to.equal('A password reset link has been sent ot your email');
+          done();
+        });
+    });
+
+    it('Should return an error if email is invalid', (done) => {
+      chai.request(app)
+        .post('/api/v1/forgetPassword')
+        .send({
+          email: 'sample@example.com'
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.message).to.equal('Email address is not registered');
           done();
         });
     });
