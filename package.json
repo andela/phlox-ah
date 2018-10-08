@@ -10,7 +10,6 @@
     "babel-node": "babel-node --presets=env",
     "migrate-undo": "sequelize db:migrate:undo:all",
     "migrate": "npm run migrate-undo && sequelize db:migrate",
-    "reset:db": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "migrate": "sequelize db:migrate",
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",

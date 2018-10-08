@@ -43,7 +43,7 @@ export default class ProfileController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and profile detail
    */
-  static getProfile(req, res) {
+  static getOneProfile(req, res) {
     return Profile.findOne({
       where: { username: req.user.username },
       include: [{
@@ -63,7 +63,7 @@ export default class ProfileController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and profile detail
    */
-  static getProfiles(req, res) {
+  static getAllProfile(req, res) {
     return Profile.findAll({
       include: [{
         model: User,
