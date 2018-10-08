@@ -55,7 +55,6 @@ describe('Articles', () => {
       .send(article)
       .end((err, res) => {
         slug = res.body.article.slug;
-        console.log(res.body);
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');
         done();
@@ -87,7 +86,6 @@ describe('Articles', () => {
       .set('x-access-token', token)
       .send(article)
       .end((err, res) => {
-        console.log(slug);
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
         done();
