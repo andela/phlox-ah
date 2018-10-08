@@ -70,7 +70,9 @@ export default class UserController {
             If you did not request this, Please ignore this mail, your password will remain unchanged
             `
         };
-        userFound.update({ resetToken, expireAt: new Date(new Date().getTime() + (10 * 60 * 1000)) })
+        userFound.update({
+          resetToken, expireAt: new Date(new Date().getTime() + (10 * 60 * 1000))
+        })
           .then(() => {
             sendMail(options);
             return res.status(200).json({ success: true, message: 'A password reset link has been sent ot your email' });
