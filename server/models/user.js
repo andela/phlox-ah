@@ -2,6 +2,7 @@ export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
+      primaryKey: true,
       unique: {
         msg: 'this username already exists'
       },

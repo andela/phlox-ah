@@ -8,6 +8,8 @@
   },
   "scripts": {
     "babel-node": "babel-node --presets=env",
+    "migrate-undo": "sequelize db:migrate:undo:all",
+    "migrate": "npm run migrate-undo && sequelize db:migrate",
     "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "migrate": "sequelize db:migrate",
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
@@ -24,6 +26,7 @@
   "dependencies": {
     "bcrypt": "^3.0.1",
     "body-parser": "^1.18.3",
+    "cloudinary": "^1.11.0",
     "cors": "^2.8.4",
     "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
@@ -37,6 +40,8 @@
     "joi": "^13.7.0",
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.0",
+    "multer": "^1.4.0",
+    "multer-storage-cloudinary": "^2.2.1",
     "npm-watch": "^0.4.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
