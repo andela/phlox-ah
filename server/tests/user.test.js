@@ -2,27 +2,34 @@
 import faker from 'faker';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import db from '../models';
 import app from '../index';
-import Model from '../models';
 
 chai.use(chaiHttp);
 
-const user = {
+const verifyUser = {
   username: faker.internet.userName(),
-  email: faker.internet.email(),
+  email: faker.internet.email().toLowerCase(),
   password: 'password',
-  resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bddd',
+  verifyToken: faker.random.uuid()
 };
 
-const newUser = {
+const testUser = {
   username: faker.internet.userName(),
   email: 'john.doe@gmail.com',
   password: 'password',
   resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bd',
-  expireAt: new Date(new Date().getTime() + (10 * 60 * 1000))
+  expireAt: new Date(new Date().getTime() + (10 * 60 * 1000)),
+};
+
+const user = {
+  username: 'testuser',
+  email: 'testuser@andela.com',
+  password: 'password'
 };
 
 let token = '';
+let verifyToken;
 
 describe('Users', () => {
   before((done) => {
@@ -36,8 +43,16 @@ describe('Users', () => {
   });
 
   before((done) => {
-    Model.User.create(newUser)
+    db.User.create(testUser)
       .then(() => {
+        done();
+      });
+  });
+  // create user into the database and retrieve it verification token
+  before((done) => {
+    db.User.create(verifyUser)
+      .then((newUser) => {
+        verifyToken = newUser.dataValues.verifyToken;
         done();
       });
   });
@@ -166,7 +181,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(201);
           expect(res.body).to.have.property('token');
-          expect(res.body.message).to.equal('You have successfully signed up!');
+          expect(res.body.message).to.equal('User successfully signed up, an email is sent to your mail account, please verify your mail account to complete registration');
           done();
         });
     });
@@ -228,7 +243,7 @@ describe('Users', () => {
   describe('Password Reset', () => {
     it('Should successfully reset user password', (done) => {
       chai.request(app)
-        .put(`/api/v1/reset_password/${newUser.resetToken}`)
+        .put(`/api/v1/reset_password/${testUser.resetToken}`)
         .send({ password: 'newPassword' })
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -251,7 +266,7 @@ describe('Users', () => {
     it('should send the user url for password reset', (done) => {
       chai.request(app)
         .post('/api/v1/forgetPassword')
-        .send({ email: newUser.email })
+        .send({ email: testUser.email })
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('A password reset link has been sent ot your email');
@@ -268,6 +283,68 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(400);
           expect(res.body.message).to.equal('Email address is not registered');
+          done();
+        });
+    });
+  });
+  describe('Verify User', () => {
+    it('should verify user given the right verification token', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/verify/${verifyToken}`)
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.message).to.equal('Thank you, account verified. You can login now');
+          done();
+        });
+    });
+
+    it('should display user is already verified when isVerified is true', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/verify/${verifyToken}`)
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(422);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.message).to.equal('Your account is already verified');
+          done();
+        });
+    });
+  });
+
+  describe('Login User', () => {
+    it('should login a user and return a token', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'testuser', password: 'password' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('token');
+          done();
+        });
+    });
+
+    it('Should return error message when user tries to login in with invalid email/username', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'wronguser', password: 'password' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('Invalid Email/Username or password');
+          done();
+        });
+    });
+
+    it('Should return error message when user tries to login in with invalid password', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'testuser', password: 'wrongpassword' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Invalid Email/Username or password');
           done();
         });
     });
