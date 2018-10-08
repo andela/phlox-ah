@@ -16,7 +16,12 @@ export default class ArticleController {
   */
   static createArticle(req, res) {
     const { title, body, description } = req.body;
-    const imgUrl = (req.file ? req.file.secure_url : '');
+    let imgUrl;
+    if (req.file) {
+      imgUrl = req.file.secure_url;
+    } else {
+      imgUrl = '';
+    }
     Article.create({
       title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl
     }).then(article => res.status(201).json({ message: 'article created successfully', status: 'success', article }))
@@ -69,10 +74,14 @@ export default class ArticleController {
   * @returns {object} - status, message and articles details
   */
   static updateArticle(req, res) {
-    const imgUrl = (req.file ? req.file.secure_url : '');
+    let imgUrl;
+    if (req.file) {
+      imgUrl = req.file.secure_url;
+    } else {
+      imgUrl = '';
+    }
     req.body.imgUrl = imgUrl;
-    const request = req.body;
-    Article.update(request, {
+    Article.update(req.body, {
       where: { slug: req.params.slug, userId: req.user.id },
       returning: true,
     }).then(article => (article[0] === 0 ? res.status(404).json({ message: 'article does not exist', status: 'failed' }) : res.status(200).json({ message: 'article updated successfully', status: 'success', article })))
