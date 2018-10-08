@@ -19,6 +19,14 @@ export default (sequelize, DataTypes) => {
         min: 5
       }
     },
+    resetToken: {
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
+    expireAt: {
+      type: DataTypes.DATE,
+      defaultValue: null
+    }
   }, {});
   return User;
 };

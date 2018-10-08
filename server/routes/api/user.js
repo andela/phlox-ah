@@ -12,6 +12,8 @@ router.get('/', (req, res, next) => res.json('welcome Author Haven'));
 
 /* User Endpoint */
 router.post('/signup', UserController.create);
+router.post('/forget', UserController.forgetPassword);
+router.put('/reset_password/:token', UserController.resetPassword);
 
 /* Test route */
 router.get('/test', checkToken, (req, res) => res.status(200).json('This is a protected route'));
