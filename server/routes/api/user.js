@@ -1,6 +1,7 @@
 import express from 'express';
 import UserController from '../../controllers/userController';
 import Authenticator from '../../middlewares/authenticator';
+import UserValidations from '../../middlewares/userValidations';
 
 const { checkToken } = Authenticator;
 
@@ -11,7 +12,7 @@ const router = express.Router();
 router.get('/', (req, res, next) => res.json('welcome Author Haven'));
 
 /* User Endpoint */
-router.post('/signup', UserController.create);
+router.post('/signup', UserValidations.validateSignup, UserController.create);
 router.post('/forget', UserController.forgetPassword);
 router.put('/reset_password/:token', UserController.resetPassword);
 
