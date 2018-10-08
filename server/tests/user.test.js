@@ -149,7 +149,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(201);
           expect(res.body).to.have.property('token');
-          expect(res.body.message).to.equal('You have successfully signed up!');
+          expect(res.body.message).to.equal('User successfully signed up');
           done();
         });
     });

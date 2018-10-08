@@ -1,14 +1,17 @@
+/* eslint-disable no-unused-vars */
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: {
       allowNull: false,
       autoIncrement: true,
+      unique: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
     username: {
       allowNull: false,
+      primaryKey: true,
       unique: true,
       type: Sequelize.STRING
     },
@@ -34,7 +37,8 @@ module.exports = {
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
-    }
+    },
+
   }),
-  down: queryInterface => queryInterface.dropTable('Users')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Users')
 };
