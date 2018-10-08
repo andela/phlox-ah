@@ -25,7 +25,7 @@ export default class UserController {
     const { username, email, password } = req.body;
 
     // generate verification token and store in verifyToken variable
-    const verifyToken = crypto.createHmac('sha256', 'seticify').digest('hex');
+    const verifyToken = crypto.randomBytes(16).toString('hex');
 
     bcrypt.hash(password, saltRounds)
       .then(hashedPassword => User.create({
@@ -35,7 +35,7 @@ export default class UserController {
           const { id } = user;
           const token = generateToken({ id });
           // set the url
-          const url = `http://${req.headers.host}/api/v1/${verifyToken}`;
+          const url = `http://${req.headers.host}/api/v1/users/verify/${verifyToken}`;
           // send verification mail to user
           sendMail({
             email: user.email,
@@ -53,6 +53,28 @@ export default class UserController {
             token
           });
         })
-        .catch(error => res.status(400).send(error)));
+        .catch(error => res.status(409).json({ message: error.errors[0].message })));
+  }
+
+  /**
+  * @description -This method verify user account
+  * @param {object} req - The request payload sent to the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status Message
+  */
+  static verifyUser(req, res) {
+    const { verifyToken } = req.params;
+    // find user with the unique verifytoken and is not yet verified
+    User.findOne({ where: { verifyToken, isVerified: false } })
+      .then((user) => {
+        if (user) {
+          // if user exist update their isVerified status to true and verifyToken to null
+          return user.update({ isVerified: true, verifyToken: null })
+            .then(() => res.status(200).json({ success: true, message: 'Thank you, account verified. You can login now' }))
+            .catch(() => res.status(500).json({ success: false, message: 'Internal Server Error. Can not verify user now try again later!' }));
+        }
+        return res.status(422).json({ success: false, message: 'Your account is already verified' });
+      })
+      .catch(() => res.status(500).json({ success: false, message: 'Internal Server Error. Please try again later!' }));
   }
 }
