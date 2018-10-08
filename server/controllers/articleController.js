@@ -103,7 +103,7 @@ export default class ArticleController {
       if (article === 0) {
         res.status(404).json({ message: 'article does not exist', status: 'failed' });
       } else {
-        res.status(200).json({ message: 'article updated successfully', status: 'success', article });
+        res.status(204).end();
       }
     })
       .catch(error => res.status(500).json(error));
