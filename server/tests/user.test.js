@@ -1,14 +1,14 @@
 /* eslint-disable prefer-destructuring */
 import faker from 'faker';
-import chai, { expect } from 'chai';
+import chai, { expect, assert } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
 chai.use(chaiHttp);
 
 const user = {
-  username: faker.internet.userName(),
-  email: faker.internet.email(),
+  username: 'testuser',
+  email: 'testuser@andela.com',
   password: 'password'
 };
 
@@ -203,6 +203,43 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(403);
+          done();
+        });
+    });
+  });
+
+  describe('Login User', () => {
+    it('should login a user and return a token', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ username: 'testuser', password: 'password' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          assert.isNotNull(res.body.token);
+          done();
+        });
+    });
+
+    it('Should return error message when user tries to login in with invalid email/username', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'wronguser', password: 'password' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(404);
+          assert.equal(res.body.message, 'Email/Username does not exist');
+          done();
+        });
+    });
+
+    it('Should return error message when user tries to login in with invalid password', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'testuser', password: 'wrongpassword' })
+        .end((err, res) => {
+          expect(res.body).to.be.an('object');
+          expect(res).to.have.status(400);
+          assert.equal(res.body.message, 'Incorrect Password');
           done();
         });
     });
