@@ -6,13 +6,14 @@ import db from '../models';
 const validUser = {
   username: faker.internet.userName(),
   email: faker.internet.email().toLowerCase(),
-  password: 'password'
+  password: 'password',
+  verifyToken: faker.random.uuid() // creating new user now need a verification token
 };
 
 const invalidEmail = {
   username: faker.internet.userName(),
   email: 'invalidEmail',
-  password: 'password'
+  password: 'password',
 };
 
 const noUsername = {

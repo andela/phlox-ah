@@ -16,6 +16,9 @@ router.post('/signup', UserValidations.validateSignup, UserController.create);
 
 router.post('/login', UserValidations.validateLogin, UserController.login);
 
+router.get('/users/verify/:verifyToken', UserController.verifyUser);
+
+
 /* Test route */
 router.get('/test', checkToken, (req, res) => res.status(200).json('This is a protected route'));
 export default router;

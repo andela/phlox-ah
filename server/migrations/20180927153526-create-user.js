@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: {
@@ -29,6 +28,14 @@ module.exports = {
       validate: {
         min: 5
       }
+    },
+    isVerified: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    verifyToken: {
+      type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
