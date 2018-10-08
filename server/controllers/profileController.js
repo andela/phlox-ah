@@ -84,7 +84,7 @@ export default class ProfileController {
    */
   static getProfileByUsername(req, res) {
     return Profile.findOne({
-      where: { username: req.user.username },
+      where: { username: req.params.username },
       include: [{
         model: User,
         attributes: ['username', 'email', 'createdAt', 'updatedAt']
@@ -103,10 +103,10 @@ export default class ProfileController {
    * @returns {object} - status, message and profile detail
    */
   static updateProfile(req, res) {
-    const body = ProfileController.updateReqBody(req, req.user);
+    const body = ProfileController.updateReqBody(req);
 
     return Profile.findOne({
-      where: { username: req.params.username },
+      where: { username: req.user.username },
     })
       .then((profile) => {
         if (profile) {
