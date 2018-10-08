@@ -7,7 +7,7 @@ import sendMail from '../helpers/mail';
 
 const { User } = Model;
 const { generateToken } = Authenticator;
-const { verificationMessageHTML, verificationMessageTEXT } = emailMessages;
+const { verificationMessageHtml, verificationMessageText } = emailMessages;
 const saltRounds = 10;
 
 /**
@@ -40,8 +40,8 @@ export default class UserController {
           sendMail({
             email: user.email,
             subject: 'Email Verification',
-            textMessage: verificationMessageTEXT(user.username, url),
-            htmlMessage: verificationMessageHTML(user.username, url)
+            textMessage: verificationMessageText(user.username, url),
+            htmlMessage: verificationMessageHtml(user.username, url)
           });
           /**
            * change message to 'User successfully signed up, an email is sent to your mail account,

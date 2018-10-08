@@ -5,7 +5,7 @@ export default {
   * @param {string} url - The url link to verify user account
   * @returns {html-string} - It returns an HTML String
   */
-  verificationMessageHTML(username, url) {
+  verificationMessageHtml(username, url) {
     return `
     <div>
       <h3>Hi ${username},</h3>
@@ -33,7 +33,7 @@ export default {
   * @param {string} url - The url link to verify user account
   * @returns {string} - It returns a string
   */
-  verificationMessageTEXT(username, url) {
+  verificationMessageText(username, url) {
     return `Hi, ${username}, Welcome to Author's Haven. Please copy this link into your browser url
     ${url} to verify your account`;
   }
