@@ -227,7 +227,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(404);
-          assert.equal(res.body.message, 'Email/Username does not exist');
+          assert.equal(res.body.message, 'Invalid Email/Username or password');
           done();
         });
     });
@@ -239,7 +239,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(400);
-          assert.equal(res.body.message, 'Incorrect Password');
+          assert.equal(res.body.message, 'Invalid Email/Username or password');
           done();
         });
     });

@@ -49,7 +49,7 @@ export default class UserController {
       .then((user) => {
         if (!user) {
           return res.status(404)
-            .send({ success: false, message: 'Email/Username does not exist' });
+            .send({ success: false, message: 'Invalid Email/Username or password' });
         }
         const { id, username } = user;
         if (bcrypt.compareSync(req.body.password, user.password)) {
@@ -58,7 +58,7 @@ export default class UserController {
             success: true, message: 'successfully logged in!', user, token
           });
         } else {
-          res.status(400).send({ success: false, message: 'Incorrect Password' });
+          res.status(400).send({ success: false, message: 'Invalid Email/Username or password' });
         }
       })
       .catch(() => {
