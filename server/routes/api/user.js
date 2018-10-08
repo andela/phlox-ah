@@ -9,7 +9,7 @@ const router = express.Router();
 
 /* eslint-disable no-unused-vars */
 /* GET home page. */
-router.get('/', (req, res, next) => res.json('welcome Author Haven'));
+router.get('/', (req, res) => res.json('welcome Author Haven'));
 
 /* User Endpoint */
 router.post('/signup', UserValidations.validateSignup, UserController.create);

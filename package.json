@@ -9,9 +9,8 @@
   "scripts": {
     "babel-node": "babel-node --presets=env",
     "migrate-undo": "sequelize db:migrate:undo:all",
-    "migrate": "npm run migrate-undo && sequelize db:migrate",
-    "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "migrate": "sequelize db:migrate",
+    "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
     "test": "cross-env process.env.NODE_ENV=test nyc mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --exit || true",
     "dev": "cross-env process.env.NODE_ENV=development npm run migrate && npm run eslint && npm run babel-node server/index.js",
@@ -51,7 +50,8 @@
     "sequelize": "^4.39.0",
     "sequelize-cli": "^4.1.1",
     "slug": "^0.9.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "uuid-random": "^1.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
