@@ -1,5 +1,6 @@
 import express from 'express';
 import ArticleController from '../../controllers/articleController';
+import RateController from '../../controllers/rateController';
 import upload from '../../helpers/cloudinary';
 import ArticleValidations from '../../middlewares/articleValidations';
 import Authenticator from '../../middlewares/authenticator';
@@ -14,5 +15,6 @@ router.get('/articles', checkToken, ArticleController.getUserArticles);
 router.get('/articles/:slug', checkToken, ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
+router.post('/articles/:slug/rate', checkToken, RateController.rateArticle);
 
 export default router;
