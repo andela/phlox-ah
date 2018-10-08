@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 import faker from 'faker';
-import chai, { expect, assert } from 'chai';
+import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
@@ -212,10 +212,10 @@ describe('Users', () => {
     it('should login a user and return a token', (done) => {
       chai.request(app)
         .post('/api/v1/login')
-        .send({ username: 'testuser', password: 'password' })
+        .send({ emailOrUsername: 'testuser', password: 'password' })
         .end((err, res) => {
           expect(res.body).to.be.an('object');
-          assert.isNotNull(res.body.token);
+          expect(res.body).to.have.property('token');
           done();
         });
     });
@@ -227,7 +227,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(404);
-          assert.equal(res.body.message, 'Invalid Email/Username or password');
+          expect(res.body.message).to.equal('Invalid Email/Username or password');
           done();
         });
     });
@@ -239,7 +239,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(400);
-          assert.equal(res.body.message, 'Invalid Email/Username or password');
+          expect(res.body.message).to.equal('Invalid Email/Username or password');
           done();
         });
     });

@@ -55,7 +55,7 @@ export default class UserController {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const token = generateToken({ id, username });
           res.json({
-            success: true, message: 'successfully logged in!', user, token
+            success: true, message: 'Successfully logged in!', user, token
           });
         } else {
           res.status(400).send({ success: false, message: 'Invalid Email/Username or password' });
