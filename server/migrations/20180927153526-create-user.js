@@ -29,6 +29,14 @@ module.exports = {
         min: 5
       }
     },
+    resetToken: {
+      type: Sequelize.STRING,
+      defaultValue: null
+    },
+    expireAt: {
+      type: Sequelize.DATE,
+      defaultValue: null
+    },
     isVerified: {
       allowNull: false,
       type: Sequelize.BOOLEAN,

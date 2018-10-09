@@ -6,10 +6,11 @@ import Authenticator from '../middlewares/authenticator';
 import emailMessages from '../helpers/emailMessages';
 import sendMail from '../helpers/mail';
 
-
 const { User } = Model;
 const { generateToken } = Authenticator;
-const { verificationMessageHtml, verificationMessageText } = emailMessages;
+const {
+  verificationMessageHtml, verificationMessageText, resetPassMessageHtml, resetPassMessageText
+} = emailMessages;
 const saltRounds = 10;
 
 /**
@@ -57,6 +58,64 @@ export default class UserController {
           });
         })
         .catch(error => res.status(409).json({ message: error.errors[0].message })));
+  }
+
+  /**
+  * @description -This method send a mail to reset his password
+  * @param {object} req - The request payload sent to the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status Message and confirms the mail has been sent
+  */
+  static forgetPassword(req, res) {
+    const { email } = req.body;
+
+    User.findOne({ where: { email } })
+      .then((user) => {
+        if (!user) {
+          return res.status(400).json({ success: false, message: 'Email address is not registered' });
+        }
+        const { username } = user;
+        const resetToken = crypto.randomBytes(16).toString('hex');
+        const url = `http://${req.headers.host}/api/reset_password/${resetToken}`;
+        const options = {
+          email,
+          subject: 'Password Reset',
+          htmlMessage: resetPassMessageHtml(username, url),
+          textMessage: resetPassMessageText(username, url)
+        };
+        user.update({
+          resetToken, expireAt: new Date(new Date().getTime() + (10 * 60 * 1000))
+        })
+          .then(() => {
+            sendMail(options);
+            return res.status(200).json({ success: true, message: 'A password reset link has been sent ot your email' });
+          });
+      });
+  }
+
+  /**
+  * @description -This method send a mail to reset his password
+  * @param {object} req - The request payload sent to the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status Message and confirms the mail has been sent
+  */
+  static resetPassword(req, res) {
+    const resetToken = req.params.token;
+    const { password } = req.body;
+
+    User.find({ where: { resetToken } })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ success: false, message: 'This link is invalid' });
+        }
+
+        if (!(user.expireAt >= new Date())) {
+          return res.status(400).json({ success: false, message: 'This link has expired' });
+        }
+
+        user.update({ password, resetToken: null, expireAt: null })
+          .then(updatedUser => res.status(200).json({ success: true, message: 'Password has been successfully updated', updatedUser }));
+      });
   }
 
   /**
