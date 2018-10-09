@@ -32,12 +32,14 @@ class RateController {
                     articleId: article.dataValues.id,
                     rating: req.body.rating
                   });
+                  // eslint-disable-next-line
+                } else {
+                  return Rate.create({
+                    userId: req.user.id,
+                    articleId: article.dataValues.id,
+                    rating: req.body.rating
+                  });
                 }
-                return Rate.create({
-                  userId: req.user.id,
-                  articleId: article.dataValues.id,
-                  rating: req.body.rating
-                });
               })
               .then(() => {
                 computeRateAverage(

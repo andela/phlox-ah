@@ -1,3 +1,4 @@
+// import faker from 'faker';
 import { expect } from 'chai';
 import db from '../models';
 
@@ -45,7 +46,7 @@ describe('Article model validations', () => {
     expect(rate.articleId).to.equal(validRate.articleId);
   });
 
-  describe('Rating validation', () => {
+  describe('Validate ratings', () => {
     db.Rate.create(noRating)
       .catch((error) => {
         ratingError = error.message;
@@ -60,17 +61,17 @@ describe('Article model validations', () => {
       .catch((error) => {
         userIdError = error.message;
       });
-    it('should ensure that body is not null', () => {
+    it('should ensure that userId is not null', () => {
       expect(userIdError).to.equal('notNull Violation: Rate.userId cannot be null');
     });
   });
 
-  describe('Validate ratings', () => {
+  describe('ArticleId ratings', () => {
     db.Rate.create(noArticleId)
       .catch((error) => {
         articleIdError = error.message;
       });
-    it('should ensure that body is not null', () => {
+    it('should ensure that articleId is not null', () => {
       expect(articleIdError).to.equal('notNull Violation: Rate.articleId cannot be null');
     });
   });

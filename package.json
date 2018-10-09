@@ -16,7 +16,7 @@
     "dev": "cross-env process.env.NODE_ENV=development npm run migrate && npm run eslint && npm run babel-node server/index.js",
     "start": "npm run migrate && node build/index.js",
     "postinstall": "babel server -d build",
-    "eslint": "eslint . --fix --ignore-path .gitignore",
+    "eslint": "eslint . --ignore-path .gitignore",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "watch": "npm-watch"
   },
