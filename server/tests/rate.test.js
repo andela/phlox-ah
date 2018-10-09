@@ -14,16 +14,10 @@ const user = {
   password: 'password'
 };
 
-// const article = {
-//   title: faker.random.words(),
-//   body: faker.random.words(),
-//   description: faker.random.words()
-// };
-
 const article = {
-  title: 'Plenty words',
-  body: 'Plenty words here',
-  description: 'Plenty wordss'
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentences()
 };
 
 describe('Rates', () => {
@@ -52,7 +46,7 @@ describe('Rates', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.be.equal('Process finished successfully');
+        expect(res.body.message).to.be.equal('Article has been rated');
         done();
       });
   });
@@ -79,6 +73,19 @@ describe('Rates', () => {
         expect(res.status).to.equal(403);
         expect(res.body).to.be.an('object');
         expect(res.body.message.name).to.be.equal('JsonWebTokenError');
+        done();
+      });
+  });
+
+  it('Should not allow a rating value that is not a number or float', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .set('x-access-token', token)
+      .send({ rating: 'one' })
+      .end((err, res) => {
+        expect(res.status).to.equal(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('Rating must be a valid number of float');
         done();
       });
   });
