@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  version: 'v1'
+  title: 'Authors Haven - A Social platform for the creative at heart.'
+  description: 'Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.'
+  contact:
+    name: Team Phlox [Andela Simulations Programme]
+    email: no-reply@andela.com
+  license:
+    name: MIT
+
+servers:
+  - url: https://phlox-ah-staging.herokuapp.com/api/v1
+    description: Server URL
+
+tags:
+  - name: User
+    description: User operations
+  - name: Article
+    description: Article operations
+
+paths:
+  /signup:
+    post:
+      tags:
+        - User
+      summary: Register's a user
+      description: Register's a user, send verification email and return a token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Johnny4all
+
+                email:
+                  type: string
+                  example: johndoe@example.com
+                  format: email
+
+                password:
+                  type: string
+                  example: password123
+                  format: password
+
+      responses:
+        201:
+          description: Successfully create a new user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: User successfully signed up
+
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI.eyJpZCI6NjEs.ImZpciIsImVtY
+
+
+  /login:
+    post:
+      tags:
+        - User
+      summary: Log In a registered user
+      description: Returns an authentication token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: johndoe@example.com
+                  format: email
+
+                password:
+                  type: string
+                  example: password123
+                  format: password
+
+      responses:
+        201:
+          description: Successfully create a new user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: User successfully login.
+
+                  user:
+                    type: object
+
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI.eyJpZCI6NjEs.ImZpciIsImVtY
+
+
+  /articles:
+    post:
+      tags:
+        - Article
+      summary: Created article
+      description: Create a new article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Title of the article
+
+                description:
+                  type: string
+                  example: Description of the article
+
+                body:
+                  type: string
+                  example: body of the article
+
+                userId:
+                  type: integer
+                  example: 1
+
+                featureImage:
+                  type: string
+                  example: https://loadsofimage
+                  format: image
+
+
+      responses:
+        201:
+          description: Successfully create a new article
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: article created successfully
+
+                  article:
+                    type: object
+
+
