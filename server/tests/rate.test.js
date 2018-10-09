@@ -89,4 +89,17 @@ describe('Rates', () => {
         done();
       });
   });
+
+  it('Should not allow a rating value that is less than 0 and greater than 5', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .set('x-access-token', token)
+      .send({ rating: 15 })
+      .end((err, res) => {
+        expect(res.status).to.equal(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('Rating must be between 0 and 5');
+        done();
+      });
+  });
 });
