@@ -1,10 +1,28 @@
 export default {
-  /**
-  * @description - This function contains the HTML verification email message
-  * @param {string} username - The user username
-  * @param {string} url - The url link to verify user account
-  * @returns {html-string} - It returns an HTML String
-  */
+  resetPassMessageHtml(username, url) {
+    return `
+    <div>
+    <h3>Hi ${username},</h3>
+    <p>You are receiving this because you have requested a password reset <br>
+    Please click the link below or copy and paste it in your browser.</p>
+    <br/>
+    <a href="${url}">${url}</a>
+    <p>If you did not request this, Please ignore this mail, your password will remain unchanged</p>
+    </div>
+    <p>This password expires after 10 minutes</p>
+    `;
+  },
+
+  resetPassMessageText(username, url) {
+    return `
+    Hi ${username},
+    You are receiving this because you have requested a password reset
+    Please click the link below or copy and paste it in your browser.
+    <a href="${url}">${url}</a>
+    If you did not request this, Please ignore this mail, your password will remain unchanged
+    `;
+  },
+
   verificationMessageHtml(username, url) {
     return `
     <div>
@@ -27,14 +45,8 @@ export default {
     </div>`;
   },
 
-  /**
-  * @description - This function contains the Text verification email message
-  * @param {string} username - The user username
-  * @param {string} url - The url link to verify user account
-  * @returns {string} - It returns a string
-  */
   verificationMessageText(username, url) {
     return `Hi, ${username}, Welcome to Author's Haven. Please copy this link into your browser url
     ${url} to verify your account`;
-  }
+  },
 };

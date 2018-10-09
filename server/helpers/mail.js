@@ -15,7 +15,6 @@ const sendMail = (options) => {
     text: options.textMessage,
     html: options.htmlMessage,
   };
-
   sgMail.send(mailMessage);
 };
 

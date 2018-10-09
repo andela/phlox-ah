@@ -45,6 +45,14 @@ export default (sequelize, DataTypes) => {
         },
       }
     },
+    resetToken: {
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
+    expireAt: {
+      type: DataTypes.DATE,
+      defaultValue: null
+    },
     isVerified: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
