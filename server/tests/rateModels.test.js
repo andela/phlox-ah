@@ -1,4 +1,3 @@
-// import faker from 'faker';
 import { expect } from 'chai';
 import db from '../models';
 
@@ -66,7 +65,7 @@ describe('Article model validations', () => {
     });
   });
 
-  describe('Description validation', () => {
+  describe('Validate ratings', () => {
     db.Rate.create(noArticleId)
       .catch((error) => {
         articleIdError = error.message;

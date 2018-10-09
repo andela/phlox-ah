@@ -77,7 +77,7 @@ describe('Rates', () => {
       });
   });
 
-  it('Should not allow a rating value that is not a number or float', (done) => {
+  it('Should not allow a rating value that is not a number', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${createdArticle.slug}/rate`)
       .set('x-access-token', token)
@@ -85,20 +85,59 @@ describe('Rates', () => {
       .end((err, res) => {
         expect(res.status).to.equal(422);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.be.equal('Rating must be a valid number of float');
+        expect(res.body.message).to.be.an('array').that.include('rating must be a number');
         done();
       });
   });
 
-  it('Should not allow a rating value that is less than 0 and greater than 5', (done) => {
+  it('Should not allow a rating value that is less than 0', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${createdArticle.slug}/rate`)
       .set('x-access-token', token)
-      .send({ rating: 15 })
+      .send({ rating: -1 })
       .end((err, res) => {
         expect(res.status).to.equal(422);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.be.equal('Rating must be between 0 and 5');
+        expect(res.body.message).to.be.an('array').that.include('rating must be larger than or equal to 0');
+        done();
+      });
+  });
+
+  it('Should not allow a rating value that is more than 5', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .set('x-access-token', token)
+      .send({ rating: 7 })
+      .end((err, res) => {
+        expect(res.status).to.equal(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.an('array').that.include('rating must be less than or equal to 5');
+        done();
+      });
+  });
+
+  it('Should not allow a rating value that is a negative number', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .set('x-access-token', token)
+      .send({ rating: -1 })
+      .end((err, res) => {
+        expect(res.status).to.equal(422);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.an('array').that.include('rating must be a positive number');
+        done();
+      });
+  });
+
+  it('Should not allow a post to the rate api endpoitn without rating', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .set('x-access-token', token)
+      .send({ rate: 2 })
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('Bad Request');
         done();
       });
   });

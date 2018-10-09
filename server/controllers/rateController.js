@@ -1,5 +1,5 @@
-import Sequelize from 'sequelize';
 import Model from '../models';
+import computeRateAverage from '../helpers/rate/computeAverage';
 
 const { Article, Rate } = Model;
 
@@ -21,7 +21,7 @@ class RateController {
         Article.findOne({
           where: { slug: req.params.slug }
         }).then((article) => {
-          if (article !== null) {
+          if (article) {
             Rate.findOne({
               where: { articleId: article.dataValues.id, userId: req.user.id },
             })
@@ -40,7 +40,7 @@ class RateController {
                 });
               })
               .then(() => {
-                RateController.computeRateAverage(
+                computeRateAverage(
                   article.dataValues.id,
                   req.params.slug, res
                 );
@@ -57,28 +57,6 @@ class RateController {
     } else {
       res.status(422).json({ message: 'Rating must be a valid number of float', status: 'failed' });
     }
-  }
-
-  /**
-  * @description -This method computes the average rating of an article
-  * @param {object} articleId - The id of the rated article
-  * @param {object} articleSlug - The slug of the rated article
-  * @param {object} res - The response to be returned by the method
-  * @returns {object} - status, message and article details
-  */
-  static computeRateAverage(articleId, articleSlug, res) {
-    Rate.findAll({
-      attributes: [[Sequelize.fn('AVG', Sequelize.col('rating')), 'ratingAvg']],
-      where: { articleId },
-      order: [[Sequelize.fn('AVG', Sequelize.col('rating')), 'DESC']]
-    }).then((avg) => {
-      Article.update({ ratingAverage: avg[0].dataValues.ratingAvg }, {
-        where: { slug: articleSlug },
-        returning: true,
-      }).then((article) => {
-        res.status(200).json({ message: 'Article has been rated', status: 'success', article });
-      });
-    });
   }
 }
 
