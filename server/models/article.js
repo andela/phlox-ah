@@ -21,12 +21,17 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     }
-
   }, {});
+
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
+    });
+    Article.hasMany(models.ArticleComment, {
+      foreignKey: 'articleSlug',
+      sourceKey: 'slug',
+      onDelete: 'CASCADE',
     });
   };
   return Article;

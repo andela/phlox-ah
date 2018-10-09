@@ -31,6 +31,7 @@ export default (sequelize, DataTypes) => {
   Profile.associate = (models) => {
     Profile.belongsTo(models.User, {
       foreignKey: 'username',
+      targetKey: 'username',
       onDelete: 'CASCADE',
     });
   };

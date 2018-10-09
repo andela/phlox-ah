@@ -2,7 +2,7 @@ import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
 
-const { Article } = Model;
+const { Article, ArticleComment, Reply: ReplyArticleComment, User } = Model;
 /**
   * @class ArticleController
   * @description CRUD operations on Article
@@ -57,7 +57,13 @@ export default class ArticleController {
   */
   static getSingleArticle(req, res) {
     Article.findOne({
-      where: { slug: req.params.slug }
+      where: { slug: req.params.slug },
+      include: [{
+        model: ArticleComment,
+        include: [{
+          model: User, attributes: ['username', 'email'],
+        }],
+      }]
     }).then((article) => {
       if (article === null) {
         res.status(404).json({ message: 'article does not exist', status: 'failed' });

@@ -15,9 +15,9 @@ const user = {
 };
 
 const article = {
-  title: faker.random.words(),
-  body: faker.random.words(),
-  description: faker.random.words()
+  title: 'this is article title',
+  body: 'this is article body',
+  description: 'this is article description'
 };
 
 const noTitle = {

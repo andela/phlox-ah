@@ -1,5 +1,12 @@
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      unique: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     username: {
       type: DataTypes.STRING,
       primaryKey: true,
@@ -49,6 +56,13 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Article, {
       foreignKey: 'userId',
       as: 'articles'
+    });
+    User.hasMany(models.ArticleComment, {
+      foreignKey: 'userId',
+    });
+    User.hasOne(models.Profile, {
+      foreignKey: 'username',
+      sourceKey: 'username',
     });
   };
   return User;
