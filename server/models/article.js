@@ -37,7 +37,6 @@ export default (sequelize, DataTypes) => {
       sourceKey: 'slug',
       as: 'likes'
     });
-    
     Article.hasMany(models.Rate, {
       foreignKey: 'articleId',
       as: 'rates'
