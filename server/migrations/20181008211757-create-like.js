@@ -1,32 +1,19 @@
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Articles', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Likes', {
     id: {
       allowNull: false,
       autoIncrement: true,
+      primaryKey: true,
       type: Sequelize.INTEGER
     },
-    title: {
+    like: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.BOOLEAN
     },
-    body: {
+    dislike: {
       allowNull: false,
-      type: Sequelize.TEXT
-    },
-    slug: {
-      allowNull: false,
-      unique: true,
-      primaryKey: true,
-      type: Sequelize.STRING
-    },
-    description: {
-      allowNull: false,
-      type: Sequelize.STRING
-    },
-    imgUrl: {
-      allowNull: true,
-      type: Sequelize.STRING
+      type: Sequelize.BOOLEAN
     },
     userId: {
       type: Sequelize.INTEGER,
@@ -37,6 +24,16 @@ module.exports = {
         as: 'userId'
       },
     },
+    articleSlug: {
+      type: Sequelize.STRING,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Articles',
+        key: 'slug',
+        as: 'articleSlug'
+      },
+    },
+
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -46,5 +43,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Articles')
+  down: queryInterface => queryInterface.dropTable('Likes')
 };

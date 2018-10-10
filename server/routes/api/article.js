@@ -3,6 +3,7 @@ import ArticleController from '../../controllers/articleController';
 import upload from '../../helpers/cloudinary';
 import ArticleValidations from '../../middlewares/articleValidations';
 import Authenticator from '../../middlewares/authenticator';
+import LikeController from '../../controllers/likeController';
 
 const { checkToken } = Authenticator;
 
@@ -11,8 +12,9 @@ const router = express.Router();
 router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations.validateCreateArticle, ArticleController.createArticle);
 router.get('/articles/feed', ArticleController.getAllArticles);
 router.get('/articles', checkToken, ArticleController.getUserArticles);
-router.get('/articles/:slug', checkToken, ArticleController.getSingleArticle);
+router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
+router.post('/articles/:slug/:likeType', checkToken, LikeController.likeArticle);
 
 export default router;
