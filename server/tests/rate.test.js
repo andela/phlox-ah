@@ -13,11 +13,6 @@ const user = {
   password: 'password'
 };
 
-const article = {
-  title: faker.lorem.sentence(),
-  body: faker.lorem.paragraph(),
-  description: faker.lorem.sentences()
-};
 
 describe('Rates', () => {
   before((done) => {
