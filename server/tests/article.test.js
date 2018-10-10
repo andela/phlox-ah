@@ -21,18 +21,18 @@ const article = {
 };
 
 const noTitle = {
-  body: faker.random.words(),
-  description: faker.random.words()
+  body: faker.lorem.sentence(),
+  description: faker.lorem.sentence()
 };
 
 const noBody = {
-  title: faker.random.words(),
-  description: faker.random.words()
+  title: faker.lorem.sentence(),
+  description: faker.lorem.sentence()
 };
 
 const noDescription = {
   title: faker.random.words(),
-  body: faker.random.words()
+  body: faker.lorem.sentence()
 };
 
 let token = '';

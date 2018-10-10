@@ -1,6 +1,7 @@
 import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
+import readingTime from '../helpers/readTime';
 
 const { Article } = Model;
 /**
@@ -16,9 +17,10 @@ export default class ArticleController {
   */
   static createArticle(req, res) {
     const { title, body, description } = req.body;
+    const readTime = readingTime(body); // calculate the time it will take to read the article
     const imgUrl = (req.file ? req.file.secure_url : '');
     Article.create({
-      title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl
+      title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl, readTime
     }).then(article => res.status(201).json({ message: 'article created successfully', status: 'success', article }))
       .catch(error => res.status(500).json(error));
   }
@@ -76,7 +78,10 @@ export default class ArticleController {
   */
   static updateArticle(req, res) {
     const imgUrl = (req.file ? req.file.secure_url : '');
+    // calculate the time it will take to read the updated article
+    const readTime = readingTime(req.body.body);
     req.body.imgUrl = imgUrl;
+    req.body.readTime = readTime;
     Article.update(req.body, {
       where: { slug: req.params.slug, userId: req.user.id },
       returning: true,

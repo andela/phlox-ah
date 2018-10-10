@@ -1,26 +1,25 @@
 import { expect } from 'chai';
 import readTime from '../helpers/readTime';
 
-describe('Helpers Function Test', () => {
-  describe('Article Read Time Function', () => {
-    it('should be a function', () => {
-      const result = readTime;
-      expect(result).to.be.a('function');
-    });
+describe('Article Read Time Function', () => {
+  it('should be a function', () => {
+    const result = readTime;
+    expect(result).to.be.a('function');
+  });
 
-    it('should return a number', () => {
-      const read = readTime('jdjdkkdkdjdjdjdj');
-      expect(read).to.be.a('number');
-    });
+  it('should return a number', () => {
+    const read = readTime('jdjdkkdkdjdjdjdj');
+    expect(read).to.be.a('number');
+  });
 
-    it('should return 1 minute given the below article', () => {
-      const articles = 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat aspernatur deserunt excepturi, libero totam perspiciatis nulla consequuntur ad, facilis hic numquam commodi molestias cumque laborum nobis porro mollitia, dicta recusandae!';
-      const read = readTime(articles);
-      expect(read).to.equal(1);
-    });
+  it('should return 1 minute given the below article', () => {
+    const articles = 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat aspernatur deserunt excepturi, libero totam perspiciatis nulla consequuntur ad, facilis hic numquam commodi molestias cumque laborum nobis porro mollitia, dicta recusandae!';
+    const read = readTime(articles);
+    expect(read).to.equal(1);
+  });
 
-    it('should return 3 minutes given the below article', () => {
-      const articles = `Knowing the usage of resources would go a long way in helping identify parts of your system that
+  it('should return 3 minutes given the below article', () => {
+    const articles = `Knowing the usage of resources would go a long way in helping identify parts of your system that
       need to be optimized. Since theevent loop is germane to the story, let’s decipher it first.The Event Loop
       Node’s architecture is mainly composed of two major components: V8, the engine that serves as the JavaScript
       interpreter and libuv, the library that provides event loop to Node.js. Also, of importance is the fact that in a
@@ -40,8 +39,7 @@ describe('Helpers Function Test', () => {
       It’s worth noting that I won’t be using any external dependencies (or modules) in this little project,
       so you’re going to learn how to create a REST API in Node.js without, at any given moment, using npm install.
       Cool, right?`;
-      const read = readTime(articles);
-      expect(read).to.equal(3);
-    });
+    const read = readTime(articles);
+    expect(read).to.equal(3);
   });
 });
