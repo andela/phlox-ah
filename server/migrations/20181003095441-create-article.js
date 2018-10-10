@@ -38,6 +38,11 @@ module.exports = {
         as: 'userId'
       },
     },
+    ratingAverage: {
+      allowNull: true,
+      defaultValue: 0,
+      type: Sequelize.FLOAT
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

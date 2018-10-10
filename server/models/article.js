@@ -20,6 +20,10 @@ export default (sequelize, DataTypes) => {
     imgUrl: {
       allowNull: true,
       type: DataTypes.STRING
+    },
+    ratingAverage: {
+      allowNull: true,
+      type: DataTypes.FLOAT
     }
   }, {});
 
@@ -32,6 +36,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleSlug',
       sourceKey: 'slug',
       onDelete: 'CASCADE',
+    });
+    Article.hasMany(models.Rate, {
+      foreignKey: 'articleId',
+      as: 'rates'
     });
   };
   return Article;
