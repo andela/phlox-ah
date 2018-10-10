@@ -10,6 +10,8 @@ import passport from 'passport';
 import errorhandler from 'errorhandler';
 import logger from 'morgan';
 import indexRouter from './routes/index';
+import facebookStrategy from './config/facebookStrategy';
+import googleStrategy from './config/googleStrategy';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -26,6 +28,8 @@ app.use(bodyParser.json());
 // app.use(require("method-override")());
 app.use(express.static(path.resolve('./public')));
 
+// Initialize Passport
+app.use(passport.initialize());
 
 if (!isProduction) {
   app.use(errorhandler());
