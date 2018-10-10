@@ -2,7 +2,9 @@ import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
 
-const { Article, ArticleComment, Reply: ReplyArticleComment, User } = Model;
+const {
+  Article, ArticleComment, User
+} = Model;
 /**
   * @class ArticleController
   * @description CRUD operations on Article

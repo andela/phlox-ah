@@ -73,7 +73,7 @@ export default class ProfileController {
       .then((profiles) => {
         res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
       })
-      .catch((err) => res.status(500).json({ success: false, error: 'Failed to fetch profiles', err }));
+      .catch(err => res.status(500).json({ success: false, error: 'Failed to fetch profiles', err }));
   }
 
   /**

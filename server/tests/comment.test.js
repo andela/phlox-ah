@@ -17,9 +17,9 @@ const user = {
 
 
 const article = {
-  title: "this is article title",
-  body: "this is article body",
-  description: "this is article description",
+  title: 'this is article title',
+  body: 'this is article body',
+  description: 'this is article description',
 };
 
 const comment = {
@@ -57,7 +57,7 @@ describe('Comment', () => {
 
   it('Should add comment to an article', (done) => {
     chai.request(app)
-      .post('/api/v1/articles/'+ articleSlug + '/comments')
+      .post(`/api/v1/articles/${articleSlug}/comments`)
       .set('x-access-token', token)
       .send(comment)
       .end((err, res) => {
@@ -82,7 +82,7 @@ describe('Comment', () => {
 
   it('Should modify an article comment', (done) => {
     chai.request(app)
-      .put('/api/v1/articles/'+ articleSlug + '/comments/'+ commentId +'/edit')
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/edit`)
       .set('x-access-token', token)
       .send(modifiedComment)
       .end((err, res) => {
@@ -106,7 +106,7 @@ describe('Comment', () => {
 
   it('Should add reply to an article comment', (done) => {
     chai.request(app)
-      .post('/api/v1/articles/'+ articleSlug + '/comments/'+ commentId +'/reply')
+      .post(`/api/v1/articles/${articleSlug}/comments/${commentId}/reply`)
       .set('x-access-token', token)
       .send(comment)
       .end((err, res) => {
@@ -119,7 +119,7 @@ describe('Comment', () => {
 
   it('Should not add reply to an article comment', (done) => {
     chai.request(app)
-      .post('/api/v1/articles/'+ articleSlug + '/comments/100/reply')
+      .post(`/api/v1/articles/${articleSlug}/comments/100/reply`)
       .set('x-access-token', token)
       .send(comment)
       .end((err, res) => {
@@ -131,7 +131,7 @@ describe('Comment', () => {
 
   it('Should modify an added reply of an article comment', (done) => {
     chai.request(app)
-      .put('/api/v1/articles/'+ articleSlug + '/comments/'+ commentId +'/reply/'+replyCommentId+'/edit')
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}/reply/${replyCommentId}/edit`)
       .set('x-access-token', token)
       .send(modifiedComment)
       .end((err, res) => {
@@ -141,6 +141,4 @@ describe('Comment', () => {
         done();
       });
   });
-
 });
-

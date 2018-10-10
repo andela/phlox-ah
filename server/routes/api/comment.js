@@ -20,6 +20,4 @@ router.put('/articles/:articleSlug/comments/:commentId/edit', checkToken, isVali
 router.put('/articles/:articleSlug/comments/:commentId/reply/:replyCommentId/edit', checkToken, isValidData, CommentController.editReplyArticleComment);
 
 
-
 export default router;
-

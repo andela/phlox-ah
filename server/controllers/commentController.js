@@ -1,10 +1,11 @@
 import Model from '../models';
 import CommentHelpers from '../helpers/comment';
 
-const { User, Article, ArticleComment, Reply: ReplyArticleComment } = Model;
+const {
+  User, Article, ArticleComment, Reply: ReplyArticleComment
+} = Model;
 
 const { commentDetail, replyCommentDetail } = CommentHelpers;
-
 
 
 /**
@@ -19,28 +20,24 @@ export default class CommentController {
   * @returns {object} - status, message and comment detail
   */
   static createArticleComment(req, res) {
-
     const data = commentDetail(req);
 
     return Article.findOne({
       where: { slug: data.articleSlug }
     })
-      .then(article => {
-        if(article){
+      .then((article) => {
+        if (article) {
           return ArticleComment.create(data);
-        } else {
-          return null;
         }
+        return null;
       })
-      .then(comment => {
-        if(comment) {
-          return res.status(201).json({success: true, message: 'Comment added successfully', comment});
-        } else {
-          return res.status(404).json({success: false, message: 'Article could not be found'});
+      .then((comment) => {
+        if (comment) {
+          return res.status(201).json({ success: true, message: 'Comment added successfully', comment });
         }
+        return res.status(404).json({ success: false, message: 'Article could not be found' });
       })
-      .catch(() => res.status(500).json({success: false, message: 'Comment could not be added'}));
-
+      .catch(() => res.status(500).json({ success: false, message: 'Comment could not be added' }));
   }
 
   /**
@@ -50,28 +47,24 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail
    */
   static editArticleComment(req, res) {
-
     const data = commentDetail(req);
 
     return ArticleComment.findOne({
       where: { userId: data.userId, id: data.commentId }
     })
-      .then(comment => {
-        if(comment) {
+      .then((comment) => {
+        if (comment) {
           return comment.update(data);
-        } else {
-          return null;
         }
+        return null;
       })
-      .then(comment => {
-        if(comment){
-          return res.status(200).json({success: true, message: 'Comment updated successfully', comment});
-        } else {
-          return res.status(404).json({success: false, message: 'Comment could not be found'});
+      .then((comment) => {
+        if (comment) {
+          return res.status(200).json({ success: true, message: 'Comment updated successfully', comment });
         }
+        return res.status(404).json({ success: false, message: 'Comment could not be found' });
       })
-      .catch(() => res.status(500).json({success: false, message: 'Comment could not be added'}));
-
+      .catch(() => res.status(500).json({ success: false, message: 'Comment could not be added' }));
   }
 
   /**
@@ -81,34 +74,28 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail
    */
   static editReplyArticleComment(req, res) {
-
     const data = replyCommentDetail(req);
 
     return ReplyArticleComment.findOne({
-      where: { 
-        userId: data.userId, 
+      where: {
+        userId: data.userId,
         id: data.replyCommentId,
         commentId: data.commentId,
       }
     })
-      .then(comment => {
-        if(comment) {
+      .then((comment) => {
+        if (comment) {
           return comment.update(data);
-        } else {
-          return null;
         }
+        return null;
       })
-      .then(comment => {
-        if(comment){
-          return res.status(200).json({success: true, message: 'Comment updated successfully', comment});
-        } else {
-          return res.status(404).json({success: false, message: 'Comment could not be found'});
+      .then((comment) => {
+        if (comment) {
+          return res.status(200).json({ success: true, message: 'Comment updated successfully', comment });
         }
+        return res.status(404).json({ success: false, message: 'Comment could not be found' });
       })
-      .catch(() => {
-        return res.status(500).json({success: false, message: 'Comment could not be added'});
-      })
-
+      .catch(() => res.status(500).json({ success: false, message: 'Comment could not be added' }));
   }
 
   /**
@@ -118,9 +105,8 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail array
    */
   static getArticleComment(req, res) {
-
     return ArticleComment.findAll({
-      where: {articleSlug: req.params.articleSlug},
+      where: { articleSlug: req.params.articleSlug },
       include: [{
         model: User,
         attributes: ['username', 'email']
@@ -132,11 +118,8 @@ export default class CommentController {
         }]
       }]
     })
-      .then(comments => {
-        return res.status(200).json({success: true, message: 'Comments fetched successfully', comments});
-      })
-      .catch(() => res.status(500).json({success: false, message: 'Comment could not be fetched'}));
-
+      .then(comments => res.status(200).json({ success: true, message: 'Comments fetched successfully', comments }))
+      .catch(() => res.status(500).json({ success: false, message: 'Comment could not be fetched' }));
   }
 
   /**
@@ -146,28 +129,23 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail
    */
   static replyArticleComment(req, res) {
-
     const data = replyCommentDetail(req);
 
     return ArticleComment.findOne({
       where: { userId: data.userId, id: data.commentId }
     })
-      .then(comment => {
-        if(comment) {
+      .then((comment) => {
+        if (comment) {
           return ReplyArticleComment.create(data);
-        } else {
-          return null;
         }
+        return null;
       })
-      .then(comment => {
-        if(comment){
-          return res.status(201).json({success: true, message: 'Comment added successfully', comment});
-        } else {
-          return res.status(404).json({success: false, message: 'Comment could not be found'});
+      .then((comment) => {
+        if (comment) {
+          return res.status(201).json({ success: true, message: 'Comment added successfully', comment });
         }
+        return res.status(404).json({ success: false, message: 'Comment could not be found' });
       })
-      .catch(() => res.status(500).json({success: false, message: 'Comment could not be added'}));
-
+      .catch(() => res.status(500).json({ success: false, message: 'Comment could not be added' }));
   }
-
 }
