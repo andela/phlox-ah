@@ -6,7 +6,7 @@ const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_APP_ID,
     clientSecret: process.env.GOOGLE_APP_SECRET,
-    callbackURL: 'http://localhost:3000/api/v1/login/google/return',
+    callbackURL: `${process.env.BASE_URL}/login/google/return`,
   },
   socialLoginController.passportCallback
 );

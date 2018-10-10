@@ -18,4 +18,10 @@ router.get(
   passport.authenticate('google', { session: false }), SocialLoginController.response
 );
 
+// I added this route to test the response method in the SocialLoginController
+router.post('/login/response', (req, res, next) => {
+  req.user = req.body;
+  next();
+}, SocialLoginController.response);
+
 export default router;
