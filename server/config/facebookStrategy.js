@@ -1,8 +1,7 @@
-import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import socialLoginController from '../controllers/socialLoginController';
 
-
+// create an instance of facebook strategy
 const facebookStrategy = new FacebookStrategy(
   {
     clientID: process.env.FACEBOOK_APP_ID,
@@ -12,7 +11,5 @@ const facebookStrategy = new FacebookStrategy(
   },
   socialLoginController.passportCallback
 );
-passport.use(facebookStrategy);
-
 
 export default facebookStrategy;

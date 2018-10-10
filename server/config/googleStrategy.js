@@ -1,7 +1,7 @@
-import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import socialLoginController from '../controllers/socialLoginController';
 
+// create an instance of Google strategy
 const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_APP_ID,
@@ -10,8 +10,5 @@ const googleStrategy = new GoogleStrategy(
   },
   socialLoginController.passportCallback
 );
-
-passport.use(googleStrategy);
-
 
 export default googleStrategy;

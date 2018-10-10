@@ -28,6 +28,9 @@ app.use(bodyParser.json());
 // app.use(require("method-override")());
 app.use(express.static(path.resolve('./public')));
 
+passport.use(facebookStrategy);
+passport.use(googleStrategy);
+
 // Initialize Passport
 app.use(passport.initialize());
 
