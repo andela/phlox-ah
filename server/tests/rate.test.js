@@ -6,7 +6,6 @@ import app from '../index';
 
 chai.use(chaiHttp);
 let token = '';
-let createdArticle = '';
 
 const user = {
   username: faker.internet.userName(),
@@ -27,20 +26,13 @@ describe('Rates', () => {
       .send(user)
       .end((err, res) => {
         token = res.body.token;
-        chai.request(app)
-          .post('/api/v1/articles')
-          .set('x-access-token', token)
-          .send(article)
-          .end((err, res) => {
-            createdArticle = res.body.article;
-            done();
-          });
+        done();
       });
   });
 
   it('Should rate an article', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', token)
       .send({ rating: 2 })
       .end((err, res) => {
@@ -66,7 +58,7 @@ describe('Rates', () => {
 
   it('Should not allow an unauthenticated user to rate an article', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', '1234abc')
       .send({ rating: 2 })
       .end((err, res) => {
@@ -79,7 +71,7 @@ describe('Rates', () => {
 
   it('Should not allow a rating value that is not a number', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', token)
       .send({ rating: 'one' })
       .end((err, res) => {
@@ -92,7 +84,7 @@ describe('Rates', () => {
 
   it('Should not allow a rating value that is less than 0', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', token)
       .send({ rating: -1 })
       .end((err, res) => {
@@ -105,7 +97,7 @@ describe('Rates', () => {
 
   it('Should not allow a rating value that is more than 5', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', token)
       .send({ rating: 7 })
       .end((err, res) => {
@@ -118,7 +110,7 @@ describe('Rates', () => {
 
   it('Should not allow a rating value that is a negative number', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', token)
       .send({ rating: -1 })
       .end((err, res) => {
@@ -131,7 +123,7 @@ describe('Rates', () => {
 
   it('Should not allow a post to the rate api endpoitn without rating', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${createdArticle.slug}/rate`)
+      .post('/api/v1/articles/title-of-article/rate')
       .set('x-access-token', token)
       .send({ rate: 2 })
       .end((err, res) => {
