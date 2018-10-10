@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations.validateCreateArticle, ArticleController.createArticle);
 router.get('/articles/feed', ArticleController.getAllArticles);
 router.get('/articles', checkToken, ArticleController.getUserArticles);
-router.get('/articles/:slug', checkToken, ArticleController.getSingleArticle);
+router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
 
