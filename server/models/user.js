@@ -74,6 +74,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'articles'
     });
+    User.hasOne(models.Profile, {
+      foreignKey: 'username',
+      sourceKey: 'username'
+    });
     User.belongsToMany(User, {
       as: 'follower',
       through: models.Followings,
