@@ -14,9 +14,10 @@
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
     "test": "cross-env process.env.NODE_ENV=test nyc mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --exit || true",
     "dev": "cross-env process.env.NODE_ENV=development npm run migrate && npm run eslint && npm run babel-node server/index.js",
+    "model-create": "sequelize model:create --name Followings --attributes follower:integer,followedBy:integer",
     "start": "npm run migrate && node build/index.js",
     "postinstall": "babel server -d build",
-    "eslint": "eslint . --fix --ignore-path .gitignore",
+    "eslint": "eslint . --ignore-path .gitignore",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "watch": "npm-watch"
   },
@@ -51,8 +52,10 @@
     "sequelize": "^4.39.0",
     "sequelize-cli": "^4.1.1",
     "slug": "^0.9.1",
+    "swagger-ui-express": "^4.0.1",
     "underscore": "^1.9.1",
-    "uuid-random": "^1.0.6"
+    "uuid-random": "^1.0.6",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

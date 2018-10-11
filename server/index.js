@@ -9,7 +9,11 @@ import cors from 'cors';
 import passport from 'passport';
 import errorhandler from 'errorhandler';
 import logger from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 import indexRouter from './routes/index';
+
+const swaggerDocument = YAML.load(`${process.cwd()}/swagger.yaml`);
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -30,6 +34,9 @@ app.use(express.static(path.resolve('./public')));
 if (!isProduction) {
   app.use(errorhandler());
 }
+
+// Swagger documentation routes
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /* Index router */
 app.use('/', indexRouter);
