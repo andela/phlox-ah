@@ -1,13 +1,6 @@
 // add isVerified to the model file, it will be use to check if the user is verified.
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      unique: true,
-      primaryKey: true,
-    },
     username: {
       type: DataTypes.STRING,
       primaryKey: true,
@@ -73,20 +66,6 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Article, {
       foreignKey: 'userId',
       as: 'articles'
-    });
-    User.hasOne(models.Profile, {
-      foreignKey: 'username',
-      sourceKey: 'username'
-    });
-    User.belongsToMany(User, {
-      as: 'follower',
-      through: models.Followings,
-      foreignKey: 'follower',
-    });
-    User.belongsToMany(User, {
-      as: 'followed',
-      through: models.Followings,
-      foreignKey: 'followed',
     });
   };
   return User;

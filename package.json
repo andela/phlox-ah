@@ -14,7 +14,6 @@
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
     "test": "cross-env process.env.NODE_ENV=test nyc mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --exit || true",
     "dev": "cross-env process.env.NODE_ENV=development npm run migrate && npm run eslint && npm run babel-node server/index.js",
-    "model-create": "sequelize model:create --name Followings --attributes follower:integer,followedBy:integer",
     "start": "npm run migrate && node build/index.js",
     "postinstall": "babel server -d build",
     "eslint": "eslint . --ignore-path .gitignore",
