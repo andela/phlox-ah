@@ -11,7 +11,7 @@ const { generateToken } = Authenticator;
  */
 class SocialLoginController {
   /**
-   * @description - finds an existing user or create a new user
+   * @description - find  or create a new user and pass the user to the request body
    * @param {object} user
    * @param {function} done
    * @returns {object} createOrFindUser
@@ -29,7 +29,7 @@ class SocialLoginController {
   }
 
   /**
-    * @description response function
+    * @description generate a token and display a response to users
     * @static
     * @param {object} req
     * @param {object} res
@@ -38,6 +38,7 @@ class SocialLoginController {
   static response(req, res) {
     const user = { id: req.user.id, email: req.user.email, username: req.user.username };
     const token = generateToken(user);
+    // if a new user was created
     if (req.user.created) {
       return res.status(201).send({ success: true, message: 'you have successfully signed up', user, token });
     }

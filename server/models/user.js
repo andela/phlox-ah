@@ -1,6 +1,13 @@
 // add isVerified to the model file, it will be use to check if the user is verified.
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      unique: true,
+      primaryKey: true,
+    },
     username: {
       type: DataTypes.STRING,
       primaryKey: true,

@@ -6,11 +6,12 @@ import SocialLoginController from '../controllers/socialLoginController';
 import app from '..';
 
 chai.use(chaiHttp);
-
+// This is a mock profile
 const profile = {
   emails: [{ value: 'emailfromsocial@gmail.com' }],
 };
 
+// Test the strategy callback method
 describe('Social login controller test', () => {
   it('should handle social login callback request;', (done) => {
     SocialLoginController.passportCallback('accessToken', 'refreshToken', profile, done);
