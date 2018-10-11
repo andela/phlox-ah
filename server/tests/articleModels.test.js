@@ -1,30 +1,33 @@
-import faker from 'faker';
 import { expect } from 'chai';
 import db from '../models';
 
 
 const validArticle = {
-  title: faker.random.word(),
-  body: faker.random.words(),
-  description: faker.random.words(),
-  slug: faker.random.word()
+  title: 'When you love',
+  body: 'body exercise is good and better',
+  description: 'Physical and health',
+  slug: 'When-you-love',
+  readTime: 3
 };
 
 const noTitle = {
-  body: faker.random.words(),
-  description: faker.random.words()
+  body: 'body exercise is good and better',
+  description: 'Physical and health',
+  readTime: 3
 };
 
 const noBody = {
-  title: faker.random.words(),
-  description: faker.random.words(),
-  slug: faker.random.word()
+  title: 'When you love',
+  description: 'Physical and health',
+  slug: 'When-you-love',
+  readTime: 3
 };
 
 const noDescription = {
-  title: faker.random.words(),
-  body: faker.random.words(),
-  slug: faker.random.word()
+  title: 'When you love',
+  body: 'body exercise is good and better',
+  slug: 'When-you-love',
+  readTime: 3
 };
 
 
