@@ -3,7 +3,7 @@ import uuid from 'uuid-random';
 import Model from '../models';
 import getTagIds from '../helpers/tags/getTagIds';
 
-const { Article, Tag } = Model;
+const { Article, Tag, Like } = Model;
 /**
   * @class ArticleController
   * @description CRUD operations on Article
@@ -25,11 +25,11 @@ export default class ArticleController {
         article.setTags(tagIds).then(() => {
           article.getTags({ attributes: ['id', 'name'] }).then((associatedTags) => {
             res.status(201).json({
-              message: 'article created successfully', status: 'success', article, tags: associatedTags
+              message: 'article created successfully', success: true, article, tags: associatedTags
             });
           });
         })
-          .catch(() => res.status(404).json({ message: 'the tag does not exist', status: 'failed' }));
+          .catch(() => res.status(404).json({ message: 'the tag does not exist', success: false }));
       })
         .catch(error => res.status(500).json(error));
     })
@@ -46,10 +46,11 @@ export default class ArticleController {
     Article.findAll({
       limit: 10,
       include: [
-        { model: Tag, as: 'Tags', through: 'ArticlesTags' }
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+        { model: Like, as: 'likes' }
       ]
     })
-      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', status: 'success', articles }))
+      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -64,9 +65,10 @@ export default class ArticleController {
       where: { userId: req.user.id },
       limit: 10,
       include: [
-        { model: Tag, as: 'Tags', through: 'ArticlesTags' }
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+        { model: Like, as: 'likes' }
       ]
-    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', status: 'success', articles }))
+    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -80,15 +82,14 @@ export default class ArticleController {
     Article.findOne({
       where: { slug: req.params.slug },
       include: [
-        { model: Tag, as: 'Tags', through: 'ArticlesTags' }
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+        { model: Like, as: 'likes' }
       ]
     }).then((article) => {
       if (article === null) {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'article does not exist', success: false });
       } else {
-        res.status(200).json({
-          message: 'article retrieved successfully', status: 'success', article,
-        });
+        res.status(200).json({ message: 'article retrieved successfully', success: true, article });
       }
     })
       .catch(error => res.status(500).json(error));
@@ -108,18 +109,18 @@ export default class ArticleController {
         where: { slug: req.params.slug, userId: req.user.id },
       }).then((article) => {
         if (article === null) {
-          res.status(404).json({ message: 'article does not exist', status: 'failed' });
+          res.status(404).json({ message: 'article does not exist', success: false });
         } else {
           article.update(req.body)
             .then((updatedArticle) => {
               article.setTags(tagIds).then(() => {
                 article.getTags({ attributes: ['id', 'name'] }).then((associatedTags) => {
                   res.status(200).json({
-                    message: 'article updated successfully', status: 'success', article: updatedArticle, tags: associatedTags
+                    message: 'article updated successfully', success: true, article: updatedArticle, tags: associatedTags
                   });
                 });
               })
-                .catch(() => res.status(404).json({ message: 'the tag does not exist', status: 'failed' }));
+                .catch(() => res.status(404).json({ message: 'the tag does not exist', success: false }));
             })
             .catch(error => res.status(500).json(error));
         }
@@ -139,7 +140,7 @@ export default class ArticleController {
       where: { slug: req.params.slug, userId: req.user.id },
     }).then((article) => {
       if (article === null) {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'article does not exist', success: false });
       } else {
         article.setTags([]).then(() => {
           article.destroy()

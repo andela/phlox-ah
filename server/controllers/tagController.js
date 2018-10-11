@@ -23,7 +23,7 @@ export default class TagController {
         }
       });
     });
-    res.status(201).json({ message: 'Tags created successfully', status: 'success', tag: tags });
+    res.status(201).json({ message: 'Tags created successfully', success: true, tag: tags });
   }
 
   /**
@@ -34,7 +34,7 @@ export default class TagController {
   */
   static showAllTags(req, res) {
     Tag.findAll()
-      .then(tags => res.status(200).json({ message: 'Tags retrieved successfully', status: 'success', tags }))
+      .then(tags => res.status(200).json({ message: 'Tags retrieved successfully', success: false, tags }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -51,7 +51,7 @@ export default class TagController {
         { model: Article, as: 'Articles', through: 'ArticlesTags' }
       ]
     })
-      .then(tag => res.status(200).json({ message: 'Tag retrieved successfully', status: 'success', tag }))
+      .then(tag => res.status(200).json({ message: 'Tag retrieved successfully', success: false, tag }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -66,7 +66,7 @@ export default class TagController {
       where: { name: req.params.name },
     }).then((tag) => {
       if (tag === null) {
-        res.status(404).json({ message: 'tag does not exist', status: 'failed' });
+        res.status(404).json({ message: 'tag does not exist', success: false });
       } else {
         tag.destroy()
           .then(() => {

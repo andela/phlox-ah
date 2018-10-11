@@ -47,7 +47,7 @@ class RateController {
           })
           .catch(() => res.status(500).json({ success: false, error: 'Rate could not be updated' }));
       } else {
-        res.status(404).json({ message: 'Article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'Article does not exist', success: false });
       }
     })
       .catch(error => res.status(500).json(error));

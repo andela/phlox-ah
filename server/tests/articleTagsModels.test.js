@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import db from '../models';
 
 const validArticleTag = {
-  articleId: 2,
+  articleId: 1,
   tagId: 1
 };
 
 const invalidTagId = {
-  articleId: 2,
+  articleId: 1,
   notagId: 100
 };
 

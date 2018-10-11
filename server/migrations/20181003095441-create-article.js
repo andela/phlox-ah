@@ -3,8 +3,8 @@ module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Articles', {
     id: {
       allowNull: false,
+      unique: true,
       autoIncrement: true,
-      primaryKey: true,
       type: Sequelize.INTEGER
     },
     title: {
@@ -17,6 +17,8 @@ module.exports = {
     },
     slug: {
       allowNull: false,
+      unique: true,
+      primaryKey: true,
       type: Sequelize.STRING
     },
     description: {
