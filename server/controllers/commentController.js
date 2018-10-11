@@ -5,7 +5,7 @@ const {
   User, Article, ArticleComment, Reply: ReplyArticleComment
 } = Model;
 
-const { commentDetail, replyCommentDetail } = CommentHelpers;
+const { reqCommentParams, reqReplyParams } = CommentHelpers;
 
 
 /**
@@ -20,7 +20,7 @@ export default class CommentController {
   * @returns {object} - status, message and comment detail
   */
   static createArticleComment(req, res) {
-    const data = commentDetail(req);
+    const data = reqCommentParams(req);
 
     return Article.findOne({
       where: { slug: data.articleSlug }
@@ -47,7 +47,7 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail
    */
   static editArticleComment(req, res) {
-    const data = commentDetail(req);
+    const data = reqCommentParams(req);
 
     return ArticleComment.findOne({
       where: { userId: data.userId, id: data.commentId }
@@ -74,7 +74,7 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail
    */
   static editReplyArticleComment(req, res) {
-    const data = replyCommentDetail(req);
+    const data = reqReplyParams(req);
 
     return ReplyArticleComment.findOne({
       where: {
@@ -129,7 +129,7 @@ export default class CommentController {
    * @returns {object} - status, message and comment detail
    */
   static replyArticleComment(req, res) {
-    const data = replyCommentDetail(req);
+    const data = reqReplyParams(req);
 
     return ArticleComment.findOne({
       where: { userId: data.userId, id: data.commentId }

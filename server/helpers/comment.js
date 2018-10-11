@@ -6,7 +6,7 @@ export default {
   * @param {object} req - The request payload sent from the router
   * @returns {object} - new object of relevant data
   */
-  commentDetail(req) {
+  reqCommentParams(req) {
     const data = Object.assign(
       {},
       req.body,
@@ -25,7 +25,7 @@ export default {
   * @param {object} req - The request payload sent from the router
   * @returns {object} - new object of relevant data
   */
-  replyCommentDetail(req) {
+  reqReplyParams(req) {
     const data = Object.assign(
       {},
       req.body,
