@@ -2,11 +2,11 @@
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       unique: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
     },
     username: {
       type: DataTypes.STRING,
@@ -71,15 +71,28 @@ export default (sequelize, DataTypes) => {
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {
-      foreignKey: 'userId',
       as: 'articles'
     });
     User.hasMany(models.ArticleComment, {
       foreignKey: 'userId',
     });
+    User.hasMany(models.Like, {
+      foreignKey: 'userId',
+      as: 'likes'
+    });
     User.hasOne(models.Profile, {
       foreignKey: 'username',
-      sourceKey: 'username',
+      sourceKey: 'username'
+    });
+    User.belongsToMany(User, {
+      as: 'follower',
+      through: models.Followings,
+      foreignKey: 'follower',
+    });
+    User.belongsToMany(User, {
+      as: 'followed',
+      through: models.Followings,
+      foreignKey: 'followed',
     });
   };
   return User;

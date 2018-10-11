@@ -19,6 +19,9 @@ router.put('/reset_password/:token', UserController.resetPassword);
 router.post('/login', UserValidations.validateLogin, UserController.login);
 
 router.get('/users/verify/:verifyToken', UserController.verifyUser);
+router.post('/profiles/:username/follow', checkToken, UserController.follow);
+router.delete('/profiles/:username/follow', checkToken, UserController.unfollow);
+router.get('/followings', checkToken, UserController.following);
 
 
 /* Test route */

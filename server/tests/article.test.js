@@ -60,7 +60,25 @@ describe('Articles', () => {
         done();
       });
   });
-
+  it('Should get a specific article', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/${slug}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should not get an article with an invalid slug', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/${slug}00`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
   it('Should get all articles', (done) => {
     chai.request(app)
       .get('/api/v1/articles/feed')
@@ -91,12 +109,55 @@ describe('Articles', () => {
         done();
       });
   });
+  it('Should not update an invalid article', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${slug}00`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should like an article', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${slug}/like`)
+      .set('x-access-token', token)
+      .send(article)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should not like an invalid article', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${slug}00/like`)
+      .set('x-access-token', token)
+      .send(article)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
   it('Should delete a users article', (done) => {
     chai.request(app)
       .delete(`/api/v1/articles/${slug}`)
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(204);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('Should not delete an invalid article', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/articles/${slug}00`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();
       });

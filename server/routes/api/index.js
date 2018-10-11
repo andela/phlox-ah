@@ -3,6 +3,7 @@ import user from './user';
 import article from './article';
 import profile from './profile';
 import comment from './comment';
+import socialLogin from './socialLogin';
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ router.use('/', article);
 router.use('/', comment);
 router.use('/', profile);
 router.use('/', user);
+router.use('/', socialLogin);
 
 router.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {

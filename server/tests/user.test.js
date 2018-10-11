@@ -15,7 +15,7 @@ const verifyUser = {
 };
 
 const testUser = {
-  username: faker.internet.userName(),
+  username: 'JohnDoe',
   email: 'john.doe@gmail.com',
   password: 'password',
   resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bd',
@@ -345,6 +345,119 @@ describe('Users', () => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal('Invalid Email/Username or password');
+          done();
+        });
+    });
+  });
+
+  describe('User follow/unfollow', () => {
+    it('should return success message and follow a user', (done) => {
+      chai.request(app)
+        .post('/api/v1/profiles/JohnDoe/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.eql('You are now following JohnDoe');
+          done();
+        });
+    });
+
+    it('should return error message if user is not found', (done) => {
+      chai.request(app)
+        .post('/api/v1/profiles/unknown/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.eql('User not found');
+          done();
+        });
+    });
+
+    it('should return error message if user tries to follow himself', (done) => {
+      chai.request(app)
+        .post('/api/v1/profiles/testuser/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(403);
+          expect(res.body.message).to.eql('You cannot follow yourself');
+          done();
+        });
+    });
+
+    it('should return error message if user already follows user', (done) => {
+      chai.request(app)
+        .post('/api/v1/profiles/JohnDoe/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eql('You already follow JohnDoe');
+          done();
+        });
+    });
+
+    it('should return error message if user is not found', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/unknown/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.eql('User not found');
+          done();
+        });
+    });
+
+    it('should return error message if user tries to unfollow himself', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/testuser/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(403);
+          expect(res.body.message).to.eql('You cannot unfollow yourself');
+          done();
+        });
+    });
+
+    it('should return error message if user doesnt follow user', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/dimeji/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eql('You are not following dimeji');
+          done();
+        });
+    });
+
+    it('should return success message and unfollow a user', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/JohnDoe/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.eql('You are no longer following JohnDoe');
+          done();
+        });
+    });
+  });
+
+  describe('User Followers/Following', () => {
+    it('should return a list of users following and followers', (done) => {
+      chai.request(app)
+        .get('/api/v1/followings')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.eql('Follows/Followers');
+          expect(res.body.following).to.be.an('array');
+          expect(res.body.followers).to.be.an('array');
           done();
         });
     });
