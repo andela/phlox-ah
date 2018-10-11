@@ -62,7 +62,6 @@ describe('Comment', () => {
       .set('x-access-token', token)
       .send(comment)
       .end((err, res) => {
-        console.log("BODY: ", res.body);
         commentId = res.body.comment.id;
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');

@@ -75,6 +75,7 @@ export default class ArticleController {
         include: [{
           model: User, attributes: ['username', 'email'],
         }],
+      }, {
         model: Like,
         as: 'likes'
       }]
