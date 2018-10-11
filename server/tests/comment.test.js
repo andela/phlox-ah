@@ -17,10 +17,11 @@ const user = {
 
 
 const article = {
-  title: 'this is article title',
-  body: 'this is article body',
-  description: 'this is article description',
+  title: 'How to use the faker package',
+  body: 'faker.js contains a super useful generator method Faker.fake for combining faker API methods using a mustache string format.',
+  description: 'Fake package is an handy package when it comes to generation random data.'
 };
+
 
 const comment = {
   comment: 'comment test',
@@ -61,6 +62,7 @@ describe('Comment', () => {
       .set('x-access-token', token)
       .send(comment)
       .end((err, res) => {
+        console.log("BODY: ", res.body);
         commentId = res.body.comment.id;
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');

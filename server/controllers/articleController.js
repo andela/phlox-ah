@@ -5,7 +5,6 @@ import Model from '../models';
 const {
   Article, ArticleComment, User, Like
 } = Model;
-
 /**
   * @class ArticleController
   * @description CRUD operations on Article

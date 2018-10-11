@@ -7,8 +7,8 @@ import socialLogin from './socialLogin';
 
 const router = express.Router();
 
-router.use('/', article);
 router.use('/', comment);
+router.use('/', article);
 router.use('/', profile);
 router.use('/', user);
 router.use('/', socialLogin);

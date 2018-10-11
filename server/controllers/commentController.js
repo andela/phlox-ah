@@ -22,6 +22,8 @@ export default class CommentController {
   static createArticleComment(req, res) {
     const data = reqCommentParams(req);
 
+    console.log("DATA: ", data);
+
     return Article.findOne({
       where: { slug: data.articleSlug }
     })

@@ -30,6 +30,7 @@ export default (sequelize, DataTypes) => {
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
+      targetKey: 'id',
       onDelete: 'CASCADE'
     });
     Article.hasMany(models.ArticleComment, {
