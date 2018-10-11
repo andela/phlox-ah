@@ -1,32 +1,33 @@
+import faker from 'faker';
 import { expect } from 'chai';
 import db from '../models';
 
 
 const validArticle = {
-  title: 'When you love',
-  body: 'body exercise is good and better',
-  description: 'Physical and health',
-  slug: 'When-you-love',
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence(),
+  slug: faker.lorem.sentence(),
   readTime: 3
 };
 
 const noTitle = {
-  body: 'body exercise is good and better',
-  description: 'Physical and health',
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence(),
   readTime: 3
 };
 
 const noBody = {
-  title: 'When you love',
-  description: 'Physical and health',
-  slug: 'When-you-love',
+  title: faker.lorem.sentence(),
+  description: faker.lorem.sentence(),
+  slug: faker.lorem.sentence(),
   readTime: 3
 };
 
 const noDescription = {
-  title: 'When you love',
-  body: 'body exercise is good and better',
-  slug: 'When-you-love',
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  slug: faker.lorem.sentence(),
   readTime: 3
 };
 

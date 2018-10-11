@@ -15,24 +15,24 @@ const user = {
 };
 
 const article = {
-  title: 'When you love',
-  body: 'body exercise is good and better',
-  description: 'Physical and health'
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence()
 };
 
 const noTitle = {
-  body: 'body exercise is good and better',
-  description: 'Physical and health'
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence()
 };
 
 const noBody = {
-  title: 'When you love',
-  description: 'Physical and health'
+  title: faker.lorem.sentence(),
+  description: faker.lorem.sentence()
 };
 
 const noDescription = {
-  title: 'When you love',
-  body: 'body exercise is good and better'
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph()
 };
 
 let token = '';
