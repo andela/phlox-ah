@@ -181,7 +181,7 @@ export default class UserController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - message and successfully follows a user
    */
-  static follow(req, res) {
+  static followUser(req, res) {
     const { user } = req;
 
     User.findOne({ where: { username: req.params.username } })
@@ -216,7 +216,7 @@ export default class UserController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - message and successfully follows a user
    */
-  static unfollow(req, res) {
+  static unfollowUser(req, res) {
     const { user } = req;
 
     User.findOne({ where: { username: req.params.username } })
@@ -251,7 +251,7 @@ export default class UserController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - json data
    */
-  static following(req, res) {
+  static followList(req, res) {
     User
       .findOne({ where: { id: req.user.id }, include: ['followed', 'follower'] })
       .then((user) => {
