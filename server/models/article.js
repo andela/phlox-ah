@@ -20,8 +20,11 @@ export default (sequelize, DataTypes) => {
     imgUrl: {
       allowNull: true,
       type: DataTypes.STRING
+    },
+    ratingAverage: {
+      allowNull: true,
+      type: DataTypes.FLOAT
     }
-
   }, {});
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
@@ -31,6 +34,9 @@ export default (sequelize, DataTypes) => {
     Article.hasMany(models.ArticlesTag, {
       foreignKey: 'articleId',
       as: 'articleTags'
+    Article.hasMany(models.Rate, {
+      foreignKey: 'articleId',
+      as: 'rates'
     });
   };
   return Article;

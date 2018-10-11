@@ -1,0 +1,1100 @@
+openapi: 3.0.0
+info:
+  version: 'v1'
+  title: 'Authors Haven - A Social platform for the creative at heart.'
+  description: 'Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.'
+  contact:
+    name: Team Phlox [Andela Simulations Programme]
+    email: no-reply@andela.com
+  license:
+    name: MIT
+
+servers:
+  - url: https://phlox-ah-staging.herokuapp.com/api/v1
+    description: Server URL
+
+tags:
+  - name: User
+    description: User operations
+  - name: Article
+    description: Article operations
+  - name: Profile
+    description: Profile operations
+
+paths:
+  /signup:
+    post:
+      tags:
+        - User
+      summary: Register's a user
+      description: Register's a user, send verification email and return a token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Johnny4all
+
+                email:
+                  type: string
+                  example: johndoe@example.com
+                  format: email
+
+                password:
+                  type: string
+                  example: password123
+                  format: password
+
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: User successfully signed up
+
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI.eyJpZCI6NjEs.ImZpciIsImVtY
+
+
+  /login:
+    post:
+      tags:
+        - User
+      summary: Log In a registered user
+      description: Returns an authentication token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: johndoe@example.com
+                  format: email
+
+                password:
+                  type: string
+                  example: password123
+                  format: password
+
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: User successfully login.
+
+                  user:
+                    $ref: '#/components/schemas/Users'
+
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI.eyJpZCI6NjEs.ImZpciIsImVtY
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Invalid username/email or password
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Invalid username/email or password
+
+
+  /articles:
+    post:
+      tags:
+        - Article
+      summary: Create a new article
+      description: Create a new article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Title of the article
+
+                description:
+                  type: string
+                  example: Description of the article
+
+                body:
+                  type: string
+                  example: body of the article
+
+                featureImage:
+                  type: string
+                  example: https://loadsofimage
+                  format: image
+
+
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: article created successfully
+
+                  article:
+                    $ref: '#/components/schemas/Articles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+    get:
+      tags:
+        - Article
+      summary: Get all articles written by the authenticated user
+      description: Get all articles from the database by the users who log in
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: articles retrieved successfully
+
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Articles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/feed:
+    get:
+      tags:
+        - Article
+      summary: Get all articles
+      description: Get all articles from the database
+      security: []
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: articles retrieved successfully
+
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Articles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{slug}:
+    parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+        description: String slug of the article
+
+    get:
+      tags:
+        - Article
+      summary: Get one article by its slug
+      security: []
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: article retrieved successfully
+
+                  articles:
+                    $ref: '#/components/schemas/Articles'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: article does not exist
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+    put:
+      tags:
+        - Article
+      summary: Update one article by its slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Title of the article
+
+                description:
+                  type: string
+                  example: Description of the article
+
+                body:
+                  type: string
+                  example: body of the article
+
+                featureImage:
+                  type: string
+                  example: https://loadsofimage
+                  format: image
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: article updated successfully
+
+                  articles:
+                    $ref: '#/components/schemas/Articles'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: article does not exist
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+    delete:
+      tags:
+        - Article
+      summary: Delete one article by its slug
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: article deleted successfully
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: article does not exist
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /profile:
+    post:
+      tags:
+        - Profile
+      summary: Create a user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: John
+
+                lastName:
+                  type: string
+                  example: Doe
+
+                contact:
+                  type: string
+                  example: Nairobi, Kenya
+
+                gender:
+                  type: string
+                  example: male
+
+                bio:
+                  type: string
+                  example: I'm a baddass Senior Software Developer
+
+                profileImage:
+                  type: string
+                  example: https://loadsofimage
+                  format: image
+
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Profile created successfully
+
+                  profile:
+                    $ref: '#/components/schemas/Profiles'
+
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Profile updated successfully
+
+                  profile:
+                    $ref: '#/components/schemas/Profiles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Profile could not be updated
+
+    get:
+      tags:
+        - Profile
+      summary: Get the profile of the authenticated user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Profile fetched successfully
+
+                  profile:
+                    $ref: '#/components/schemas/Profiles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Failed to fetch profile
+
+  /profile/{username}:
+    parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+        description: username of a user
+
+    get:
+      tags:
+        - Profile
+      summary: Get a user profile by their username
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Profile fetched successfully
+
+                  profile:
+                    $ref: '#/components/schemas/Profiles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Failed to fetch profile
+
+    put:
+      tags:
+        - Profile
+      summary: Update a user profile by username
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: John
+
+                lastName:
+                  type: string
+                  example: Doe
+
+                contact:
+                  type: string
+                  example: Nairobi, Kenya
+
+                gender:
+                  type: string
+                  example: male
+
+                bio:
+                  type: string
+                  example: I'm a baddass Senior Software Developer
+
+                profileImage:
+                  type: string
+                  example: https://loadsofimage
+                  format: image
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Profile updated successfully
+
+                  profile:
+                    $ref: '#/components/schemas/Profiles'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Profile not found
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Profile could not be updated
+
+  /profiles:
+    get:
+      tags:
+        - Profile
+      summary: Get all users profiles
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Profiles fetched successfully
+
+                  profiles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profiles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Failed to fetch profiles
+
+  /forgetPassword:
+    post:
+      tags:
+        - User
+      summary: Send mail to reset user password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: Johndoe@example.com
+                  format: email
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: A password reset link has been sent ot your email
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Email address is not registered
+
+  /reset_password/{token}:
+    put:
+      tags:
+        - User
+      summary: Reset users password
+      security: []
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: reset token
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Password has been successfully updated
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: This link is invalid
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: This link has expired
+
+
+
+
+
+  /users/verify/{verifyToken}:
+    get:
+      tags:
+        - User
+      summary: Verify user account
+      security: []
+      parameters:
+        - in: path
+          name: verifyToken
+          schema:
+            type: string
+          required: true
+          description: verification token
+
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: Thank you, account verified. You can login now
+
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Your account is already verified
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error. Please try again later!
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-access-token
+
+  schemas:
+    Articles:
+      description: Articles Model
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        title:
+          type: string
+          minLength: 6
+          maxLength: 150
+          example: My Time Management Crisis
+
+        description:
+          type: string
+          minLength: 6
+          maxLength: 150
+          example: It's been two weeks now, after so much consumption
+
+        body:
+          type: string
+          minLength: 6
+          example: It's been two weeks now, after so much consumption of time management books
+
+        usersId:
+          type: integer
+          example: 1
+
+        featureImage:
+          type: string
+          example: https://loadsofimage
+          format: image
+
+        createdAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+    Users:
+      description: Model containing users
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        username:
+          type: string
+          example: Johnny4all
+
+        email:
+          type: string
+          example: johndoe@example.com
+          format: email
+
+        createdAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+    Profiles:
+      description: Profile Model
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        firstName:
+          type: string
+          example: John
+
+        lastName:
+          type: string
+          example: Doe
+
+        contact:
+          type: string
+          example: Nairobi, Kenya
+
+        gender:
+          type: string
+          example: male
+
+        bio:
+          type: string
+          example: I'm a baddass Senior Software Developer
+
+        profileImage:
+          type: string
+          example: https://loadsofimage
+          format: image
+
+        userId:
+          type: integer
+          example: 1
+
+        createdAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
