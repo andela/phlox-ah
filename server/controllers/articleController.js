@@ -1,8 +1,9 @@
 import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
+import getTagIds from '../helpers/tags/getTagIds';
 
-const { Article } = Model;
+const { Article, Tag } = Model;
 /**
   * @class ArticleController
   * @description CRUD operations on Article
@@ -17,9 +18,21 @@ export default class ArticleController {
   static createArticle(req, res) {
     const { title, body, description } = req.body;
     const imgUrl = (req.file ? req.file.secure_url : '');
-    Article.create({
-      title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl
-    }).then(article => res.status(201).json({ message: 'article created successfully', status: 'success', article }))
+    getTagIds(req, res).then((tagIds) => {
+      Article.create({
+        title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl
+      }).then((article) => {
+        article.setTags(tagIds).then(() => {
+          article.getTags({ attributes: ['id', 'name'] }).then((associatedTags) => {
+            res.status(201).json({
+              message: 'article created successfully', status: 'success', article, tags: associatedTags
+            });
+          });
+        })
+          .catch(() => res.status(404).json({ message: 'the tag does not exist', status: 'failed' }));
+      })
+        .catch(error => res.status(500).json(error));
+    })
       .catch(error => res.status(500).json(error));
   }
 
@@ -30,7 +43,12 @@ export default class ArticleController {
   * @returns {object} - status, message and list of articles
   */
   static getAllArticles(req, res) {
-    Article.findAll({ limit: 10 })
+    Article.findAll({
+      limit: 10,
+      include: [
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' }
+      ]
+    })
       .then(articles => res.status(200).json({ message: 'articles retrieved successfully', status: 'success', articles }))
       .catch(error => res.status(500).json(error));
   }
@@ -44,7 +62,10 @@ export default class ArticleController {
   static getUserArticles(req, res) {
     Article.findAll({
       where: { userId: req.user.id },
-      limit: 10
+      limit: 10,
+      include: [
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' }
+      ]
     }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', status: 'success', articles }))
       .catch(error => res.status(500).json(error));
   }
@@ -57,12 +78,17 @@ export default class ArticleController {
   */
   static getSingleArticle(req, res) {
     Article.findOne({
-      where: { slug: req.params.slug }
+      where: { slug: req.params.slug },
+      include: [
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' }
+      ]
     }).then((article) => {
       if (article === null) {
         res.status(404).json({ message: 'article does not exist', status: 'failed' });
       } else {
-        res.status(200).json({ message: 'article retrieved successfully', status: 'success', article });
+        res.status(200).json({
+          message: 'article retrieved successfully', status: 'success', article,
+        });
       }
     })
       .catch(error => res.status(500).json(error));
@@ -77,15 +103,27 @@ export default class ArticleController {
   static updateArticle(req, res) {
     const imgUrl = (req.file ? req.file.secure_url : '');
     req.body.imgUrl = imgUrl;
-    Article.update(req.body, {
-      where: { slug: req.params.slug, userId: req.user.id },
-      returning: true,
-    }).then((article) => {
-      if (article[0] === 0) {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
-      } else {
-        res.status(200).json({ message: 'article updated successfully', status: 'success', article });
-      }
+    getTagIds(req, res).then((tagIds) => {
+      Article.findOne({
+        where: { slug: req.params.slug, userId: req.user.id },
+      }).then((article) => {
+        if (article === null) {
+          res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        } else {
+          article.update(req.body)
+            .then((updatedArticle) => {
+              article.setTags(tagIds).then(() => {
+                article.getTags({ attributes: ['id', 'name'] }).then((associatedTags) => {
+                  res.status(200).json({
+                    message: 'article updated successfully', status: 'success', article: updatedArticle, tags: associatedTags
+                  });
+                });
+              })
+                .catch(() => res.status(404).json({ message: 'the tag does not exist', status: 'failed' }));
+            })
+            .catch(error => res.status(500).json(error));
+        }
+      });
     })
       .catch(error => res.status(500).json(error));
   }
@@ -97,15 +135,20 @@ export default class ArticleController {
   * @returns {object} - status, message and articles details
   */
   static deleteArticle(req, res) {
-    Article.destroy({
-      where: { slug: req.params.slug, userId: req.user.id }
+    Article.findOne({
+      where: { slug: req.params.slug, userId: req.user.id },
     }).then((article) => {
-      if (article === 0) {
+      if (article === null) {
         res.status(404).json({ message: 'article does not exist', status: 'failed' });
       } else {
-        res.status(204).end();
+        article.setTags([]).then(() => {
+          article.destroy()
+            .then(() => {
+              res.status(204).end();
+            })
+            .catch(error => res.status(500).json(error));
+        });
       }
-    })
-      .catch(error => res.status(500).json(error));
+    });
   }
 }

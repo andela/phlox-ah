@@ -12,21 +12,14 @@ const user = {
   password: 'password'
 };
 
-const article = {
+const validArticle = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentences()
+  description: 'This is the description',
+  tags: []
 };
 
-const validArticleTag = {};
-
-const tag = { name: 'sports', };
-
 let token = '';
-// eslint-disable-next-line
-let createdArt = '';
-// eslint-disable-next-line
-let createdTag = '';
 
 describe('ArticleTags', () => {
   before((done) => {
@@ -38,28 +31,18 @@ describe('ArticleTags', () => {
         chai.request(app)
           .post('/api/v1/articles')
           .set('x-access-token', token)
-          .send(article)
-          .end((error, response) => {
-            createdArt = response.body.article;
-            validArticleTag.articleId = response.body.article.id;
-            chai.request(app)
-              .post('/api/v1/tags')
-              .set('x-access-token', token)
-              .send(tag)
-              .end((er, re) => {
-                createdTag = re.body.tag;
-                validArticleTag.tagId = re.body.tag.id;
-                done();
-              });
+          .send(validArticle)
+          .end(() => {
+            done();
           });
       });
   });
 
   it('Should create an article tag', (done) => {
     chai.request(app)
-      .post('/api/v1/articletags')
+      .post('/api/v1/articles')
       .set('x-access-token', token)
-      .send(validArticleTag)
+      .send(validArticle)
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');

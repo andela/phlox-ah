@@ -9,11 +9,23 @@ module.exports = {
     },
     articleId: {
       allowNull: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Articles',
+        key: 'id',
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
     },
     tagId: {
       allowNull: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Tags',
+        key: 'id',
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
     },
     createdAt: {
       allowNull: false,

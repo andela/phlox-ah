@@ -17,7 +17,8 @@ const user = {
 const article = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentences()
+  description: faker.lorem.sentences(),
+  tags: []
 };
 
 describe('Rates', () => {

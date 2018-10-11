@@ -1,7 +1,8 @@
 import Joi from 'joi';
+import joiValidations from '../helpers/validations/joiValidations';
 /**
   * @class TagValidationsController
-  * @description Validate User Input
+  * @description This validates tags sent along with an article
   */
 class TagValidations {
   /**
@@ -15,22 +16,14 @@ class TagValidations {
    * @returns {object} - status Message if validation fails or proceeds to next()
    */
   static validateTag(req, res, next) {
-    if (req.body.name) {
-      const { name } = req.body;
+    if (req.body.tags) {
+      const { tags } = req.body;
       const joiSchema = {
-        name: Joi.string().min(2).required()
+        tags: Joi.array()
       };
       // this tells Joi to check for all errors in user input before giving out a response
       const joiOptions = { abortEarly: false };
-      Joi.validate({ name, }, joiSchema, joiOptions, (err) => {
-        if (err) {
-          // this regex replaces the string (\") that is returned with the json response
-          const getErrorMessages = error => error.message.replace(/"/g, '');
-          res.status(422).json({ message: err.details.map(getErrorMessages), status: 'failed', });
-        } else if (!err) {
-          return next();
-        }
-      });
+      joiValidations({ tags }, joiSchema, joiOptions, res, next);
     } else {
       res.status(400).json({ message: 'Bad Request', status: 'failed', });
     }

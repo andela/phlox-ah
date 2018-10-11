@@ -12,7 +12,7 @@ const user = {
   password: 'password'
 };
 
-const tag = { name: 'sports', };
+const tags = ['tech-sports', 'recent-sports'];
 
 let token = '';
 
@@ -31,10 +31,11 @@ describe('Tags', () => {
     chai.request(app)
       .post('/api/v1/tags')
       .set('x-access-token', token)
-      .send(tag)
+      .send({ tags })
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('Tags created successfully');
         done();
       });
   });
@@ -47,6 +48,7 @@ describe('Tags', () => {
       .end((err, res) => {
         expect(res.status).to.equal(400);
         expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('Bad Request');
         done();
       });
   });
@@ -55,23 +57,61 @@ describe('Tags', () => {
     chai.request(app)
       .post('/api/v1/tags')
       .set('x-access-token', '123abc')
-      .send(tag)
+      .send(tags)
       .end((err, res) => {
         expect(res.status).to.equal(403);
         expect(res.body).to.be.an('object');
+        expect(res.body.message.name).to.be.equal('JsonWebTokenError');
         done();
       });
   });
 
   it('should not create tag without any token', (done) => {
     chai.request(app)
-      .put('/api/v1/tags')
-      .send(tag)
+      .post('/api/v1/tags')
+      .send(tags)
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(403);
         expect(res.body.success).to.equals(false);
         expect(res.body.message).to.equals('Missing Token');
+        done();
+      });
+  });
+
+  it('should get all tags', (done) => {
+    chai.request(app)
+      .get('/api/v1/tags')
+      .set('x-access-token', token)
+      .send()
+      .end((err, res) => {
+        expect(res.body).to.be.an('object');
+        expect(res).to.have.status(200);
+        expect(res.body.message).to.equals('Tags retrieved successfully');
+        done();
+      });
+  });
+
+  it('should get one tag', (done) => {
+    chai.request(app)
+      .get(`/api/v1/tags/${tags[0]}`)
+      .set('x-access-token', token)
+      .send(tags)
+      .end((err, res) => {
+        expect(res.body).to.be.an('object');
+        expect(res).to.have.status(200);
+        expect(res.body.message).to.equals('Tag retrieved successfully');
+        done();
+      });
+  });
+
+  it('Should delete a tag', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/tags/${tags[0]}`)
+      .set('x-access-token', token)
+      .send()
+      .end((err, res) => {
+        expect(res.status).to.equal(204);
         done();
       });
   });

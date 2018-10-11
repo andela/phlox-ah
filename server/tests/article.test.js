@@ -17,22 +17,26 @@ const user = {
 const article = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentences()
+  description: 'This is the description',
+  tags: []
 };
 
 const noTitle = {
   body: faker.random.words(),
-  description: faker.random.words()
+  description: faker.random.words(),
+  tags: []
 };
 
 const noBody = {
   title: faker.random.words(),
-  description: faker.random.words()
+  description: faker.random.words(),
+  tags: []
 };
 
 const noDescription = {
   title: faker.random.words(),
-  body: faker.random.words()
+  body: faker.random.words(),
+  tags: []
 };
 
 let token = '';

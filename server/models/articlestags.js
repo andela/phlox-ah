@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
-  const ArticlesTag = sequelize.define('ArticlesTag', {
+  const ArticlesTags = sequelize.define('ArticlesTags', {
     articleId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -20,15 +20,15 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
   }, {});
-  ArticlesTag.associate = (models) => {
-    ArticlesTag.belongsTo(models.Tag, {
+  ArticlesTags.associate = (models) => {
+    ArticlesTags.belongsTo(models.Tag, {
       foreignKey: 'tagId',
       onDelete: 'CASCADE'
     });
-    ArticlesTag.belongsTo(models.Article, {
+    ArticlesTags.belongsTo(models.Article, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });
   };
-  return ArticlesTag;
+  return ArticlesTags;
 };

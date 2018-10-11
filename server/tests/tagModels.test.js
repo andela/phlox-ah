@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import db from '../models';
 
-const validTag = { name: 'sports' };
+const validTag = { name: 'new-sports' };
 const invalidTag = { title: 'sports' };
-let tag = '';
+let tag;
 let nameError = '';
 
 describe('Tag model validations', () => {

@@ -6,7 +6,7 @@ import db from '../models';
 const validArticle = {
   title: faker.random.word(),
   body: faker.random.words(),
-  description: faker.random.words(),
+  description: 'This is the description',
   slug: faker.random.word()
 };
 
@@ -17,7 +17,7 @@ const noTitle = {
 
 const noBody = {
   title: faker.random.words(),
-  description: faker.random.words(),
+  description: 'This is the description',
   slug: faker.random.word()
 };
 
