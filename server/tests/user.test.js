@@ -349,4 +349,117 @@ describe('Users', () => {
         });
     });
   });
+
+  describe('User follow/unfollow', () => {
+    it('should return success message and follow a user', (done) => {
+      chai.request(app)
+        .post(`/api/v1/profiles/${testUser.username}/follow`)
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.eql(`You are now following ${testUser.username}`);
+          done();
+        });
+    });
+
+    it('should return error message if user is not found', (done) => {
+      chai.request(app)
+        .post('/api/v1/profiles/unknown/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.eql('User not found');
+          done();
+        });
+    });
+
+    it('should return error message if user tries to follow himself', (done) => {
+      chai.request(app)
+        .post('/api/v1/profiles/testuser/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(403);
+          expect(res.body.message).to.eql('You cannot follow yourself');
+          done();
+        });
+    });
+
+    it('should return error message if user already follows user', (done) => {
+      chai.request(app)
+        .post(`/api/v1/profiles/${testUser.username}/follow`)
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eql(`You already follow ${testUser.username}`);
+          done();
+        });
+    });
+
+    it('should return error message if user is not found', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/unknown/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.eql('User not found');
+          done();
+        });
+    });
+
+    it('should return error message if user tries to unfollow himself', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/testuser/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(403);
+          expect(res.body.message).to.eql('You cannot unfollow yourself');
+          done();
+        });
+    });
+
+    it('should return error message if user doesnt follow user', (done) => {
+      chai.request(app)
+        .delete('/api/v1/profiles/dimeji/follow')
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eql('You are not following dimeji');
+          done();
+        });
+    });
+
+    it('should return success message and unfollow a user', (done) => {
+      chai.request(app)
+        .delete(`/api/v1/profiles/${testUser.username}/follow`)
+        .set('x-access-token', token)
+        .send()
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.eql(`You are no longer following ${testUser.username}`);
+          done();
+        });
+    });
+  });
+
+  describe('User Followers/Following', () => {
+    it('should return a list of users following and followers', (done) => {
+      chai.request(app)
+        .get('/api/v1/followings')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.message).to.eql('Follows/Followers');
+          expect(res.body.following).to.be.an('array');
+          expect(res.body.followers).to.be.an('array');
+          done();
+        });
+    });
+  });
 });

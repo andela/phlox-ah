@@ -5,8 +5,8 @@ import Model from '../models';
 import Authenticator from '../middlewares/authenticator';
 import emailMessages from '../helpers/emailMessages';
 import sendMail from '../helpers/mail';
-
-const { User } = Model;
+/* eslint-disable no-unused-vars */
+const { User, Followings } = Model;
 const { generateToken } = Authenticator;
 const {
   verificationMessageHtml, verificationMessageText, resetPassMessageHtml, resetPassMessageText
@@ -159,9 +159,9 @@ export default class UserController {
           return res.status(404)
             .send({ success: false, message: 'Invalid Email/Username or password' });
         }
-        const { id, username } = user;
+        const { id, email, username } = user.dataValues;
         if (bcrypt.compareSync(req.body.password, user.password)) {
-          const token = generateToken({ id, username });
+          const token = generateToken({ id, email, username });
           res.json({
             success: true, message: 'Successfully logged in!', user, token
           });
@@ -172,6 +172,97 @@ export default class UserController {
       .catch(() => {
         res.status(400)
           .send({ success: false, message: 'Invalid username/email or password' });
+      });
+  }
+
+  /**
+   * @description -Method to follow a user
+   * @param {object} req - The request payload sent to the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - message and successfully follows a user
+   */
+  static followUser(req, res) {
+    const { user } = req;
+
+    User.findOne({ where: { username: req.params.username } })
+      .then((foundUser) => {
+        if (!foundUser) {
+          return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        const { id, username } = foundUser;
+
+        if (user.username === username) {
+          return res.status(403).json({ success: false, message: 'You cannot follow yourself' });
+        }
+
+        Followings.findOrCreate({
+          where: {
+            follower: id,
+            followed: user.id
+          }
+        })
+          .spread((following, created) => {
+            if (!created) {
+              return res.status(400).json({ success: false, message: `You already follow ${username}` });
+            }
+            return res.status(200).json({ success: true, message: `You are now following ${username}` });
+          });
+      });
+  }
+
+  /**
+   * @description -Method to unfollow a user
+   * @param {object} req - The request payload sent to the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - message and successfully follows a user
+   */
+  static unfollowUser(req, res) {
+    const { user } = req;
+
+    User.findOne({ where: { username: req.params.username } })
+      .then((foundUser) => {
+        if (!foundUser) {
+          res.status(404).json({ success: false, message: 'User not found' });
+        }
+        const { id, username } = foundUser;
+
+        if (user.username === username) {
+          return res.status(403).json({ success: false, message: 'You cannot unfollow yourself' });
+        }
+        Followings.findOne({
+          where: {
+            follower: id,
+            followed: user.id
+          }
+        })
+          .then((following) => {
+            if (!following) {
+              return res.status(400).json({ success: false, message: `You are not following ${foundUser.username}` });
+            }
+            following.destroy()
+              .then(() => res.status(200).json({ success: true, message: `You are no longer following ${foundUser.username}` }));
+          });
+      });
+  }
+
+  /**
+   * @description -Method to show user followers
+   * @param {object} req - The request payload sent to the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - json data
+   */
+  static followList(req, res) {
+    User
+      .findOne({ where: { id: req.user.id }, include: ['followed', 'follower'] })
+      .then((user) => {
+        const { followed, follower } = user;
+
+        return res.status(200).json({
+          success: true,
+          message: 'Follows/Followers',
+          following: followed,
+          followers: follower
+        });
       });
   }
 }

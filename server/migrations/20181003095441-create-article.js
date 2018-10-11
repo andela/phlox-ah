@@ -4,7 +4,6 @@ module.exports = {
     id: {
       allowNull: false,
       autoIncrement: true,
-      primaryKey: true,
       type: Sequelize.INTEGER
     },
     title: {
@@ -17,6 +16,8 @@ module.exports = {
     },
     slug: {
       allowNull: false,
+      unique: true,
+      primaryKey: true,
       type: Sequelize.STRING
     },
     description: {

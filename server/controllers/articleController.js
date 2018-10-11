@@ -3,7 +3,7 @@ import uuid from 'uuid-random';
 import Model from '../models';
 import readingTime from '../helpers/readTime';
 
-const { Article } = Model;
+const { Article, Like } = Model;
 /**
   * @class ArticleController
   * @description CRUD operations on Article
@@ -21,7 +21,7 @@ export default class ArticleController {
     const imgUrl = (req.file ? req.file.secure_url : '');
     Article.create({
       title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl, readTime
-    }).then(article => res.status(201).json({ message: 'article created successfully', status: 'success', article }))
+    }).then(article => res.status(201).json({ message: 'article created successfully', success: true, article }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -32,8 +32,14 @@ export default class ArticleController {
   * @returns {object} - status, message and list of articles
   */
   static getAllArticles(req, res) {
-    Article.findAll({ limit: 10 })
-      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', status: 'success', articles }))
+    Article.findAll({
+      limit: 10,
+      include: [{
+        model: Like,
+        as: 'likes'
+      }]
+    })
+      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -46,8 +52,12 @@ export default class ArticleController {
   static getUserArticles(req, res) {
     Article.findAll({
       where: { userId: req.user.id },
-      limit: 10
-    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', status: 'success', articles }))
+      limit: 10,
+      include: [{
+        model: Like,
+        as: 'likes'
+      }]
+    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -59,12 +69,16 @@ export default class ArticleController {
   */
   static getSingleArticle(req, res) {
     Article.findOne({
-      where: { slug: req.params.slug }
+      where: { slug: req.params.slug },
+      include: [{
+        model: Like,
+        as: 'likes'
+      }]
     }).then((article) => {
       if (article === null) {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'article does not exist', success: false });
       } else {
-        res.status(200).json({ message: 'article retrieved successfully', status: 'success', article });
+        res.status(200).json({ message: 'article retrieved successfully', success: true, article });
       }
     })
       .catch(error => res.status(500).json(error));
@@ -77,9 +91,10 @@ export default class ArticleController {
   * @returns {object} - status, message and articles details
   */
   static updateArticle(req, res) {
-    const imgUrl = (req.file ? req.file.secure_url : '');
     // calculate the time it will take to read the updated article
-    const readTime = readingTime(req.body.body);
+    const readTime = readingTime(req.body.body ? req.body.body : '');
+    const imgUrl = (req.file ? req.file.secure_url : '');
+
     req.body.imgUrl = imgUrl;
     req.body.readTime = readTime;
     Article.update(req.body, {
@@ -87,9 +102,9 @@ export default class ArticleController {
       returning: true,
     }).then((article) => {
       if (article[0] === 0) {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'article does not exist', success: false });
       } else {
-        res.status(200).json({ message: 'article updated successfully', status: 'success', article });
+        res.status(200).json({ message: 'article updated successfully', success: true, article });
       }
     })
       .catch(error => res.status(500).json(error));
@@ -106,7 +121,7 @@ export default class ArticleController {
       where: { slug: req.params.slug, userId: req.user.id }
     }).then((article) => {
       if (article === 0) {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'article does not exist', success: 'false' });
       } else {
         res.status(204).end();
       }

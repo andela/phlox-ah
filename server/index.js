@@ -12,6 +12,8 @@ import logger from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import indexRouter from './routes/index';
+import facebookStrategy from './config/facebookStrategy';
+import googleStrategy from './config/googleStrategy';
 
 const swaggerDocument = YAML.load(`${process.cwd()}/swagger.yaml`);
 
@@ -27,9 +29,13 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use(require("method-override")());
 app.use(express.static(path.resolve('./public')));
 
+passport.use(facebookStrategy);
+passport.use(googleStrategy);
+
+// Initialize Passport
+app.use(passport.initialize());
 
 if (!isProduction) {
   app.use(errorhandler());

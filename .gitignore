@@ -11,4 +11,3 @@ yarn-error.log
 build
 .nyc_output/
 .coveralls.yml
-server/seeders/
