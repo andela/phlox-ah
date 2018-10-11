@@ -5,6 +5,7 @@ import upload from '../../helpers/cloudinary';
 import ArticleValidations from '../../middlewares/articleValidations';
 import RateValidations from '../../middlewares/rateValidations';
 import Authenticator from '../../middlewares/authenticator';
+import LikeController from '../../controllers/likeController';
 
 const { checkToken } = Authenticator;
 
@@ -17,5 +18,6 @@ router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
 router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, RateController.rateArticle);
+router.post('/articles/:slug/:likeType', checkToken, LikeController.likeArticle);
 
 export default router;

@@ -15,7 +15,7 @@ const verifyUser = {
 };
 
 const testUser = {
-  username: 'JohnDoe',
+  username: faker.internet.userName(),
   email: 'john.doe@gmail.com',
   password: 'password',
   resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bd',
@@ -353,12 +353,12 @@ describe('Users', () => {
   describe('User follow/unfollow', () => {
     it('should return success message and follow a user', (done) => {
       chai.request(app)
-        .post('/api/v1/profiles/JohnDoe/follow')
+        .post(`/api/v1/profiles/${testUser.username}/follow`)
         .set('x-access-token', token)
         .send()
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.message).to.eql('You are now following JohnDoe');
+          expect(res.body.message).to.eql(`You are now following ${testUser.username}`);
           done();
         });
     });
@@ -389,12 +389,12 @@ describe('Users', () => {
 
     it('should return error message if user already follows user', (done) => {
       chai.request(app)
-        .post('/api/v1/profiles/JohnDoe/follow')
+        .post(`/api/v1/profiles/${testUser.username}/follow`)
         .set('x-access-token', token)
         .send()
         .end((err, res) => {
           expect(res).to.have.status(400);
-          expect(res.body.message).to.eql('You already follow JohnDoe');
+          expect(res.body.message).to.eql(`You already follow ${testUser.username}`);
           done();
         });
     });
@@ -437,12 +437,12 @@ describe('Users', () => {
 
     it('should return success message and unfollow a user', (done) => {
       chai.request(app)
-        .delete('/api/v1/profiles/JohnDoe/follow')
+        .delete(`/api/v1/profiles/${testUser.username}/follow`)
         .set('x-access-token', token)
         .send()
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.message).to.eql('You are no longer following JohnDoe');
+          expect(res.body.message).to.eql(`You are no longer following ${testUser.username}`);
           done();
         });
     });

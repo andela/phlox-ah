@@ -32,6 +32,11 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
 
+    Article.hasMany(models.Like, {
+      foreignKey: 'articleSlug',
+      sourceKey: 'slug',
+      as: 'likes'
+    });
     Article.hasMany(models.Rate, {
       foreignKey: 'articleId',
       as: 'rates'
