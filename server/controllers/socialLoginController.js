@@ -16,14 +16,14 @@ class SocialLoginController {
    * @param {function} done
    * @returns {object} createOrFindUser
    */
-  static modelQuery(user, done) {
+  static findOrCreateUser(user, done) {
     User.findOrCreate({
       where: { email: user.email },
       // users signing up via socialmedia should be verified  authomatically
       // given a random password since password cannot be null
       defaults: { isVerified: true, username: user.email, password: '5kb3455uf884545i44i' },
-    }).spread((foundOrCreated, created) => {
-      const { id, email, username } = foundOrCreated.dataValues;
+    }).spread((foundOrCreatedUser, created) => {
+      const { id, email, username } = foundOrCreatedUser.dataValues;
       done(null, { email, id, username, created, });
     });
   }
@@ -35,7 +35,7 @@ class SocialLoginController {
     * @param {object} res
     * @returns {json} json
   */
-  static response(req, res) {
+  static respondWithToken(req, res) {
     const user = { id: req.user.id, email: req.user.email, username: req.user.username };
     const token = generateToken(user);
     // if a new user was created
@@ -55,7 +55,7 @@ class SocialLoginController {
    */
   static passportCallback(accessToken, refreshToken, profile, done) {
     const userProfile = { email: profile.emails[0].value, };
-    SocialLoginController.modelQuery(userProfile, done);
+    SocialLoginController.findOrCreateUser(userProfile, done);
   }
 }
 export default SocialLoginController;

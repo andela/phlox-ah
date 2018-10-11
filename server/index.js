@@ -25,7 +25,6 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use(require("method-override")());
 app.use(express.static(path.resolve('./public')));
 
 passport.use(facebookStrategy);
