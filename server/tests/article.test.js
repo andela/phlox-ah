@@ -15,24 +15,24 @@ const user = {
 };
 
 const article = {
-  title: 'How to use the faker package',
-  body: 'faker.js contains a super useful generator method Faker.fake for combining faker API methods using a mustache string format.',
-  description: 'Fake package is an handy package when it comes to generation random data.'
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence()
 };
 
 const noTitle = {
-  body: faker.random.words(),
-  description: faker.random.words()
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence()
 };
 
 const noBody = {
-  title: faker.random.words(),
-  description: faker.random.words()
+  title: faker.lorem.sentence(),
+  description: faker.lorem.sentence()
 };
 
 const noDescription = {
-  title: faker.random.words(),
-  body: faker.random.words()
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph()
 };
 
 let token = '';
