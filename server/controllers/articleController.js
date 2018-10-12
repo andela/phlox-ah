@@ -1,6 +1,7 @@
 import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
+import readingTime from '../helpers/readTime';
 
 const {
   Article, ArticleComment, User, Like
@@ -18,10 +19,11 @@ export default class ArticleController {
   */
   static createArticle(req, res) {
     const { title, body, description } = req.body;
+    const readTime = readingTime(body); // calculate the time it will take to read the article
     const imgUrl = (req.file ? req.file.secure_url : '');
     Article.create({
-      title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl
-    }).then(article => res.status(201).json({ message: 'article created successfully', success: 'true', article }))
+      title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl, readTime
+    }).then(article => res.status(201).json({ message: 'article created successfully', success: true, article }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -39,7 +41,7 @@ export default class ArticleController {
         as: 'likes'
       }]
     })
-      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: 'true', articles }))
+      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -57,7 +59,7 @@ export default class ArticleController {
         model: Like,
         as: 'likes'
       }]
-    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: 'true', articles }))
+    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -81,9 +83,9 @@ export default class ArticleController {
       }]
     }).then((article) => {
       if (article === null) {
-        res.status(404).json({ message: 'article does not exist', success: 'false' });
+        res.status(404).json({ message: 'article does not exist', success: false });
       } else {
-        res.status(200).json({ message: 'article retrieved successfully', success: 'true', article });
+        res.status(200).json({ message: 'article retrieved successfully', success: true, article });
       }
     })
       .catch(error => res.status(500).json(error));
@@ -96,16 +98,20 @@ export default class ArticleController {
   * @returns {object} - status, message and articles details
   */
   static updateArticle(req, res) {
+    // calculate the time it will take to read the updated article
+    const readTime = readingTime(req.body.body ? req.body.body : '');
     const imgUrl = (req.file ? req.file.secure_url : '');
+
     req.body.imgUrl = imgUrl;
+    req.body.readTime = readTime;
     Article.update(req.body, {
       where: { slug: req.params.slug, userId: req.user.id },
       returning: true,
     }).then((article) => {
       if (article[0] === 0) {
-        res.status(404).json({ message: 'article does not exist', success: 'false' });
+        res.status(404).json({ message: 'article does not exist', success: false });
       } else {
-        res.status(200).json({ message: 'article updated successfully', success: 'true', article });
+        res.status(200).json({ message: 'article updated successfully', success: true, article });
       }
     })
       .catch(error => res.status(500).json(error));

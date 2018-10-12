@@ -21,6 +21,10 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     },
+    readTime: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
     ratingAverage: {
       allowNull: true,
       type: DataTypes.FLOAT
