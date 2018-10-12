@@ -8,6 +8,7 @@
   },
   "scripts": {
     "babel-node": "babel-node --presets=env",
+    "babel-watch": "babel-watch server/index.js",
     "migrate-undo": "sequelize db:migrate:undo:all",
     "migrate": "sequelize db:migrate",
     "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
@@ -17,7 +18,7 @@
     "model-create": "sequelize model:create --name Followings --attributes follower:integer,followedBy:integer",
     "start": "npm run migrate && node build/index.js",
     "postinstall": "babel server -d build",
-    "eslint": "eslint . --ignore-path .gitignore",
+    "eslint": "eslint . --fix --ignore-path .gitignore",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "watch": "npm-watch"
   },
@@ -64,6 +65,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "babel-watch": "^2.0.7",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "coveralls": "^3.0.2",

@@ -26,12 +26,18 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.FLOAT
     }
   }, {});
+
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
+      targetKey: 'id',
       onDelete: 'CASCADE'
     });
-
+    Article.hasMany(models.ArticleComment, {
+      foreignKey: 'articleSlug',
+      sourceKey: 'slug',
+      onDelete: 'CASCADE',
+    });
     Article.hasMany(models.Like, {
       foreignKey: 'articleSlug',
       sourceKey: 'slug',

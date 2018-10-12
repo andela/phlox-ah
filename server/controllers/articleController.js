@@ -2,7 +2,9 @@ import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
 
-const { Article, Like } = Model;
+const {
+  Article, ArticleComment, User, Like
+} = Model;
 /**
   * @class ArticleController
   * @description CRUD operations on Article
@@ -69,6 +71,11 @@ export default class ArticleController {
     Article.findOne({
       where: { slug: req.params.slug },
       include: [{
+        model: ArticleComment,
+        include: [{
+          model: User, attributes: ['username', 'email'],
+        }],
+      }, {
         model: Like,
         as: 'likes'
       }]
