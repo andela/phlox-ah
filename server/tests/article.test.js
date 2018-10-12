@@ -22,20 +22,20 @@ const article = {
 };
 
 const noTitle = {
-  body: faker.random.words(),
-  description: faker.random.words(),
+  body: faker.lorem.paragraph(),
+  description: faker.lorem.sentence(),
   tags: []
 };
 
 const noBody = {
-  title: faker.random.words(),
-  description: faker.random.words(),
+  title: faker.lorem.sentence(),
+  description: faker.lorem.sentence(),
   tags: []
 };
 
 const noDescription = {
-  title: faker.random.words(),
-  body: faker.random.words(),
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
   tags: []
 };
 
@@ -108,6 +108,7 @@ describe('Articles', () => {
       .set('x-access-token', token)
       .send(article)
       .end((err, res) => {
+        console.log(res);
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();

@@ -18,7 +18,7 @@ export default class TagController {
       Tag.findOne({
         where: { name: element },
       }).then((tag) => {
-        if (tag) {
+        if (!tag) {
           Tag.create({ name: element });
         }
       });
@@ -65,7 +65,7 @@ export default class TagController {
     Tag.findOne({
       where: { name: req.params.name },
     }).then((tag) => {
-      if (tag) {
+      if (!tag) {
         res.status(404).json({ message: 'tag does not exist', success: false });
       } else {
         tag.destroy()

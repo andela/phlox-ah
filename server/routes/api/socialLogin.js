@@ -18,6 +18,13 @@ router.get(
   passport.authenticate('google', { session: false }), SocialLoginController.respondWithToken
 );
 
+router.get('/login/twitter', passport.authenticate('twitter', { scope: ['include_email=true', 'include_entities=false'] }));
+
+router.get(
+  '/login/twitter/return',
+  passport.authenticate('twitter', { session: false }), SocialLoginController.respondWithToken
+);
+
 // I added this route to test the response method in the SocialLoginController
 router.post('/login/response', (req, res, next) => {
   req.user = req.body;

@@ -3,14 +3,16 @@ import user from './user';
 import article from './article';
 import profile from './profile';
 import tag from './tag';
+import comment from './comment';
 import socialLogin from './socialLogin';
 
 const router = express.Router();
 
-router.use('/', user);
+router.use('/', comment);
 router.use('/', article);
 router.use('/', profile);
 router.use('/', tag);
+router.use('/', user);
 router.use('/', socialLogin);
 
 router.use((err, req, res, next) => {

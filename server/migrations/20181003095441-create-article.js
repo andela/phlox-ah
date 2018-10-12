@@ -5,6 +5,7 @@ module.exports = {
       allowNull: false,
       unique: true,
       autoIncrement: true,
+      primaryKey: true,
       type: Sequelize.INTEGER
     },
     title: {
@@ -17,8 +18,8 @@ module.exports = {
     },
     slug: {
       allowNull: false,
-      unique: true,
       primaryKey: true,
+      unique: true,
       type: Sequelize.STRING
     },
     description: {
@@ -28,6 +29,10 @@ module.exports = {
     imgUrl: {
       allowNull: true,
       type: Sequelize.STRING
+    },
+    readTime: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
     },
     userId: {
       type: Sequelize.INTEGER,
