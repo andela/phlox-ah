@@ -15,9 +15,9 @@ const user = {
 };
 
 const article = {
-  title: faker.lorem.sentence(),
-  body: faker.lorem.paragraph(),
-  description: faker.lorem.sentences()
+  title: 'How to use the faker package',
+  body: 'faker.js contains a super useful generator method Faker.fake for combining faker API methods using a mustache string format.',
+  description: 'Fake package is an handy package when it comes to generation random data.'
 };
 
 const noTitle = {

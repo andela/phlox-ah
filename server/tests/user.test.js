@@ -462,4 +462,42 @@ describe('Users', () => {
         });
     });
   });
+
+  describe('List Users', () => {
+    it('should list all authors and their profile', (done) => {
+      chai.request(app)
+        .get('/api/v1/users')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.users[0]).to.have.property('Profiles');
+          expect(res.body.message).to.equal('users retrieved successfully');
+          done();
+        });
+    });
+
+    it('should get a user with profile details', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/johndoe')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.equal('user details retrieved successfully');
+          done();
+        });
+    });
+    it('should not get profile details of invalid', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/johndoesss')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.equal('user does not exist');
+          done();
+        });
+    });
+  });
 });
