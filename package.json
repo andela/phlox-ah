@@ -18,7 +18,7 @@
     "model-create": "sequelize model:create --name Followings --attributes follower:integer,followedBy:integer",
     "start": "npm run migrate && node build/index.js",
     "postinstall": "babel server -d build",
-    "eslint": "eslint . --ignore-path .gitignore server/seeders/*.js",
+    "eslint": "eslint . --ignore-path .gitignore",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "watch": "npm-watch"
   },

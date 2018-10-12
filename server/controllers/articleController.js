@@ -18,6 +18,7 @@ export default class ArticleController {
   static createArticle(req, res) {
     const { title, body, description } = req.body;
     const imgUrl = (req.file ? req.file.secure_url : '');
+    // this function gets the tag ids of the tags sent in the request
     getTagIds(req, res).then((tagIds) => {
       Article.create({
         title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl
@@ -104,6 +105,7 @@ export default class ArticleController {
   static updateArticle(req, res) {
     const imgUrl = (req.file ? req.file.secure_url : '');
     req.body.imgUrl = imgUrl;
+    // this function gets the tag ids of the tags sent in the request
     getTagIds(req, res).then((tagIds) => {
       Article.findOne({
         where: { slug: req.params.slug, userId: req.user.id },
