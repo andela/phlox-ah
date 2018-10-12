@@ -108,7 +108,6 @@ describe('Articles', () => {
       .set('x-access-token', token)
       .send(article)
       .end((err, res) => {
-        console.log(res);
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();
