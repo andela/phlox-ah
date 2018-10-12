@@ -120,7 +120,7 @@ describe('Users', () => {
   });
 
 
-  it('should be able to update profile by profile id', (done) => {
+  it('should be able to update profile by username', (done) => {
     chai.request(app)
       .put(`/api/v1/profile/${user.username}`)
       .set('x-access-token', token)
@@ -173,13 +173,13 @@ describe('Users', () => {
         expect(res.body.success).to.equals(true);
         expect(res.body.message).to.equals('Profile fetched successfully');
         expect(res.body).to.be.an('object');
-        expect(res.body.profile).to.be.an('object');
-        expect(res.body.profile).to.have.property('firstName');
-        expect(res.body.profile).to.have.property('lastName');
-        expect(res.body.profile).to.have.property('contact');
-        expect(res.body.profile).to.have.property('gender');
-        expect(res.body.profile).to.have.property('bio');
-        expect(res.body.profile).to.have.property('profileImage');
+        expect(res.body.profile.profile).to.be.an('object');
+        expect(res.body.profile.profile).to.have.property('firstName');
+        expect(res.body.profile.profile).to.have.property('lastName');
+        expect(res.body.profile.profile).to.have.property('contact');
+        expect(res.body.profile.profile).to.have.property('gender');
+        expect(res.body.profile.profile).to.have.property('bio');
+        expect(res.body.profile.profile).to.have.property('profileImage');
         done();
       });
   });
