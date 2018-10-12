@@ -87,7 +87,7 @@ export default class ArticleController {
         { model: Like, as: 'likes' }
       ]
     }).then((article) => {
-      if (article === null) {
+      if (article) {
         res.status(404).json({ message: 'article does not exist', success: false });
       } else {
         res.status(200).json({ message: 'article retrieved successfully', success: true, article });
@@ -110,7 +110,7 @@ export default class ArticleController {
       Article.findOne({
         where: { slug: req.params.slug, userId: req.user.id },
       }).then((article) => {
-        if (article === null) {
+        if (article) {
           res.status(404).json({ message: 'article does not exist', success: false });
         } else {
           article.update(req.body)
@@ -141,7 +141,7 @@ export default class ArticleController {
     Article.findOne({
       where: { slug: req.params.slug, userId: req.user.id },
     }).then((article) => {
-      if (article === null) {
+      if (article) {
         res.status(404).json({ message: 'article does not exist', success: false });
       } else {
         article.setTags([]).then(() => {

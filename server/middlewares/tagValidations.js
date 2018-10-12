@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import joiValidations from '../helpers/validations/joiValidations';
+import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
   * @class TagValidationsController
   * @description This validates tags sent along with an article
@@ -23,7 +23,7 @@ class TagValidations {
       };
       // this tells Joi to check for all errors in user input before giving out a response
       const joiOptions = { abortEarly: false };
-      joiValidations({ tags }, joiSchema, joiOptions, res, next);
+      checkJoiValidation({ tags }, joiSchema, joiOptions, res, next);
     } else {
       res.status(400).json({ message: 'Bad Request', status: 'failed', });
     }

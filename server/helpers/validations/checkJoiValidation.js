@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const joiValidations = (input, joiSchema, joiOptions, res, next) => {
+const checkJoiValidation = (input, joiSchema, joiOptions, res, next) => {
   Joi.validate(input, joiSchema, joiOptions, (err) => {
     if (err) {
       // this regex replaces the string (\") that is returned with the json response
@@ -12,4 +12,4 @@ const joiValidations = (input, joiSchema, joiOptions, res, next) => {
   });
 };
 
-export default joiValidations;
+export default checkJoiValidation;

@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import joiValidations from '../helpers/validations/joiValidations';
+import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
   * @class ArticleValidationsController
   * @description Validate User Input
@@ -27,7 +27,7 @@ class ArticleValidations {
     const {
       title, body, description, tags
     } = req.body;
-    joiValidations({
+    checkJoiValidation({
       title, body, description, tags
     }, joiSchema, joiOptions, res, next);
   }
@@ -54,7 +54,7 @@ class ArticleValidations {
     const {
       title, body, description, tags
     } = req.body;
-    joiValidations({
+    checkJoiValidation({
       title, body, description, tags
     }, joiSchema, joiOptions, res, next);
   }

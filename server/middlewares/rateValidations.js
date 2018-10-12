@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import joiValidations from '../helpers/validations/joiValidations';
+import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
  * @class RateValidationsController
   * @description Validate Ratings submitted by user
@@ -24,7 +24,7 @@ class RateValidations {
       };
       // this tells Joi to check for all errors in user input before giving out a response
       const joiOptions = { abortEarly: false };
-      joiValidations({ rating }, joiSchema, joiOptions, res, next);
+      checkJoiValidation({ rating }, joiSchema, joiOptions, res, next);
     } else {
       res.status(400).json({ message: 'Bad Request', status: 'failed', });
     }

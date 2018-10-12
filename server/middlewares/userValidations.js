@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import joiValidations from '../helpers/validations/joiValidations';
+import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
   * @class UserValidationsController
   * @description Validate User Input
@@ -34,7 +34,7 @@ class UserValidations {
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
     const { username, email, password } = req.body;
-    joiValidations({ email, username, password, }, joiSchema, joiOptions, res, next);
+    checkJoiValidation({ email, username, password, }, joiSchema, joiOptions, res, next);
   }
 
   /**
@@ -64,7 +64,7 @@ class UserValidations {
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
     const { emailOrUsername, password } = req.body;
-    joiValidations({ emailOrUsername, password, }, joiSchema, joiOptions, res, next);
+    checkJoiValidation({ emailOrUsername, password, }, joiSchema, joiOptions, res, next);
   }
 }
 
