@@ -2,10 +2,14 @@ import slug from 'slug';
 import uuid from 'uuid-random';
 import Model from '../models';
 import readingTime from '../helpers/readTime';
+import { computeOffset, computeTotalPages } from '../helpers/article';
 
 const {
   Article, ArticleComment, User, Like
 } = Model;
+
+const LIMIT = 15;
+
 /**
   * @class ArticleController
   * @description CRUD operations on Article
@@ -27,6 +31,7 @@ export default class ArticleController {
       .catch(error => res.status(500).json(error));
   }
 
+
   /**
   * @description -This method gets all articles
   * @param {object} req - The request payload sent from the router
@@ -34,41 +39,74 @@ export default class ArticleController {
   * @returns {object} - status, message and list of articles
   */
   static getAllArticles(req, res) {
-    Article.findAll({
-      limit: 10,
-      include: [{
-        model: Like,
-        as: 'likes'
-      }]
-    })
-      .then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
+
+    const page = computeOffset(req);
+
+    Article.findAll()
+      .then(data => {
+        return Article.findAll({
+          limit: LIMIT,
+          offset: LIMIT * (page - 1),
+          order: [
+            ['createdAt', 'DESC'],
+          ], 
+          include: [{
+            model: Like,
+            as: 'likes'
+          }]
+        })
+          .then(articles => ({
+              articles,
+              pages: computeTotalPages(data, LIMIT)
+          }))
+      })
+      .then(data => {
+        return res.status(200).json({ message: 'articles retrieved successfully', success: true, articles: data.articles, pages: data.pages })
+      })
       .catch(error => res.status(500).json(error));
   }
 
   /**
-  * @description -This method gets all articles  of the authenticated user
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and list of user's articles
-  */
+   * @description -This method gets all articles  of the authenticated user
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and list of user's articles
+   */
   static getUserArticles(req, res) {
-    Article.findAll({
-      where: { userId: req.user.id },
-      limit: 10,
-      include: [{
-        model: Like,
-        as: 'likes'
-      }]
-    }).then(articles => res.status(200).json({ message: 'articles retrieved successfully', success: true, articles }))
+
+    const page = computeOffset(req);
+
+    Article.findAll({where: { userId: req.user.id }})
+      .then(data => {
+        return Article.findAll({
+          where: { userId: req.user.id },
+          limit: LIMIT,
+          offset: LIMIT * (page - 1),
+          order: [
+            ['createdAt', 'DESC'],
+          ], 
+          include: [{
+            model: Like,
+            as: 'likes'
+          }]
+        })
+          .then(articles => ({
+            articles,
+            pages: computeTotalPages(data, LIMIT)
+          }))
+      })
+      .then(data => {
+        return res.status(200).json({ message: 'articles retrieved successfully', success: true, articles: data.articles, pages: data.pages })
+      })
       .catch(error => res.status(500).json(error));
   }
 
   /**
-  * @description -This method gets an article by the slug
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and list of articles
-  */
+   * @description -This method gets an article by the slug
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and list of articles
+   */
   static getSingleArticle(req, res) {
     Article.findOne({
       where: { slug: req.params.slug },
@@ -92,11 +130,11 @@ export default class ArticleController {
   }
 
   /**
-  * @description -This method gets updates an article
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and articles details
-  */
+   * @description -This method gets updates an article
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and articles details
+   */
   static updateArticle(req, res) {
     // calculate the time it will take to read the updated article
     const readTime = readingTime(req.body.body ? req.body.body : '');
@@ -118,11 +156,11 @@ export default class ArticleController {
   }
 
   /**
-  * @description -This method deletes an article
-  * @param {object} req - The request payload sent from the router
-  * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and articles details
-  */
+   * @description -This method deletes an article
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and articles details
+   */
   static deleteArticle(req, res) {
     Article.destroy({
       where: { slug: req.params.slug, userId: req.user.id }
