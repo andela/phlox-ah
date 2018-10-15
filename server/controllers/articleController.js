@@ -87,10 +87,6 @@ export default class ArticleController {
   static getSingleArticle(req, res) {
     Article.findOne({
       where: { slug: req.params.slug },
-      // include: [
-      //   { model: Tag, as: 'Tags', through: 'ArticlesTags' },
-      //   { model: Like, as: 'likes' }
-      // ]
       include: [
         {
           model: ArticleComment,
