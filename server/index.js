@@ -11,9 +11,11 @@ import errorhandler from 'errorhandler';
 import logger from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import session from 'express-session';
 import indexRouter from './routes/index';
 import facebookStrategy from './config/facebookStrategy';
 import googleStrategy from './config/googleStrategy';
+import twitterStrategy from './config/twitterStrategy';
 
 const swaggerDocument = YAML.load(`${process.cwd()}/swagger.yaml`);
 
@@ -31,8 +33,12 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.resolve('./public')));
 
+// twitter authentication requires session support
+app.use(session({ secret: process.env.SESSION_SECRET }));
+
 passport.use(facebookStrategy);
 passport.use(googleStrategy);
+passport.use(twitterStrategy);
 
 // Initialize Passport
 app.use(passport.initialize());
