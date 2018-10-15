@@ -159,7 +159,14 @@ export default class UserController {
           return res.status(404)
             .send({ success: false, message: 'Invalid Email/Username or password' });
         }
-        const { id, email, username } = user.dataValues;
+        const {
+          id, email, username, isVerified
+        } = user.dataValues;
+
+        if (!isVerified) {
+          return res.status(403).json({ success: false, message: 'Please verify your account' });
+        }
+
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const token = generateToken({ id, email, username });
           res.json({
