@@ -471,7 +471,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('object');
-          expect(res.body.users[0]).to.have.property('Profiles');
+          expect(res.body.users[0]).to.have.property('Profile');
           expect(res.body.message).to.equal('users retrieved successfully');
           done();
         });

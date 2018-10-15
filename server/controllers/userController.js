@@ -298,9 +298,9 @@ export default class UserController {
     })
       .then((user) => {
         if (user) {
-          res.status(200).json({ message: 'user details retrieved successfully', success: 'true', user });
+          return res.status(200).json({ message: 'user details retrieved successfully', success: 'true', user });
         }
-        res.status(404).json({ message: 'user does not exist', success: 'false' });
+        return res.status(404).json({ message: 'user does not exist', success: 'false' });
       })
       .catch(error => res.status(500).json(error));
   }

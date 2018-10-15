@@ -10,7 +10,6 @@ export default (sequelize, DataTypes) => {
     },
     username: {
       type: DataTypes.STRING,
-      primaryKey: true,
       unique: {
         msg: 'this username already exists'
       },
@@ -81,9 +80,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'likes'
     });
-    User.hasMany(models.Profile, {
-      foreignKey: 'username',
-      sourceKey: 'username'
+    User.hasOne(models.Profile, {
+      foreignKey: 'userId',
+      sourceKey: 'id'
     });
     User.belongsToMany(User, {
       as: 'follower',
