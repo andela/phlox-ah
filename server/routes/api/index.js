@@ -5,6 +5,7 @@ import profile from './profile';
 import tag from './tag';
 import comment from './comment';
 import socialLogin from './socialLogin';
+import bookmark from './bookmark';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use('/', profile);
 router.use('/', tag);
 router.use('/', user);
 router.use('/', socialLogin);
+router.use('/', bookmark);
 
 router.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {
