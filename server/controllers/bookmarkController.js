@@ -35,13 +35,16 @@ export default class BookmarkController {
       where: {
         articleId,
         userId: req.user.id
-      }
+      },
+      include: [
+        { model: Article }
+      ]
     })
       .spread((bookmark, created) => {
         if (!created) {
           return res.status(200).json({ success: false, message: 'You already bookmarked this article', bookmark });
         }
-        return res.status(200).json({ success: true, message: 'This article has been bookmarked', bookmark });
+        return res.status(201).json({ success: true, message: 'This article has been bookmarked', bookmark });
       });
   }
 

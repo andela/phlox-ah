@@ -1,4 +1,3 @@
-// import faker from 'faker';
 import { expect } from 'chai';
 import db from '../models';
 
