@@ -19,7 +19,7 @@ export default class LikeController {
     const dislike = req.params.likeType === 'dislike';
     // message to be sent to user depending on function performed
     const message = like || dislike ? `you ${req.params.likeType}d the article`
-      : 'you disliked the article';
+      : 'you unliked the article';
 
     Article.findOne({
       where: { slug: req.params.slug }
@@ -37,6 +37,10 @@ export default class LikeController {
         })
           .spread((reaction, created) => {
             if (created) {
+              reaction.like = like;
+              reaction.dislike = dislike;
+              reaction.save();
+            } else {
               reaction.like = like;
               reaction.dislike = dislike;
               reaction.save();
