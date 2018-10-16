@@ -197,8 +197,8 @@ export default class UserController {
 
         Followings.findOrCreate({
           where: {
-            follower: id,
-            followed: user.id
+            follower: user.id,
+            followed: id
           }
         })
           .spread((following, created) => {
@@ -231,8 +231,8 @@ export default class UserController {
         }
         Followings.findOne({
           where: {
-            follower: id,
-            followed: user.id
+            follower: user.id,
+            followed: id
           }
         })
           .then((following) => {
@@ -263,6 +263,21 @@ export default class UserController {
           following: followed,
           followers: follower
         });
+      });
+  }
+
+  /**
+ * @description -Method to show user followers
+ * @param {object} req - The request payload sent to the router
+ * @param {object} res - The response payload sent back from the controller
+ * @returns {object} - json data
+ */
+  static followers(req, res) {
+    Followings
+      .findAll({ where: { followed: req.user.id }, include: [{ model: User, attributes: ['id', 'email'], }] })
+      .then((result) => {
+        const followers = result.map(follower => follower.User);
+        res.status(200).json({ success: true, followers });
       });
   }
 }

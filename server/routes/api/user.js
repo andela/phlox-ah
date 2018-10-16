@@ -23,6 +23,7 @@ router.post('/profiles/:username/follow', checkToken, UserController.followUser)
 router.delete('/profiles/:username/follow', checkToken, UserController.unfollowUser);
 router.get('/followings', checkToken, UserController.followList);
 
+router.get('/followers', checkToken, UserController.followers);
 
 /* Test route */
 router.get('/test', checkToken, (req, res) => res.status(200).json('This is a protected route'));
