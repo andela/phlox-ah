@@ -6,7 +6,7 @@ import Authenticator from '../middlewares/authenticator';
 import emailMessages from '../helpers/emailMessages';
 import sendMail from '../helpers/mail';
 /* eslint-disable no-unused-vars */
-const { User, Followings } = Model;
+const { User, Followings, Profile } = Model;
 const { generateToken } = Authenticator;
 const {
   verificationMessageHtml, verificationMessageText, resetPassMessageHtml, resetPassMessageText
@@ -264,5 +264,44 @@ export default class UserController {
           followers: follower
         });
       });
+  }
+
+  /**
+  * @description -This method gets all users and their profiles
+  * @param {object} req - The request payload sent from the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status, message and list of articles
+  */
+  static getAllUsers(req, res) {
+    User.findAll({
+      limit: 10,
+      include: [{
+        model: Profile
+      }]
+    })
+      .then(users => res.status(200).json({ message: 'users retrieved successfully', success: 'true', users }))
+      .catch(error => res.status(500).json(error));
+  }
+
+  /**
+  * @description -This method gets a single user's profile
+  * @param {object} req - The request payload sent from the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status, message and list of articles
+  */
+  static getOneUser(req, res) {
+    User.findOne({
+      where: { username: req.params.username },
+      include: [{
+        model: Profile
+      }]
+    })
+      .then((user) => {
+        if (user) {
+          return res.status(200).json({ message: 'user details retrieved successfully', success: 'true', user });
+        }
+        return res.status(404).json({ message: 'user does not exist', success: 'false' });
+      })
+      .catch(error => res.status(500).json(error));
   }
 }

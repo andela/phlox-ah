@@ -22,6 +22,8 @@ router.get('/users/verify/:verifyToken', UserController.verifyUser);
 router.post('/profiles/:username/follow', checkToken, UserController.followUser);
 router.delete('/profiles/:username/follow', checkToken, UserController.unfollowUser);
 router.get('/followings', checkToken, UserController.followList);
+router.get('/users', checkToken, UserController.getAllUsers);
+router.get('/users/:username', checkToken, UserController.getOneUser);
 
 
 /* Test route */
