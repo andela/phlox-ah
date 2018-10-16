@@ -17,22 +17,26 @@ const user = {
 const article = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentence()
+  description: 'This is the description',
+  tags: []
 };
 
 const noTitle = {
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentence()
+  description: faker.lorem.sentence(),
+  tags: []
 };
 
 const noBody = {
   title: faker.lorem.sentence(),
-  description: faker.lorem.sentence()
+  description: faker.lorem.sentence(),
+  tags: []
 };
 
 const noDescription = {
   title: faker.lorem.sentence(),
-  body: faker.lorem.paragraph()
+  body: faker.lorem.paragraph(),
+  tags: []
 };
 
 let token = '';
@@ -88,12 +92,67 @@ describe('Articles', () => {
         done();
       });
   });
+  it('Should get all articles and the number of pages', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/feed?page=1')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('pages');
+        expect(res.body).to.have.property('articles');
+        done();
+      });
+  });
   it('Should get articles of logged in users', (done) => {
     chai.request(app)
       .get('/api/v1/articles')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should get articles of logged in users and the number of pages', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles?page=1')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('pages');
+        expect(res.body).to.have.property('articles');
+        done();
+      });
+  });
+  it('Should not get articles for a wrong page number', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles?page=abc')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('parent');
+        done();
+      });
+  });
+  it('Should not get articles for a wrong page number', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/feed?page=abc')
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('parent');
+        done();
+      });
+  });
+  it('Should not update an invalid article', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${slug}00`)
+      .set('x-access-token', token)
+      .send(article)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();
       });
@@ -105,16 +164,6 @@ describe('Articles', () => {
       .send(article)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body).to.be.an('object');
-        done();
-      });
-  });
-  it('Should not update an invalid article', (done) => {
-    chai.request(app)
-      .put(`/api/v1/articles/${slug}00`)
-      .set('x-access-token', token)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();
       });

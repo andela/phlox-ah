@@ -13,7 +13,6 @@ const user = {
   password: 'password'
 };
 
-
 describe('Rates', () => {
   before((done) => {
     chai.request(app)
