@@ -53,30 +53,27 @@ export default class ArticleController {
   * @returns {object} - status, message and list of articles
   */
   static getAllArticles(req, res) {
-
     const page = computeOffset(req);
 
     Article.findAll()
-      .then(data => {
-        return Article.findAll({
-          limit: LIMIT,
-          offset: LIMIT * (page - 1),
-          order: [
-            ['createdAt', 'DESC'],
-          ], 
-          include: [
-            { model: Tag, as: 'Tags', through: 'ArticlesTags' },
-            { model: Like, as: 'likes' }
-          ]
-        })
-          .then(articles => ({
-            articles,
-            pages: computeTotalPages(data, LIMIT)
-          }))
+      .then(data => Article.findAll({
+        limit: LIMIT,
+        offset: LIMIT * (page - 1),
+        order: [
+          ['createdAt', 'DESC'],
+        ],
+        include: [
+          { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+          { model: Like, as: 'likes' }
+        ]
       })
-      .then(data => {
-        return res.status(200).json({ message: 'articles retrieved successfully', success: true, articles: data.articles, pages: data.pages })
-      })
+        .then(articles => ({
+          articles,
+          pages: computeTotalPages(data, LIMIT)
+        })))
+      .then(data => res.status(200).json({
+        message: 'articles retrieved successfully', success: true, articles: data.articles, pages: data.pages
+      }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -87,31 +84,28 @@ export default class ArticleController {
    * @returns {object} - status, message and list of user's articles
    */
   static getUserArticles(req, res) {
-
     const page = computeOffset(req);
 
-    Article.findAll({where: { userId: req.user.id }})
-      .then(data => {
-        return Article.findAll({
-          where: { userId: req.user.id },
-          limit: LIMIT,
-          offset: LIMIT * (page - 1),
-          order: [
-            ['createdAt', 'DESC'],
-          ], 
-          include: [
-            { model: Tag, as: 'Tags', through: 'ArticlesTags' },
-            { model: Like, as: 'likes' }
-          ]
-        })
-          .then(articles => ({
-            articles,
-            pages: computeTotalPages(data, LIMIT)
-          }))
+    Article.findAll({ where: { userId: req.user.id } })
+      .then(data => Article.findAll({
+        where: { userId: req.user.id },
+        limit: LIMIT,
+        offset: LIMIT * (page - 1),
+        order: [
+          ['createdAt', 'DESC'],
+        ],
+        include: [
+          { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+          { model: Like, as: 'likes' }
+        ]
       })
-      .then(data => {
-        return res.status(200).json({ message: 'articles retrieved successfully', success: true, articles: data.articles, pages: data.pages })
-      })
+        .then(articles => ({
+          articles,
+          pages: computeTotalPages(data, LIMIT)
+        })))
+      .then(data => res.status(200).json({
+        message: 'articles retrieved successfully', success: true, articles: data.articles, pages: data.pages
+      }))
       .catch(error => res.status(500).json(error));
   }
 
