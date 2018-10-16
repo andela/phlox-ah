@@ -1,5 +1,3 @@
-
-
 module.exports = {
   up: queryInterface => queryInterface.bulkInsert('Users', [{
     username: 'johndoe',
@@ -7,7 +5,13 @@ module.exports = {
     password: 'secret123',
     createdAt: new Date(),
     updatedAt: new Date()
+  },
+  {
+    username: 'janedoe',
+    email: 'janedoe@something.com',
+    password: 'secret123',
+    createdAt: new Date(),
+    updatedAt: new Date()
   }], {}),
-
   down: queryInterface => queryInterface.bulkDelete('Users', null, {})
 };
