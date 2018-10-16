@@ -15,6 +15,7 @@ export default class BookmarkController {
   static showBookmarks(req, res) {
     Bookmark.findAll({
       where: { userId: req.user.id },
+      attributes: ['userId', 'articleId'],
       include: [
         { model: Article }
       ]
@@ -36,6 +37,7 @@ export default class BookmarkController {
         articleId,
         userId: req.user.id
       },
+      attributes: ['userId', 'articleId'],
       include: [
         { model: Article }
       ]
