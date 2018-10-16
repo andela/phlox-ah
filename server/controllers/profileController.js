@@ -18,7 +18,7 @@ export default class ProfileController {
     const body = ProfileController.updateReqBody(req);
 
     return Profile.findOne({
-      where: { username: req.user.username },
+      where: { userId: body.userId },
     })
       .then((profile) => {
         if (profile) {
@@ -34,7 +34,7 @@ export default class ProfileController {
         }
         return res.status(200).json({ success: true, message: 'Profile updated successfully', profile: data });
       })
-      .catch(() => res.status(500).json({ success: false, error: 'Profile could not be updated' }));
+      .catch(err => res.status(500).json({ success: false, error: 'Profile could not be updated', err }));
   }
 
   /**
@@ -43,14 +43,15 @@ export default class ProfileController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and profile detail
    */
-  static getOneProfile(req, res) {
+  static getUserProfile(req, res) {
     return Profile.findOne({
-      where: { username: req.user.username },
-      include: [{
-        model: User,
-        attributes: ['username', 'email', 'createdAt', 'updatedAt']
-      }]
+      where: { userId: req.user.id },
     })
+      .then(profile => User.findOne({
+        where: { id: profile.userId },
+        attributes: ['username', 'email']
+      })
+        .then(user => ({ profile, user })))
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
       })
@@ -64,12 +65,7 @@ export default class ProfileController {
    * @returns {object} - status, message and profile detail
    */
   static getAllProfile(req, res) {
-    return Profile.findAll({
-      include: [{
-        model: User,
-        attributes: ['username', 'email', 'createdAt', 'updatedAt']
-      }]
-    })
+    return Profile.findAll()
       .then((profiles) => {
         res.status(200).json({ success: true, message: 'Profiles fetched successfully', profiles });
       })
@@ -83,17 +79,14 @@ export default class ProfileController {
    * @returns {object} - status, message and profile detail
    */
   static getProfileByUsername(req, res) {
-    return Profile.findOne({
+    return User.findOne({
       where: { username: req.params.username },
-      include: [{
-        model: User,
-        attributes: ['username', 'email', 'createdAt', 'updatedAt']
-      }]
     })
+      .then(user => Profile.findOne({ where: { userId: user.id } }))
       .then((profile) => {
         res.status(200).json({ success: true, message: 'Profile fetched successfully', profile });
       })
-      .catch(() => res.status(500).json({ success: false, error: 'Failed to fetch profile' }));
+      .catch(err => res.status(500).json({ success: false, error: 'Failed to fetch profile', err }));
   }
 
   /**
@@ -106,7 +99,7 @@ export default class ProfileController {
     const body = ProfileController.updateReqBody(req);
 
     return Profile.findOne({
-      where: { username: req.user.username },
+      where: { userId: body.userId },
     })
       .then((profile) => {
         if (profile) {
@@ -132,12 +125,11 @@ export default class ProfileController {
   static updateReqBody(req) {
     const data = Object.assign(
       {},
+      req.body,
       {
         profileImage: req.file ? req.file.secure_url : '',
-        username: req.user.username,
         userId: req.user.id,
       },
-      req.body,
     );
 
     if (!data.profileImage) {

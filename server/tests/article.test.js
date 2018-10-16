@@ -17,22 +17,26 @@ const user = {
 const article = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentence()
+  description: 'This is the description',
+  tags: []
 };
 
 const noTitle = {
   body: faker.lorem.paragraph(),
-  description: faker.lorem.sentence()
+  description: faker.lorem.sentence(),
+  tags: []
 };
 
 const noBody = {
   title: faker.lorem.sentence(),
-  description: faker.lorem.sentence()
+  description: faker.lorem.sentence(),
+  tags: []
 };
 
 const noDescription = {
   title: faker.lorem.sentence(),
-  body: faker.lorem.paragraph()
+  body: faker.lorem.paragraph(),
+  tags: []
 };
 
 let token = '';
@@ -98,6 +102,17 @@ describe('Articles', () => {
         done();
       });
   });
+  it('Should not update an invalid article', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${slug}00`)
+      .set('x-access-token', token)
+      .send(article)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
   it('Should update an article', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${slug}`)
@@ -105,16 +120,6 @@ describe('Articles', () => {
       .send(article)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body).to.be.an('object');
-        done();
-      });
-  });
-  it('Should not update an invalid article', (done) => {
-    chai.request(app)
-      .put(`/api/v1/articles/${slug}00`)
-      .set('x-access-token', token)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();
       });

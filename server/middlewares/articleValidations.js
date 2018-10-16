@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
   * @class ArticleValidationsController
   * @description Validate User Input
@@ -19,20 +20,16 @@ class ArticleValidations {
       title: Joi.string().min(6).max(150).required(),
       body: Joi.string().min(6).required(),
       description: Joi.string().min(6).max(250).required(),
+      tags: Joi.array(),
     };
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
-    const { title, body, description } = req.body;
-
-    Joi.validate({ title, body, description }, joiSchema, joiOptions, (err) => {
-      if (err) {
-        // this regex replaces the string (\") that is returned with the json response
-        const getErrorMessages = error => error.message.replace(/"/g, '');
-        res.status(422).json({ message: err.details.map(getErrorMessages), });
-      } else if (!err) {
-        return next();
-      }
-    });
+    const {
+      title, body, description, tags
+    } = req.body;
+    checkJoiValidation({
+      title, body, description, tags
+    }, joiSchema, joiOptions, res, next);
   }
 
   /**
@@ -50,20 +47,16 @@ class ArticleValidations {
       title: Joi.string().min(6).max(150),
       body: Joi.string().min(6),
       description: Joi.string().min(6).max(250),
+      tags: Joi.array(),
     };
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
-    const { title, body, description } = req.body;
-
-    Joi.validate({ title, body, description }, joiSchema, joiOptions, (err) => {
-      if (err) {
-        // this regex replaces the string (\") that is returned with the json response
-        const getErrorMessages = error => error.message.replace(/"/g, '');
-        res.status(422).json({ message: err.details.map(getErrorMessages), });
-      } else if (!err) {
-        return next();
-      }
-    });
+    const {
+      title, body, description, tags
+    } = req.body;
+    checkJoiValidation({
+      title, body, description, tags
+    }, joiSchema, joiOptions, res, next);
   }
 }
 

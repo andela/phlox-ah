@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
   * @class UserValidationsController
   * @description Validate User Input
@@ -33,16 +34,7 @@ class UserValidations {
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
     const { username, email, password } = req.body;
-
-    Joi.validate({ email, username, password, }, joiSchema, joiOptions, (err) => {
-      if (err) {
-        // this regex replaces the string (\") that is returned with the json response
-        const getErrorMessages = error => error.message.replace(/"/g, '');
-        res.status(422).json({ message: err.details.map(getErrorMessages), });
-      } else if (!err) {
-        return next();
-      }
-    });
+    checkJoiValidation({ email, username, password, }, joiSchema, joiOptions, res, next);
   }
 
   /**
@@ -72,16 +64,7 @@ class UserValidations {
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
     const { emailOrUsername, password } = req.body;
-
-    Joi.validate({ emailOrUsername, password, }, joiSchema, joiOptions, (err) => {
-      if (err) {
-        // this regex replaces the string (\") that is returned with the json response
-        const getErrorMessages = error => error.message.replace(/"/g, '');
-        res.status(422).json({ message: err.details.map(getErrorMessages), });
-      } else {
-        return next();
-      }
-    });
+    checkJoiValidation({ emailOrUsername, password, }, joiSchema, joiOptions, res, next);
   }
 }
 

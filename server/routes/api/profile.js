@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/profile', checkToken, upload.single('profileImage'), ProfileController.createOrUpdateProfile);
 router.put('/profile/:username', checkToken, upload.single('profileImage'), ProfileController.updateProfile);
-router.get('/profile', checkToken, ProfileController.getOneProfile);
+router.get('/profile', checkToken, ProfileController.getUserProfile);
 router.get('/profile/:username', checkToken, ProfileController.getProfileByUsername);
 router.get('/profiles', checkToken, ProfileController.getAllProfile);
 
