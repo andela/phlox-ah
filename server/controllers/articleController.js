@@ -3,6 +3,7 @@ import uuid from 'uuid-random';
 import Model from '../models';
 import getTagIds from '../helpers/tags/getTagIds';
 import readingTime from '../helpers/readTime';
+import Notification from './notificationController';
 
 const {
   Article, Tag, Like, ArticleComment, User
@@ -23,10 +24,11 @@ export default class ArticleController {
     const { title, body, description } = req.body;
     const readTime = readingTime(body); // calculate the time it will take to read the article
     const imgUrl = (req.file ? req.file.secure_url : '');
+    const articleSlug = `${slug(title)}-${uuid()}`;
     // this function gets the tag ids of the tags sent in the request
     getTagIds(req, res).then((tagIds) => {
       Article.create({
-        title, body, userId: req.user.id, description, slug: `${slug(title)}-${uuid()}`, imgUrl, readTime
+        title, body, userId: req.user.id, description, slug: articleSlug, imgUrl, readTime
       }).then((article) => {
         article.setTags(tagIds).then(() => {
           article.getTags({ attributes: ['id', 'name'] }).then((associatedTags) => {
@@ -35,6 +37,9 @@ export default class ArticleController {
             });
           });
         })
+          .then(() => {
+            Notification.notifyForArticle(req.user.id, articleSlug, title, req.user.username);
+          })
           .catch(() => res.status(404).json({ message: 'the tag does not exist', success: false }));
       })
         .catch(error => res.status(500).json(error));
