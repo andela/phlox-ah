@@ -5,20 +5,20 @@ import db from '../models';
 const validLike = {
   like: true,
   dislike: false,
-  articleSlug: 'title-of-article',
+  articleSlug: 'title-of-article1',
   userId: 1
 };
 
 const noLike = {
   dislike: false,
   articleId: 1,
-  articleSlug: 'title-of-article',
+  articleSlug: 'title-of-article1',
   userId: 1
 };
 
 const noDislike = {
   like: false,
-  articleSlug: 'title-of-article',
+  articleSlug: 'title-of-article1',
   userId: 1
 };
 

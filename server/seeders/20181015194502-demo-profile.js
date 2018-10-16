@@ -5,7 +5,7 @@ module.exports = {
     contact: 'Test street',
     gender: 'male',
     bio: 'Lowkey bad guy',
-    username: 'johndoe',
+    userId: 1,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -15,7 +15,7 @@ module.exports = {
     contact: 'Testing gals street',
     gender: 'female',
     bio: 'beautiful queen',
-    username: 'janedoe',
+    userId: 2,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
