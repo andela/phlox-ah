@@ -44,9 +44,10 @@ export default class BookmarkController {
     })
       .spread((bookmark, created) => {
         if (!created) {
-          return res.status(200).json({ success: false, message: 'You already bookmarked this article', bookmark });
+          res.status(200).json({ success: false, message: 'You already bookmarked this article', bookmark });
+        } else {
+          res.status(201).json({ success: true, message: 'This article has been bookmarked', bookmark });
         }
-        return res.status(201).json({ success: true, message: 'This article has been bookmarked', bookmark });
       });
   }
 
