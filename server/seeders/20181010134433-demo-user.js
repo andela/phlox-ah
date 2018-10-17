@@ -3,6 +3,7 @@ module.exports = {
     username: 'johndoe',
     email: 'jd@something.com',
     password: 'secret123',
+    isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date()
   },

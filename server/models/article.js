@@ -51,6 +51,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'rates'
     });
+    Article.hasMany(models.Bookmark, {
+      foreignKey: 'articleId'
+    });
 
     Article.belongsToMany(models.Tag, { as: 'Tags', through: 'ArticlesTags', foreignKey: 'articleId' });
   };
