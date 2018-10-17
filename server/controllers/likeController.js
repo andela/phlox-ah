@@ -3,8 +3,8 @@ import Model from '../models';
 const { Like, Article } = Model;
 
 /**
-  * @class ArticleController
-  * @description CRUD operations on Article
+  * @class LikeControler
+  * @description like and dislike an article
   */
 export default class LikeController {
   /**
@@ -44,7 +44,7 @@ export default class LikeController {
   }
 
   /**
-  * @description -This method likes an article
+  * @description -This method dislikes an article
   * @param {object} req - The request payload sent from the router
   * @param {object} res - The response payload sent back from the controller
   * @returns {object} - status, message and reaction details
