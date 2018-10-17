@@ -15,18 +15,16 @@ export default class SearchController {
   * @returns {object} - status, message and search result
   */
   static searchWith(req, res) {
-    const {
-      keyword, searchWith
-    } = req.body;
+    const { author, article, tag } = req.query;
 
-    if (searchWith === 'author') {
-      Profile.findOne({
+    if (author) {
+      Profile.find({
         attributes: ['id', 'firstName', 'lastName', 'userId'],
         where: {
           [Op.or]: [{
-            firstName: { [Op.iLike]: `%${keyword}%` },
+            firstName: { [Op.iLike]: `%${author}%` },
           }, {
-            lastName: { [Op.iLike]: `%${keyword}%` }
+            lastName: { [Op.iLike]: `%${author}%` }
           }]
         }
       })
@@ -51,15 +49,15 @@ export default class SearchController {
               return res.status(200).json({
                 success: true,
                 message: 'found result',
-                searchResult,
+                searchResult
               });
             })
             .catch(err => res.status(500).json({ message: err }));
         });
-    } else if (searchWith === 'article') {
+    } else if (article) {
       Article.findAll({
         attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
-        where: { title: { [Op.iLike]: `%${keyword}%` } },
+        where: { title: { [Op.iLike]: `%${article}%` } },
         include: [{
           model: User,
           attributes: ['id', 'username'],
@@ -83,10 +81,10 @@ export default class SearchController {
           });
         })
         .catch(err => res.status(500).json({ message: err }));
-    } else if (searchWith === 'tag') {
+    } else if (tag) {
       Tag.findAll({
         attributes: ['id', 'name'],
-        where: { name: { [Op.iLike]: `%${keyword}%` } },
+        where: { name: { [Op.iLike]: `%${tag}%` } },
         include: [{
           model: Article,
           attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],

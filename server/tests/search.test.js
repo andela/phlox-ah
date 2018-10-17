@@ -7,8 +7,7 @@ chai.use(chaiHttp);
 describe('POST /Search', () => {
   it('should make a successful search using author', (done) => {
     chai.request(app)
-      .post('/api/v1/search')
-      .send({ keyword: 'doe', searchWith: 'author' })
+      .get('/api/v1/search?author=doe')
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(200);
@@ -19,8 +18,8 @@ describe('POST /Search', () => {
   });
   it('should not make a successful search using author', (done) => {
     chai.request(app)
-      .post('/api/v1/search')
-      .send({ keyword: 'Unknown', searchWith: 'author' })
+      .get('/api/v1/search?author=unknown')
+      .send()
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(404);
@@ -31,8 +30,8 @@ describe('POST /Search', () => {
   });
   it('should make a successful search using article', (done) => {
     chai.request(app)
-      .post('/api/v1/search')
-      .send({ keyword: 'title1', searchWith: 'article' })
+      .get('/api/v1/search?article=title1')
+      .send()
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(200);
@@ -43,8 +42,8 @@ describe('POST /Search', () => {
   });
   it('should not make a successful search using article', (done) => {
     chai.request(app)
-      .post('/api/v1/search')
-      .send({ keyword: 'xxx', searchWith: 'article' })
+      .get('/api/v1/search?article=xxx')
+      .send()
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(404);
@@ -55,8 +54,8 @@ describe('POST /Search', () => {
   });
   it('should make a successful search using tags', (done) => {
     chai.request(app)
-      .post('/api/v1/search')
-      .send({ keyword: 'sports', searchWith: 'tag' })
+      .get('/api/v1/search?tag=sports')
+      .send()
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(200);
@@ -67,8 +66,8 @@ describe('POST /Search', () => {
   });
   it('should not make a successful search using tags', (done) => {
     chai.request(app)
-      .post('/api/v1/search')
-      .send({ keyword: 'unknown', searchWith: 'tag' })
+      .get('/api/v1/search?tag=unknown')
+      .send()
       .end((err, res) => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(404);

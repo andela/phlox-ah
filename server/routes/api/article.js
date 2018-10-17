@@ -21,5 +21,5 @@ router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValida
 router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, RateController.rateArticle);
 router.post('/articles/:slug/:likeType', checkToken, LikeController.likeArticle);
 
-router.post('/search', SearchController.searchWith);
+router.get('/search', SearchController.searchWith);
 export default router;
