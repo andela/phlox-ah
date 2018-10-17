@@ -32,8 +32,12 @@ export default class LikeCommentController {
         })
           .spread((reaction, created) => {
             if (created) {
+              reaction.like = true;
+              reaction.dislike = false;
               reaction.save();
             } else {
+              reaction.like = true;
+              reaction.dislike = false;
               reaction.save();
             }
             return res.status(200).json({ reaction, message });
@@ -69,8 +73,12 @@ export default class LikeCommentController {
         })
           .spread((reaction, created) => {
             if (created) {
+              reaction.like = false;
+              reaction.dislike = true;
               reaction.save();
             } else {
+              reaction.like = false;
+              reaction.dislike = true;
               reaction.save();
             }
             return res.status(200).json({ reaction, message });
