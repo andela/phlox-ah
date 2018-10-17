@@ -44,6 +44,11 @@ module.exports = {
     verifyToken: {
       type: Sequelize.STRING
     },
+    role: {
+      type: Sequelize.ENUM,
+      defaultValue: 'User',
+      values: ['Admin', 'Author', 'User']
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

@@ -67,6 +67,10 @@ export default (sequelize, DataTypes) => {
     verifyToken: {
       type: DataTypes.STRING
     },
+    role: {
+      type: DataTypes.ENUM('Admin', 'Author', 'User'),
+      defaultValue: 'User'
+    }
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {
