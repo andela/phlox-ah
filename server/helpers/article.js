@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 export const computeOffset = (req) => {
   const page = Object.keys(req.query).length ? parseInt(req.query.page, 10) : 1;
   return ((page <= 0) || (Number.isNaN(page))) ? 1 : page;
