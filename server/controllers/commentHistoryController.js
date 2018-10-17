@@ -1,8 +1,7 @@
 import Model from '../models';
+import getCommentHistory from '../helpers/commentsHistory';
 
-const {
-  CommentsHistory, ArticleComment, User, Article
-} = Model;
+const { CommentsHistory, ArticleComment } = Model;
 /**
   * @class CommentsHistoryController
   * @description CRUD operations on Article
@@ -36,35 +35,10 @@ export default class CommentsHistoryController {
       where: { articleSlug: req.params.articleSlug, id: req.params.commentId },
     }).then((comment) => {
       if (comment) {
-        CommentsHistory.findAll({
-          // eslint-disable-next-line
-          where: { commentId: req.params.commentId, articleSlug: req.params.articleSlug, userId: req.user.id },
-          order: [
-            ['createdAt', 'DESC'],
-          ],
-          include: [{
-            model: User,
-            attributes: ['username', 'email']
-          },
-          {
-            model: ArticleComment,
-            attributes: ['comment']
-          },
-          {
-            model: Article,
-            attributes: ['title', 'body', 'description']
-          }]
-        })
-          .then((histories) => {
-            if (histories.length >= 1) {
-              res.status(200).json({ success: true, message: 'comment history retrieved', histories });
-            } else if (histories.length <= 0) {
-              res.status(200).json({ success: false, message: 'you have no histories for this comment' });
-            } else {
-              res.status(404).json({ success: false, message: 'comment cannot be found' });
-            }
-          })
-          .catch(error => res.status(500).json(error));
+        const searchParams = {
+          commentId: req.params.commentId, articleSlug: req.params.articleSlug, userId: req.user.id
+        };
+        getCommentHistory(searchParams, res, 'comment history retrieved', 'you have no histories for this comment');
       } else {
         res.status(404).json({ success: false, message: 'comment cannot be found' });
       }
@@ -83,35 +57,10 @@ export default class CommentsHistoryController {
       where: { articleSlug: req.params.articleSlug, id: req.params.commentId },
     }).then((comment) => {
       if (comment) {
-        CommentsHistory.findAll({
-          // eslint-disable-next-line
-          where: { commentId: req.params.commentId, articleSlug: req.params.articleSlug },
-          order: [
-            ['createdAt', 'DESC'],
-          ],
-          include: [{
-            model: User,
-            attributes: ['username', 'email']
-          },
-          {
-            model: ArticleComment,
-            attributes: ['comment']
-          },
-          {
-            model: Article,
-            attributes: ['title', 'body', 'description']
-          }]
-        })
-          .then((histories) => {
-            if (histories.length >= 1) {
-              res.status(200).json({ success: true, message: 'all comment histories retrieved', histories });
-            } else if (histories.length <= 0) {
-              res.status(200).json({ success: false, message: 'there are no histories for this comment' });
-            } else {
-              res.status(404).json({ success: false, message: 'comment cannot be found' });
-            }
-          })
-          .catch(error => res.status(500).json(error));
+        const searchParams = {
+          commentId: req.params.commentId, articleSlug: req.params.articleSlug
+        };
+        getCommentHistory(searchParams, res, 'all comment histories retrieved', 'there are no histories for this comment');
       } else {
         res.status(404).json({ success: false, message: 'comment cannot be found' });
       }
