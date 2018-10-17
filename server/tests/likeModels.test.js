@@ -10,7 +10,7 @@ const validLike = {
 
 const noLike = {
   articleId: 1,
-  articleSlug: 'title-of-article',
+  articleSlug: 'title-of-article1',
   userId: 1
 };
 let like;

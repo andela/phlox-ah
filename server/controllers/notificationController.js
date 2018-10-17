@@ -4,7 +4,7 @@ import notificationMessages from '../helpers/notificationMessages';
 import sendMail from '../helpers/mail';
 
 /* eslint-disable no-unused-vars */
-const { User, Followings } = Model;
+const { User, Followings, Like } = Model;
 
 
 env.config();
@@ -36,6 +36,38 @@ class Notifications {
             htmlMessage: notificationMessages.newArticleNotification(authorsUsername, url, title)
           });
         }
+      });
+  }
+
+  /**
+  * @description -This method notifies users of new interactions on articles they liked
+   * @param {String} articleSlug - Article slug
+   * @param {string} commentersUserId - UserID of the user that commented
+   * @returns {object} res
+   */
+  static notifyLikers(articleSlug, commentersUserId) {
+    let commentersUsername;
+    // get the username of the user that commented
+    User.findOne({ where: { id: commentersUserId } })
+      .then((user) => {
+        commentersUsername = user.username;
+      })
+      .then(() => {
+        Like
+          .findAll({ where: { like: true, articleSlug }, include: [{ model: User, attributes: ['email'], }] })
+          .then((likers) => {
+            // map all the likers email to an array and store it in the emails variable
+            const emails = likers.map(liker => liker.User.email);
+            if (emails.length > 0) {
+              const url = `${process.env.BASE_URL}/articles/${articleSlug}`;
+              // notify all the likers about the new comment
+              sendMail({
+                email: emails,
+                subject: `${commentersUsername} commented on an article you liked.`,
+                htmlMessage: notificationMessages.commentNotification(url, commentersUsername)
+              });
+            }
+          });
       });
   }
 }
