@@ -1,5 +1,6 @@
 import Model from '../models';
 import CommentHelpers from '../helpers/comment';
+import CommentsHistoryController from './commentHistoryController';
 
 const {
   User, Article, ArticleComment, Reply: ReplyArticleComment
@@ -54,6 +55,8 @@ export default class CommentController {
     })
       .then((comment) => {
         if (comment) {
+          // eslint-disable-next-line
+          CommentsHistoryController.createNewHistory(req.user.id, comment.id, comment.articleSlug, comment.comment, res);
           return comment.update(data);
         }
         return null;
