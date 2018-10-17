@@ -8,11 +8,7 @@ module.exports = {
       type: Sequelize.INTEGER
     },
     like: {
-      allowNull: false,
-      type: Sequelize.BOOLEAN
-    },
-    dislike: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.BOOLEAN
     },
     userId: {

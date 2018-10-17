@@ -38,7 +38,18 @@ describe('Likes', () => {
         done();
       });
   });
-  it('Should update like status of an article if it has been liked before', (done) => {
+  it('Should unlike an article if it has been liked before', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${slug}/like`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('you unliked this article');
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should like an article if it has been unliked before', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${slug}/like`)
       .set('x-access-token', token)
@@ -71,13 +82,13 @@ describe('Likes', () => {
         done();
       });
   });
-  it('Should update dislike status of an article if it has been disliked before', (done) => {
+  it('Should unlike an article if it has been disliked before', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${slug}/dislike`)
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('you disliked this article');
+        expect(res.body.message).to.equal('you unliked this article');
         expect(res.body).to.be.an('object');
         done();
       });
@@ -104,7 +115,18 @@ describe('Likes', () => {
         done();
       });
   });
-  it('Should update like status of a comment if it has been liked before', (done) => {
+  it('Should unlike a comment if it has been liked before', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${slug}/comments/1/like`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('you unliked this comment');
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should like a comment if it has been unliked before', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${slug}/comments/1/like`)
       .set('x-access-token', token)
@@ -137,13 +159,13 @@ describe('Likes', () => {
         done();
       });
   });
-  it('Should update dislike status of a comment if it has been disliked before', (done) => {
+  it('Should unlike a comment if it has been disliked before', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${slug}/comments/1/dislike`)
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('you disliked this comment');
+        expect(res.body.message).to.equal('you unliked this comment');
         expect(res.body).to.be.an('object');
         done();
       });
@@ -170,7 +192,18 @@ describe('Likes', () => {
         done();
       });
   });
-  it('Should update like status of a reply if it has been liked before', (done) => {
+  it('Should unlike a reply if it has been liked before', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${slug}/comments/1/reply/1/like`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('you unliked this reply');
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should like a comment if it has been unliked before', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${slug}/comments/1/reply/1/like`)
       .set('x-access-token', token)
@@ -203,13 +236,13 @@ describe('Likes', () => {
         done();
       });
   });
-  it('Should update dislike status of a reply if it has been disliked before', (done) => {
+  it('Should unlike a reply if it has been disliked before', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${slug}/comments/1/reply/1/dislike`)
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('you disliked this reply');
+        expect(res.body.message).to.equal('you unliked this reply');
         expect(res.body).to.be.an('object');
         done();
       });

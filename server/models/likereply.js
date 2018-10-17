@@ -3,11 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const LikeReply = sequelize.define('LikeReply', {
     like: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
-    },
-    dislike: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: true
     }
   }, {});
   LikeReply.associate = (models) => {

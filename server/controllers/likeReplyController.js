@@ -31,16 +31,21 @@ export default class LikeReplyController {
           }
         })
           .spread((reaction, created) => {
-            if (created) {
-              reaction.like = true;
-              reaction.dislike = false;
-              reaction.save();
+            if (!created) {
+              if (reaction.like === true) {
+                reaction.like = null;
+                reaction.save();
+                res.status(200).json({ reaction, message: 'you unliked this reply' });
+              } else {
+                reaction.like = true;
+                reaction.save();
+                res.status(200).json({ reaction, message });
+              }
             } else {
               reaction.like = true;
-              reaction.dislike = false;
               reaction.save();
+              res.status(200).json({ reaction, message });
             }
-            return res.status(200).json({ reaction, message });
           });
       } else {
         res.status(404).json({ message: 'reply does not exist', status: 'failed' });
@@ -72,16 +77,21 @@ export default class LikeReplyController {
           }
         })
           .spread((reaction, created) => {
-            if (created) {
-              reaction.like = false;
-              reaction.dislike = true;
-              reaction.save();
+            if (!created) {
+              if (reaction.like === false) {
+                reaction.like = null;
+                reaction.save();
+                res.status(200).json({ reaction, message: 'you unliked this reply' });
+              } else {
+                reaction.like = false;
+                reaction.save();
+                res.status(200).json({ reaction, message });
+              }
             } else {
               reaction.like = false;
-              reaction.dislike = true;
               reaction.save();
+              res.status(200).json({ reaction, message });
             }
-            return res.status(200).json({ reaction, message });
           });
       } else {
         res.status(404).json({ message: 'reply does not exist', status: 'failed' });

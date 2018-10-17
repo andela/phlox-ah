@@ -25,21 +25,25 @@ export default class LikeController {
             articleSlug: req.params.slug
           },
           defaults: {
-            like: true,
-            dislike: false
+            like: true
           }
         })
           .spread((reaction, created) => {
-            if (created) {
-              reaction.like = true;
-              reaction.dislike = false;
-              reaction.save();
+            if (!created) {
+              if (reaction.like === true) {
+                reaction.like = null;
+                reaction.save();
+                res.status(200).json({ reaction, message: 'you unliked this article' });
+              } else {
+                reaction.like = true;
+                reaction.save();
+                res.status(200).json({ reaction, message });
+              }
             } else {
               reaction.like = true;
-              reaction.dislike = false;
               reaction.save();
+              res.status(200).json({ reaction, message });
             }
-            return res.status(200).json({ reaction, message });
           });
       } else {
         res.status(404).json({ message: 'article does not exist', status: 'failed' });
@@ -66,21 +70,25 @@ export default class LikeController {
             articleSlug: req.params.slug
           },
           defaults: {
-            like: false,
-            dislike: true
+            like: false
           }
         })
           .spread((reaction, created) => {
-            if (created) {
-              reaction.like = false;
-              reaction.dislike = true;
-              reaction.save();
+            if (!created) {
+              if (reaction.like === false) {
+                reaction.like = null;
+                reaction.save();
+                res.status(200).json({ reaction, message: 'you unliked this article' });
+              } else {
+                reaction.like = false;
+                reaction.save();
+                res.status(200).json({ reaction, message });
+              }
             } else {
               reaction.like = false;
-              reaction.dislike = true;
               reaction.save();
+              res.status(200).json({ reaction, message });
             }
-            return res.status(200).json({ reaction, message });
           });
       } else {
         res.status(404).json({ message: 'article does not exist', status: 'failed' });
