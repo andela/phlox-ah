@@ -70,6 +70,17 @@ describe('Comment', () => {
       });
   });
 
+  it('Should get all comments of an article', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/${articleSlug}/comments`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+
   it('Should not add comment to an article', (done) => {
     chai.request(app)
       .post('/api/v1/articles/non-existing-slug/comments')
@@ -139,6 +150,17 @@ describe('Comment', () => {
       .end((err, res) => {
         replyCommentId = res.body.comment.id;
         expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should not modify an added reply of an article comment with an invalid comment id', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${articleSlug}/comments/${commentId}00/reply/${replyCommentId}/edit`)
+      .set('x-access-token', token)
+      .send(modifiedComment)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         done();
       });
