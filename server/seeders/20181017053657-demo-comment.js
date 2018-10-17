@@ -6,6 +6,5 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
-
   down: queryInterface => queryInterface.bulkDelete('ArticleComments', null, {})
 };
