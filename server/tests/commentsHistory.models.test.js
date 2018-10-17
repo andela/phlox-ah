@@ -1,37 +1,8 @@
 import { expect } from 'chai';
 import db from '../models';
-
-
-const validCommentHistory = {
-  articleSlug: 'How-to-use-the-faker-package-306a8a4c-57ee-4ac1-898d-cbca809e1e8d',
-  userId: 5,
-  commentId: 1,
-  comment: 'comment test modified'
-};
-
-const noUserId = {
-  articleSlug: 'How-to-use-the-faker-package-306a8a4c-57ee-4ac1-898d-cbca809e1e8d',
-  commentId: 1,
-  comment: 'comment test modified'
-};
-
-const noArticleSlug = {
-  userId: 5,
-  commentId: 1,
-  comment: 'comment test modified'
-};
-
-const noCommentId = {
-  articleSlug: 'How-to-use-the-faker-package-306a8a4c-57ee-4ac1-898d-cbca809e1e8d',
-  userId: 5,
-  comment: 'comment test modified'
-};
-
-const noComment = {
-  articleSlug: 'How-to-use-the-faker-package-306a8a4c-57ee-4ac1-898d-cbca809e1e8d',
-  userId: 5,
-  commentId: 1
-};
+import {
+  validCommentHistory, noUserId, noArticleSlug, noCommentId, noComment
+} from '../helpers/commentsHistory';
 
 let commentHistory;
 let userIdError;

@@ -1,27 +1,10 @@
 /* eslint-disable prefer-destructuring */
-import faker from 'faker';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
+import { user, article, comment } from '../helpers/commentsHistory';
 
 chai.use(chaiHttp);
-
-const user = {
-  username: faker.internet.userName(),
-  email: faker.internet.email(),
-  password: 'password'
-};
-
-const article = {
-  title: faker.lorem.sentence(),
-  body: faker.lorem.paragraph(),
-  description: 'This is the description',
-  tags: []
-};
-
-const comment = {
-  comment: 'I like this article',
-};
 
 let articleSlug;
 let token = '';
