@@ -2,7 +2,7 @@ import Model from '../models';
 import CommentHelpers from '../helpers/comment';
 
 const {
-  User, Article, ArticleComment, Reply: ReplyArticleComment
+  User, Article, ArticleComment, LikeComment, LikeReply, Reply: ReplyArticleComment
 } = Model;
 
 const { reqCommentParams, reqReplyParams } = CommentHelpers;
@@ -111,10 +111,24 @@ export default class CommentController {
         model: User,
         attributes: ['username', 'email']
       }, {
+        model: LikeComment,
+        as: 'likes',
+        include: [{
+          model: User,
+          attributes: ['username', 'email']
+        }]
+      }, {
         model: ReplyArticleComment,
         include: [{
           model: User,
           attributes: ['username', 'email']
+        }, {
+          model: LikeReply,
+          as: 'likes',
+          include: [{
+            model: User,
+            attributes: ['username', 'email']
+          }]
         }]
       }]
     })
