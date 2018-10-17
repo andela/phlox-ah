@@ -16,9 +16,10 @@ export default class SearchController {
   */
   static searchWith(req, res) {
     const { author, article, tag } = req.query;
+    const usersIds = [];
 
     if (author) {
-      Profile.find({
+      Profile.findAll({
         attributes: ['id', 'firstName', 'lastName', 'userId'],
         where: {
           [Op.or]: [{
@@ -28,8 +29,9 @@ export default class SearchController {
           }]
         }
       })
-        .then((user) => {
-          if (!user) {
+        .then((users) => {
+          users.map(user => usersIds.push(user.userId));
+          if (!users) {
             return res.status(404).json({
               success: false,
               message: 'User not found'
@@ -37,7 +39,7 @@ export default class SearchController {
           }
           Article.findAll({
             attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
-            where: { userId: user.userId },
+            where: { userId: usersIds },
           })
             .then((searchResult) => {
               if (searchResult.length === 0) {
