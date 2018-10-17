@@ -24,7 +24,7 @@ describe('POST /Search', () => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(404);
         expect(res.body.success).to.equals(false);
-        expect(res.body.message).to.eql('User not found');
+        expect(res.body.message).to.eql('Nothing Found');
         done();
       });
   });
