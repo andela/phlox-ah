@@ -11,6 +11,7 @@ module.exports = {
     username: 'janedoe',
     email: 'janedoe@something.com',
     password: 'secret123',
+    isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
