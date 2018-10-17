@@ -1,28 +1,35 @@
 import Model from '../models';
 
-const { Like, Article } = Model;
+const { LikeReply, Reply } = Model;
 
 /**
   * @class ArticleController
   * @description CRUD operations on Article
   */
-export default class LikeController {
+export default class LikeReplyController {
   /**
   * @description -This method likes an article
   * @param {object} req - The request payload sent from the router
   * @param {object} res - The response payload sent back from the controller
   * @returns {object} - status, message and reaction details
   */
-  static likeArticle(req, res) {
-    const message = 'you liked this article';
-    Article.findOne({
-      where: { slug: req.params.slug }
-    }).then((article) => {
-      if (article) {
-        Like.findOrCreate({
+  static likeReply(req, res) {
+  // Check the params passed by user to determine what function to be performed
+  // const like = req.params.likeType === 'like';
+  // const dislike = req.params.likeType === 'dislike';
+  // // message to be sent to user depending on function performed
+  // const message = like || dislike ? `you ${req.params.likeType}d the article`
+  //   : 'you unliked the article';
+    const message = 'you liked this reply';
+
+    Reply.findOne({
+      where: { id: req.params.replyId }
+    }).then((reply) => {
+      if (reply) {
+        LikeReply.findOrCreate({
           where: {
             userId: req.user.id,
-            articleSlug: req.params.slug
+            replyId: req.params.replyId
           },
           defaults: {
             like: true,
@@ -38,7 +45,7 @@ export default class LikeController {
             return res.status(200).json({ reaction, message });
           });
       } else {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'reply does not exist', status: 'failed' });
       }
     });
   }
@@ -49,17 +56,23 @@ export default class LikeController {
   * @param {object} res - The response payload sent back from the controller
   * @returns {object} - status, message and reaction details
   */
-  static dislikeArticle(req, res) {
-    const message = 'you disliked this article';
+  static dislikeReply(req, res) {
+  // Check the params passed by user to determine what function to be performed
+  // const like = req.params.likeType === 'like';
+  // const dislike = req.params.likeType === 'dislike';
+  // // message to be sent to user depending on function performed
+  // const message = like || dislike ? `you ${req.params.likeType}d the article`
+  //   : 'you unliked the article';
+    const message = 'you disliked this reply';
 
-    Article.findOne({
-      where: { slug: req.params.slug }
-    }).then((article) => {
-      if (article) {
-        Like.findOrCreate({
+    Reply.findOne({
+      where: { id: req.params.replyId }
+    }).then((reply) => {
+      if (reply) {
+        LikeReply.findOrCreate({
           where: {
             userId: req.user.id,
-            articleSlug: req.params.slug
+            replyId: req.params.replyId
           },
           defaults: {
             like: false,
@@ -75,7 +88,7 @@ export default class LikeController {
             return res.status(200).json({ reaction, message });
           });
       } else {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'reply does not exist', status: 'failed' });
       }
     });
   }

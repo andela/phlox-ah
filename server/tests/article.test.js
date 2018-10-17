@@ -170,28 +170,6 @@ describe('Articles', () => {
         done();
       });
   });
-  it('Should like an article', (done) => {
-    chai.request(app)
-      .post(`/api/v1/articles/${slug}/like`)
-      .set('x-access-token', token)
-      .send(article)
-      .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body).to.be.an('object');
-        done();
-      });
-  });
-  it('Should not like an invalid article', (done) => {
-    chai.request(app)
-      .post(`/api/v1/articles/${slug}00/like`)
-      .set('x-access-token', token)
-      .send(article)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body).to.be.an('object');
-        done();
-      });
-  });
   it('Should delete a users article', (done) => {
     chai.request(app)
       .delete(`/api/v1/articles/${slug}`)
