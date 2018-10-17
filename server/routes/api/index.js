@@ -4,11 +4,13 @@ import article from './article';
 import profile from './profile';
 import tag from './tag';
 import comment from './comment';
+import report from './report';
 import socialLogin from './socialLogin';
 
 const router = express.Router();
 
 router.use('/', comment);
+router.use('/', report);
 router.use('/', article);
 router.use('/', profile);
 router.use('/', tag);

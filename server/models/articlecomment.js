@@ -16,10 +16,6 @@ export default (sequelize, DataTypes) => {
       targetKey: 'slug',
       onDelete: 'CASCADE',
     });
-    ArticleComment.hasMany(models.Reply, {
-      foreignKey: 'commentId',
-      onDelete: 'CASCADE',
-    });
   };
   return ArticleComment;
 };
