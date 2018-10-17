@@ -1,13 +1,7 @@
 import Model from '../models';
-import { reqReportParams } from '../helpers/report';
+import reqReportParams from '../helpers/report';
 
 const { Report, User, Article } = Model;
-
-// NOTE:
-// update a report
-// resolve a report
-// get all unresolved reports
-// get all resolved reports
 
 /**
  * @class ReportController
@@ -21,13 +15,12 @@ export default class ReportController {
    * @returns {object} - status, message and report detail
    */
   static createReport(req, res) {
-
     const data = reqReportParams(req);
 
     return Article.findOne({
       where: {
         userId: data.userId,
-        slug: data.articleSlug 
+        slug: data.articleSlug
       }
     })
       .then((article) => {
@@ -42,9 +35,7 @@ export default class ReportController {
         }
         return res.status(404).json({ success: false, message: 'Article could not be found' });
       })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Report could not be added'})
-      });
+      .catch(() => res.status(500).json({ success: false, message: 'Report could not be added' }));
   }
 
   /**
@@ -54,18 +45,17 @@ export default class ReportController {
    * @returns {object} - status, message and reports array
    */
   static getArticleReport(req, res) {
-
     const data = reqReportParams(req);
 
     return Article.findOne({
       where: {
-        slug: data.articleSlug 
+        slug: data.articleSlug
       }
     })
       .then((article) => {
         if (article) {
           return Report.findAll({
-            where: {articleSlug: data.articleSlug},
+            where: { articleSlug: data.articleSlug },
             order: [
               ['createdAt', 'DESC'],
             ],
@@ -85,21 +75,16 @@ export default class ReportController {
         }
         return res.status(404).json({ success: false, message: 'Report could not be found' });
       })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Report could not be fetched'});
-      });
+      .catch(() => res.status(500).json({ success: false, message: 'Report could not be fetched' }));
   }
 
   /**
-   * @description -This method fetches all report 
+   * @description -This method fetches all report
    * @param {object} req - The request payload sent from the router
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and reports array
    */
   static getAllReport(req, res) {
-
-    const data = reqReportParams(req);
-
     return Report.findAll({
       order: [
         ['createdAt', 'DESC'],
@@ -111,13 +96,8 @@ export default class ReportController {
         },
       ]
     })
-      .then((reports) => {
-        return res.status(200).json({ success: true, message: 'Report fetched successfully', reports });
-      })
-      .catch((err) => {
-        console.log(err)
-        return res.status(500).json({ success: false, message: 'Report could not be fetched'});
-      });
+      .then(reports => res.status(200).json({ success: true, message: 'Report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Report could not be fetched' }));
   }
 
   /**
@@ -127,13 +107,12 @@ export default class ReportController {
    * @returns {object} - status, message and report detail
    */
   static editReport(req, res) {
-
     const data = reqReportParams(req);
 
     return Article.findOne({
       where: {
         userId: data.userId,
-        slug: data.articleSlug 
+        slug: data.articleSlug
       }
     })
       .then((article) => {
@@ -141,7 +120,7 @@ export default class ReportController {
           return Report.update({
             title: data.title,
             body: data.body,
-          },{
+          }, {
             where: {
               id: data.reportId,
               userId: data.userId,
@@ -153,13 +132,11 @@ export default class ReportController {
       })
       .then((report) => {
         if (report) {
-          return res.status(200).json({ success: true, message: 'Report updated successfully', report:  report[1][0] });
+          return res.status(200).json({ success: true, message: 'Report updated successfully', report: report[1][0] });
         }
         return res.status(404).json({ success: false, message: 'Report could not be found' });
       })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Report could not be updated'})
-      });
+      .catch(() => res.status(500).json({ success: false, message: 'Report could not be updated' }));
   }
 
   /**
@@ -169,7 +146,6 @@ export default class ReportController {
    * @returns {object} - status, message and report detail
    */
   static resolveReport(req, res) {
-
     const data = reqReportParams(req);
 
     return Article.findOne({
@@ -192,13 +168,11 @@ export default class ReportController {
       })
       .then((report) => {
         if (report) {
-          return res.status(200).json({ success: true, message: 'Report resolved successfully', report:  report[1][0] });
+          return res.status(200).json({ success: true, message: 'Report resolved successfully', report: report[1][0] });
         }
         return res.status(404).json({ success: false, message: 'Report could not be found' });
       })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Report could not be resolved'})
-      });
+      .catch(() => res.status(500).json({ success: false, message: 'Report could not be resolved' }));
   }
 
   /**
@@ -208,7 +182,6 @@ export default class ReportController {
    * @returns {object} - status, message and report detail
    */
   static getResolvedArticleReport(req, res) {
-
     const data = reqReportParams(req);
 
     return Article.findOne({
@@ -236,9 +209,7 @@ export default class ReportController {
         }
         return res.status(404).json({ success: false, message: 'Report could not be found' });
       })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Resolved report could not be fetched'})
-      });
+      .catch(() => res.status(500).json({ success: false, message: 'Resolved report could not be fetched' }));
   }
 
   /**
@@ -248,7 +219,6 @@ export default class ReportController {
    * @returns {object} - status, message and report detail
    */
   static getUnresolvedArticleReport(req, res) {
-
     const data = reqReportParams(req);
 
     return Article.findOne({
@@ -276,9 +246,7 @@ export default class ReportController {
         }
         return res.status(404).json({ success: false, message: 'Report could not be found' });
       })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Unresolved report could not be fetched'})
-      });
+      .catch(() => res.status(500).json({ success: false, message: 'Unresolved report could not be fetched' }));
   }
 
   /**
@@ -287,8 +255,7 @@ export default class ReportController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and report detail
    */
-  static getResolvedReport(req, res) {
-
+  static getAllResolvedReport(req, res) {
     return Report.findAll({
       order: [
         ['createdAt', 'DESC'],
@@ -297,12 +264,8 @@ export default class ReportController {
         resolved: true,
       }
     })
-      .then((reports) => {
-        return res.status(200).json({ success: true, message: 'Resolved report fetched successfully', reports });
-      })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Resolved report could not be fetched'})
-      });
+      .then(reports => res.status(200).json({ success: true, message: 'Resolved report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Resolved report could not be fetched' }));
   }
 
   /**
@@ -311,8 +274,7 @@ export default class ReportController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and report detail
    */
-  static getUnresolvedReport(req, res) {
-
+  static getAllUnresolvedReport(req, res) {
     return Report.findAll({
       order: [
         ['createdAt', 'DESC'],
@@ -321,13 +283,7 @@ export default class ReportController {
         resolved: false,
       }
     })
-      .then((reports) => {
-        return res.status(200).json({ success: true, message: 'Unresolved report fetched successfully', reports });
-      })
-      .catch((err) => {
-        return res.status(500).json({ success: false, message: 'Unresolved report could not be fetched'})
-      });
+      .then(reports => res.status(200).json({ success: true, message: 'Unresolved report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Unresolved report could not be fetched' }));
   }
-
 }
-

@@ -1,5 +1,5 @@
 
-export const reqReportParams = (req) => {
+export default (req) => {
   const data = Object.assign(
     {},
     req.body,
@@ -11,5 +11,4 @@ export const reqReportParams = (req) => {
   );
 
   return data;
-}
-
+};

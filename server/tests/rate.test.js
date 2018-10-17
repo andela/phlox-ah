@@ -26,7 +26,7 @@ describe('Rates', () => {
 
   it('Should rate an article', (done) => {
     chai.request(app)
-      .post('/api/v1/articles/title-of-article/rate')
+      .post('/api/v1/articles/title-of-article1/rate')
       .set('x-access-token', token)
       .send({ rating: 2 })
       .end((err, res) => {

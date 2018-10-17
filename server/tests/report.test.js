@@ -81,7 +81,7 @@ describe('Report', () => {
 
   it('Should not create a report', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/slug-title-123/reports`)
+      .post('/api/v1/articles/slug-title-123/reports')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -95,7 +95,7 @@ describe('Report', () => {
 
   it('Should not create a report', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/slug-title-123/reports`)
+      .post('/api/v1/articles/slug-title-123/reports')
       .set('x-access-token', token)
       .send({})
       .end((err, res) => {
@@ -109,7 +109,7 @@ describe('Report', () => {
 
   it('Should not edit non-existing report', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/slug-title-123/reports/100/edit`)
+      .put('/api/v1/articles/slug-title-123/reports/100/edit')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -153,7 +153,7 @@ describe('Report', () => {
 
   it('Should not get all resolved report for an article', (done) => {
     chai.request(app)
-      .get(`/api/v1/articles/slug-title-123/reports/resolved`)
+      .get('/api/v1/articles/slug-title-123/reports/resolved')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -182,7 +182,7 @@ describe('Report', () => {
 
   it('Should not get all unresolved report for an article', (done) => {
     chai.request(app)
-      .get(`/api/v1/articles/slug-title-123/reports/unresolved`)
+      .get('/api/v1/articles/slug-title-123/reports/unresolved')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -226,7 +226,7 @@ describe('Report', () => {
 
   it('Should get all resolved report', (done) => {
     chai.request(app)
-      .get(`/api/v1/reports/resolved`)
+      .get('/api/v1/reports/resolved')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -241,7 +241,7 @@ describe('Report', () => {
 
   it('Should get all unresolved report', (done) => {
     chai.request(app)
-      .get(`/api/v1/reports/unresolved`)
+      .get('/api/v1/reports/unresolved')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -253,8 +253,4 @@ describe('Report', () => {
         done();
       });
   });
-
-
 });
-
-

@@ -1,7 +1,7 @@
 import express from 'express';
 import ReportController from '../../controllers/reportController';
 import Authenticator from '../../middlewares/authenticator';
-import { isValidReportData } from '../../middlewares/reportValidations';
+import isValidReportData from '../../middlewares/reportValidations';
 
 const { checkToken } = Authenticator;
 
@@ -13,8 +13,8 @@ router.put('/articles/:articleSlug/reports/:reportId/edit', checkToken, ReportCo
 router.put('/articles/:articleSlug/reports/:reportId/resolve', checkToken, ReportController.resolveReport);
 router.get('/articles/:articleSlug/reports/resolved', checkToken, ReportController.getResolvedArticleReport);
 router.get('/articles/:articleSlug/reports/unresolved', checkToken, ReportController.getUnresolvedArticleReport);
-router.get('/reports/resolved', checkToken, ReportController.getResolvedReport);
-router.get('/reports/unresolved', checkToken, ReportController.getUnresolvedReport);
+router.get('/reports/resolved', checkToken, ReportController.getAllResolvedReport);
+router.get('/reports/unresolved', checkToken, ReportController.getAllUnresolvedReport);
 router.get('/reports', checkToken, ReportController.getAllReport);
 
 

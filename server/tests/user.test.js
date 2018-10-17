@@ -2,16 +2,26 @@
 import faker from 'faker';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import bcrypt from 'bcrypt';
 import db from '../models';
 import app from '../index';
 
 chai.use(chaiHttp);
+
+const hash = bcrypt.hashSync('password', 10);
 
 const verifyUser = {
   username: faker.internet.userName(),
   email: faker.internet.email().toLowerCase(),
   password: 'password',
   verifyToken: faker.random.uuid()
+};
+
+const verifiedUser = {
+  username: faker.internet.userName(),
+  email: 'frank@gmail.com',
+  password: hash,
+  isVerified: true
 };
 
 const testUser = {
@@ -48,6 +58,15 @@ describe('Users', () => {
         done();
       });
   });
+
+  // create a verified user account
+  before((done) => {
+    db.User.create(verifiedUser)
+      .then(() => {
+        done();
+      });
+  });
+
   // create user into the database and retrieve it verification token
   before((done) => {
     db.User.create(verifyUser)
@@ -314,10 +333,22 @@ describe('Users', () => {
   });
 
   describe('Login User', () => {
-    it('should login a user and return a token', (done) => {
+    it('should not login a user if the user has not verify their account', (done) => {
       chai.request(app)
         .post('/api/v1/login')
         .send({ emailOrUsername: 'testuser', password: 'password' })
+        .end((err, res) => {
+          expect(res).to.have.status(403);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.equal('Please verify your account');
+          done();
+        });
+    });
+
+    it('should login a user and return a token', (done) => {
+      chai.request(app)
+        .post('/api/v1/login')
+        .send({ emailOrUsername: 'frank@gmail.com', password: 'password' })
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('token');
@@ -340,7 +371,7 @@ describe('Users', () => {
     it('Should return error message when user tries to login in with invalid password', (done) => {
       chai.request(app)
         .post('/api/v1/login')
-        .send({ emailOrUsername: 'testuser', password: 'wrongpassword' })
+        .send({ emailOrUsername: 'frank@gmail.com', password: 'wrongpassword' })
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(400);
@@ -458,6 +489,44 @@ describe('Users', () => {
           expect(res.body.message).to.eql('Follows/Followers');
           expect(res.body.following).to.be.an('array');
           expect(res.body.followers).to.be.an('array');
+          done();
+        });
+    });
+  });
+
+  describe('List Users', () => {
+    it('should list all authors and their profile', (done) => {
+      chai.request(app)
+        .get('/api/v1/users')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.users[0]).to.have.property('Profile');
+          expect(res.body.message).to.equal('users retrieved successfully');
+          done();
+        });
+    });
+
+    it('should get a user with profile details', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/johndoe')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.equal('user details retrieved successfully');
+          done();
+        });
+    });
+    it('should not get profile details of invalid', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/johndoesss')
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.equal('user does not exist');
           done();
         });
     });

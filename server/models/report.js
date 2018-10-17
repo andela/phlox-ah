@@ -5,24 +5,24 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
-    body:{
+    body: {
       allowNull: false,
       type: DataTypes.TEXT
-    }, 
-    resolved:{
+    },
+    resolved: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }, 
+    },
   }, {});
-  Report.associate = function(models) {
+  Report.associate = function (models) {
     Report.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
-    }); 
+    });
     Report.belongsTo(models.Article, {
       foreignKey: 'articleSlug',
       onDelete: 'CASCADE',
-    }); 
+    });
   };
   return Report;
 };

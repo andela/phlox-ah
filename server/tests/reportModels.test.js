@@ -37,5 +37,3 @@ describe('Report model validation', () => {
       });
   });
 });
-
-
