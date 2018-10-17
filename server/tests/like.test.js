@@ -6,7 +6,7 @@ import app from '../index';
 
 chai.use(chaiHttp);
 
-const slug = 'title-of-article';
+const slug = 'title-of-article1';
 
 let token = '';
 

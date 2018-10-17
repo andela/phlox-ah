@@ -6,6 +6,7 @@ import ArticleValidations from '../../middlewares/articleValidations';
 import RateValidations from '../../middlewares/rateValidations';
 import Authenticator from '../../middlewares/authenticator';
 import LikeController from '../../controllers/likeController';
+import SearchController from '../../controllers/searchController';
 
 const { checkToken } = Authenticator;
 
@@ -21,4 +22,5 @@ router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, 
 router.post('/articles/:slug/like', checkToken, LikeController.likeArticle);
 router.post('/articles/:slug/dislike', checkToken, LikeController.dislikeArticle);
 
+router.get('/search', SearchController.searchWith);
 export default router;
