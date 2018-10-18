@@ -44,6 +44,11 @@ module.exports = {
     verifyToken: {
       type: Sequelize.STRING
     },
+    emailNotification: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

@@ -67,6 +67,11 @@ export default (sequelize, DataTypes) => {
     verifyToken: {
       type: DataTypes.STRING
     },
+    emailNotification: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {
@@ -79,6 +84,9 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Like, {
       foreignKey: 'userId',
       as: 'likes'
+    });
+    User.hasMany(models.Notification, {
+      foreignKey: 'userId',
     });
     User.hasOne(models.Profile, {
       foreignKey: 'userId',
