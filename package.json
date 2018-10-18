@@ -12,6 +12,7 @@
     "migrate-undo": "sequelize db:migrate:undo:all",
     "migrate": "sequelize db:migrate",
     "migrate-reset": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "seed:admin": "sequelize db:seed --seed server/seeders/20181017084637-create-admin.js",
     "seed": "sequelize db:seed:all",
     "pretest": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test && sequelize db:seed:all --env test",
     "test": "cross-env process.env.NODE_ENV=test nyc mocha --compilers js:babel-core/register ./server/tests/**/'*.test.js' --recursive --exit || true",
