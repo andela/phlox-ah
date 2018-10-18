@@ -26,8 +26,7 @@ export default class LikeReplyController {
             replyId: req.params.replyId
           },
           defaults: {
-            like: true,
-            dislike: false
+            like: true
           }
         })
           .spread((reaction, created) => {
@@ -72,8 +71,7 @@ export default class LikeReplyController {
             replyId: req.params.replyId
           },
           defaults: {
-            like: false,
-            dislike: true
+            like: false
           }
         })
           .spread((reaction, created) => {
