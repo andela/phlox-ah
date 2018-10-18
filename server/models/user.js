@@ -67,11 +67,16 @@ export default (sequelize, DataTypes) => {
     verifyToken: {
       type: DataTypes.STRING
     },
+    role: {
+      type: DataTypes.ENUM,
+      defaultValue: 'User',
+      values: ['Admin', 'Author', 'User']
+    },
     emailNotification: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: true
-    },
+    }
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {
@@ -104,6 +109,10 @@ export default (sequelize, DataTypes) => {
     });
     User.hasMany(models.Bookmark, {
       foreignKey: 'userId'
+    });
+    User.hasMany(models.CommentsHistory, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
     });
   };
   return User;
