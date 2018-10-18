@@ -11,6 +11,14 @@ module.exports = {
   },
   {
     username: 'janedoe',
+    email: 'janedoe@something.com',
+    password: 'secret123',
+    isVerified: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    username: 'jannny',
     email: 'jane@something.com',
     password: bcrypt.hashSync('password', 10),
     isVerified: true,
@@ -36,6 +44,5 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
-
   down: queryInterface => queryInterface.bulkDelete('Users', null, {})
 };
