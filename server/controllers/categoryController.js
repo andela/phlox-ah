@@ -10,10 +10,10 @@ const {
   */
 export default class CategoryController {
   /**
-  * @description -This method creates article for an authenticated user
+  * @description -This method gets all categories
   * @param {object} req - The request payload sent from the router
   * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and article detail
+  * @returns {object} - status, message and categories
   */
   static getAllCategories(req, res) {
     Category.findAll()
@@ -24,10 +24,10 @@ export default class CategoryController {
   }
 
   /**
-  * @description -This method creates article for an authenticated user
+  * @description -This method get articles by category
   * @param {object} req - The request payload sent from the router
   * @param {object} res - The response payload sent back from the controller
-  * @returns {object} - status, message and article detail
+  * @returns {object} - status, message and articles
   */
   static getArticlesByCategory(req, res) {
     const { categoryName } = req.params;

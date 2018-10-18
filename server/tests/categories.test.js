@@ -64,7 +64,7 @@ describe('Categories', () => {
       .end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
-        expect(res.body.message).to.be.equal('there are no articles with this category');
+        expect(res.body.message).to.be.equal('there are no articles on this category');
         done();
       });
   });
