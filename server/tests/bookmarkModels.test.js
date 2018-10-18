@@ -39,7 +39,7 @@ describe('Bookmark model validations', () => {
       .catch((error) => {
         articleIdError = error.message;
       });
-    it('should ensure that rating is not null', () => {
+    it('should ensure that articleId is not null', () => {
       expect(articleIdError).to.equal('notNull Violation: Bookmark.articleId cannot be null');
     });
   });

@@ -102,6 +102,10 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Bookmark, {
       foreignKey: 'userId'
     });
+    User.hasMany(models.CommentsHistory, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+    });
   };
   return User;
 };
