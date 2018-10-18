@@ -5,6 +5,7 @@ module.exports = {
     slug: 'title-of-article1',
     description: 'description of article1',
     userId: 1,
+    categoryId: 1,
     readTime: 1,
     createdAt: new Date(),
     updatedAt: new Date()
@@ -15,6 +16,7 @@ module.exports = {
     slug: 'title-of-article2',
     description: 'description of article2',
     userId: 2,
+    categoryId: 2,
     readTime: 1,
     createdAt: new Date(),
     updatedAt: new Date()
@@ -25,6 +27,7 @@ module.exports = {
     slug: 'title-of-article3',
     description: 'description of article3',
     userId: 1,
+    categoryId: 3,
     readTime: 1,
     createdAt: new Date(),
     updatedAt: new Date()
