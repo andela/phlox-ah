@@ -64,4 +64,29 @@ export default class CategoryController {
       })
       .catch(error => res.status(500).json(error));
   }
+
+  /**
+  * @description -This method creates a category
+  * @param {object} req - The request payload sent from the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status, message and category details
+  */
+  static createCategory(req, res) {
+    const { category } = req.body.category;
+    Category.findOrCreate({
+      where: {
+        category: req.body.category
+      },
+      defaults: {
+        category
+      }
+    })
+      .spread((categories, created) => {
+        if (!created) {
+          res.status(200).json({ status: false, message: 'this category already exists' });
+        } else {
+          res.status(200).json({ status: true, categories, message: 'category created successfully' });
+        }
+      });
+  }
 }

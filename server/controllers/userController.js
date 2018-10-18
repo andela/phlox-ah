@@ -36,7 +36,7 @@ export default class UserController {
       })
         .then((user) => {
           const token = generateToken({
-            id: user.dataValues.id, username: user.username, email: user.email
+            id: user.dataValues.id, username: user.username, email: user.email, role: user.role
           });
           // set the url
           const url = `http://${req.headers.host}/api/v1/users/verify/${verifyToken}`;
@@ -160,7 +160,7 @@ export default class UserController {
             .send({ success: false, message: 'Invalid Email/Username or password' });
         }
         const {
-          id, email, username, isVerified
+          id, email, username, isVerified, role
         } = user.dataValues;
 
         if (!isVerified) {
@@ -168,7 +168,9 @@ export default class UserController {
         }
 
         if (bcrypt.compareSync(req.body.password, user.password)) {
-          const token = generateToken({ id, email, username });
+          const token = generateToken({
+            id, email, username, role
+          });
           res.json({
             success: true, message: 'Successfully logged in!', user, token
           });

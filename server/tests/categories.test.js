@@ -35,6 +35,34 @@ describe('Categories', () => {
         done();
       });
   });
+  it('Should add to categories', (done) => {
+    chai.request(app)
+      .post('/api/v1/categories')
+      .set('x-access-token', token)
+      .send({
+        category: 'bollywood'
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('category created successfully');
+        done();
+      });
+  });
+  it('Should not add to categories if categories exist', (done) => {
+    chai.request(app)
+      .post('/api/v1/categories')
+      .set('x-access-token', token)
+      .send({
+        category: 'bollywood'
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('this category already exists');
+        done();
+      });
+  });
   it('Should get all articles in a categoriy', (done) => {
     chai.request(app)
       .get('/api/v1/religion/articles')
