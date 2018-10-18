@@ -46,7 +46,7 @@ describe('Admin', () => {
   describe('When user does not have permission', () => {
     it('should denied permission if user role is User', (done) => {
       chai.request(app)
-        .post('/api/v1/admins/setRole')
+        .post('/api/v1/admins/role')
         .set('x-access-token', userToken)
         .send(validInput)
         .end((err, res) => {
@@ -60,7 +60,7 @@ describe('Admin', () => {
 
     it('should denied permission if user role is Author', (done) => {
       chai.request(app)
-        .post('/api/v1/admins/setRole')
+        .post('/api/v1/admins/role')
         .set('x-access-token', authorToken)
         .send(validInput)
         .end((err, res) => {
@@ -76,7 +76,7 @@ describe('Admin', () => {
   describe('When user have permission', () => {
     it('should set role if user role is Admin', (done) => {
       chai.request(app)
-        .post('/api/v1/admins/setRole')
+        .post('/api/v1/admins/role')
         .set('x-access-token', adminToken)
         .send(validInput)
         .end((err, res) => {
@@ -92,7 +92,7 @@ describe('Admin', () => {
   describe('When user does not exist', () => {
     it('should return no user found', (done) => {
       chai.request(app)
-        .post('/api/v1/admins/setRole')
+        .post('/api/v1/admins/role')
         .set('x-access-token', adminToken)
         .send({ userId: 599, role: 'Author' })
         .end((err, res) => {
@@ -108,7 +108,7 @@ describe('Admin', () => {
   describe('When role input is invalid', () => {
     it('should return invalid role input', (done) => {
       chai.request(app)
-        .post('/api/v1/admins/setRole')
+        .post('/api/v1/admins/role')
         .set('x-access-token', adminToken)
         .send({ userId: 2, role: 'Auth' })
         .end((err, res) => {

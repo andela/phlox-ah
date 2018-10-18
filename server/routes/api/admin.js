@@ -8,6 +8,6 @@ const { checkToken } = Authenticator;
 
 const router = express.Router();
 
-router.post('/admins/setRole', checkToken, permit('Admin'), RoleValidation.setRole, AdminController.changeRole);
+router.post('/admins/role', checkToken, permit('Admin'), RoleValidation.setRole, AdminController.changeRole);
 
 export default router;
