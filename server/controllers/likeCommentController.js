@@ -26,8 +26,7 @@ export default class LikeCommentController {
             commentId: req.params.commentId
           },
           defaults: {
-            like: true,
-            dislike: false
+            like: true
           }
         })
           .spread((reaction, created) => {
@@ -72,8 +71,7 @@ export default class LikeCommentController {
             commentId: req.params.commentId
           },
           defaults: {
-            like: false,
-            dislike: true
+            like: false
           }
         })
           .spread((reaction, created) => {

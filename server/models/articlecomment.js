@@ -23,6 +23,9 @@ export default (sequelize, DataTypes) => {
     ArticleComment.hasMany(models.LikeComment, {
       foreignKey: 'commentId',
       as: 'likes',
+    });
+    ArticleComment.hasMany(models.CommentsHistory, {
+      foreignKey: 'commentId',
       onDelete: 'CASCADE',
     });
   };
