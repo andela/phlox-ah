@@ -53,6 +53,7 @@ describe('Categories', () => {
       .end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
+<<<<<<< HEAD
         expect(res.body.message).to.be.equal('category does not exist');
         done();
       });
@@ -65,6 +66,9 @@ describe('Categories', () => {
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.be.equal('there are no articles on this category');
+=======
+        expect(res.body.message).to.be.equal('there are no articles with this category');
+>>>>>>> 74111e5983a26aa35798e4154c3f1f28921a5c8f
         done();
       });
   });
