@@ -20,20 +20,15 @@ export default class ReportController {
     return Article.findOne({
       where: {
         userId: data.userId,
-        slug: data.articleSlug
+        slug: data.articleSlug,
       }
     })
       .then((article) => {
         if (article) {
-          return Report.create(data);
+          return Report.create(data)
+            .then(report => res.status(201).json({ success: true, message: 'Report added successfully', report }));
         }
-        return null;
-      })
-      .then((report) => {
-        if (report) {
-          return res.status(201).json({ success: true, message: 'Report added successfully', report });
-        }
-        return res.status(404).json({ success: false, message: 'Article could not be found' });
+        return res.status(400).json({ success: false, message: 'Report could not be added' });
       })
       .catch(() => res.status(500).json({ success: false, message: 'Report could not be added' }));
   }
@@ -47,34 +42,19 @@ export default class ReportController {
   static getArticleReport(req, res) {
     const data = reqReportParams(req);
 
-    return Article.findOne({
-      where: {
-        slug: data.articleSlug
-      }
+    return Report.findAll({
+      where: { articleSlug: data.articleSlug },
+      order: [
+        ['createdAt', 'DESC'],
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ['username', 'email']
+        },
+      ]
     })
-      .then((article) => {
-        if (article) {
-          return Report.findAll({
-            where: { articleSlug: data.articleSlug },
-            order: [
-              ['createdAt', 'DESC'],
-            ],
-            include: [
-              {
-                model: User,
-                attributes: ['username', 'email']
-              },
-            ]
-          });
-        }
-        return null;
-      })
-      .then((reports) => {
-        if (reports) {
-          return res.status(200).json({ success: true, message: 'Report fetched successfully', reports });
-        }
-        return res.status(404).json({ success: false, message: 'Report could not be found' });
-      })
+      .then(reports => res.status(200).json({ success: true, message: 'Report fetched successfully', reports }))
       .catch(() => res.status(500).json({ success: false, message: 'Report could not be fetched' }));
   }
 
@@ -109,181 +89,124 @@ export default class ReportController {
   static editReport(req, res) {
     const data = reqReportParams(req);
 
-    return Article.findOne({
+    return Report.update({
+      title: data.title,
+      body: data.body,
+    }, {
       where: {
+        id: data.reportId,
         userId: data.userId,
-        slug: data.articleSlug
-      }
+        articleSlug: data.articleSlug,
+      },
+      returning: true,
     })
-      .then((article) => {
-        if (article) {
-          return Report.update({
-            title: data.title,
-            body: data.body,
-          }, {
-            where: {
-              id: data.reportId,
-              userId: data.userId,
-            },
-            returning: true,
-          });
-        }
-        return null;
-      })
-      .then((report) => {
-        if (report) {
-          return res.status(200).json({ success: true, message: 'Report updated successfully', report: report[1][0] });
-        }
-        return res.status(404).json({ success: false, message: 'Report could not be found' });
-      })
+      .then(report => res.status(200).json({ success: true, message: 'Report updated successfully', report: report[1][0] }))
       .catch(() => res.status(500).json({ success: false, message: 'Report could not be updated' }));
   }
 
   /**
-   * @description -This method resolves report of a particular article
+   * @description -This method approves report of a particular article
    * @param {object} req - The request payload sent from the router
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and report detail
    */
-  static resolveReport(req, res) {
+  static approveReport(req, res) {
     const data = reqReportParams(req);
 
-    return Article.findOne({
+    return Report.update({
+      approve: true,
+    }, {
       where: {
-        slug: data.articleSlug
-      }
+        id: data.reportId,
+        articleSlug: data.articleSlug,
+      },
+      returning: true,
     })
-      .then((article) => {
-        if (article) {
-          return Report.update({
-            resolved: true,
-          }, {
-            where: {
-              id: data.reportId
-            },
-            returning: true,
-          });
-        }
-        return null;
-      })
       .then((report) => {
-        if (report) {
-          return res.status(200).json({ success: true, message: 'Report resolved successfully', report: report[1][0] });
-        }
-        return res.status(404).json({ success: false, message: 'Report could not be found' });
+        res.status(200).json({ success: true, message: 'Report approved successfully', report: report[1][0] });
       })
-      .catch(() => res.status(500).json({ success: false, message: 'Report could not be resolved' }));
+      .catch(() => res.status(500).json({ success: false, message: 'Report could not be approved' }));
   }
 
   /**
-   * @description -This method get resolved report of a particular article
+   * @description -This method get approved report of a particular article
    * @param {object} req - The request payload sent from the router
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and report detail
    */
-  static getResolvedArticleReport(req, res) {
+  static getApproveArticleReport(req, res) {
     const data = reqReportParams(req);
 
-    return Article.findOne({
-      where: {
-        slug: data.articleSlug
-      }
-    })
-      .then((article) => {
-        if (article) {
-          return Report.findAll({
-            order: [
-              ['createdAt', 'DESC'],
-            ],
-            where: {
-              articleSlug: data.articleSlug,
-              resolved: true,
-            }
-          });
-        }
-        return null;
-      })
-      .then((reports) => {
-        if (reports) {
-          return res.status(200).json({ success: true, message: 'Resolved report fetched successfully', reports });
-        }
-        return res.status(404).json({ success: false, message: 'Report could not be found' });
-      })
-      .catch(() => res.status(500).json({ success: false, message: 'Resolved report could not be fetched' }));
-  }
-
-  /**
-   * @description -This method get unresolved report of a particular article
-   * @param {object} req - The request payload sent from the router
-   * @param {object} res - The response payload sent back from the controller
-   * @returns {object} - status, message and report detail
-   */
-  static getUnresolvedArticleReport(req, res) {
-    const data = reqReportParams(req);
-
-    return Article.findOne({
-      where: {
-        slug: data.articleSlug
-      }
-    })
-      .then((article) => {
-        if (article) {
-          return Report.findAll({
-            order: [
-              ['createdAt', 'DESC'],
-            ],
-            where: {
-              articleSlug: data.articleSlug,
-              resolved: false,
-            }
-          });
-        }
-        return null;
-      })
-      .then((reports) => {
-        if (reports) {
-          return res.status(200).json({ success: true, message: 'Unresolved report fetched successfully', reports });
-        }
-        return res.status(404).json({ success: false, message: 'Report could not be found' });
-      })
-      .catch(() => res.status(500).json({ success: false, message: 'Unresolved report could not be fetched' }));
-  }
-
-  /**
-   * @description -This method get resolved report
-   * @param {object} req - The request payload sent from the router
-   * @param {object} res - The response payload sent back from the controller
-   * @returns {object} - status, message and report detail
-   */
-  static getAllResolvedReport(req, res) {
     return Report.findAll({
       order: [
         ['createdAt', 'DESC'],
       ],
       where: {
-        resolved: true,
+        articleSlug: data.articleSlug,
+        approve: true,
       }
     })
-      .then(reports => res.status(200).json({ success: true, message: 'Resolved report fetched successfully', reports }))
-      .catch(() => res.status(500).json({ success: false, message: 'Resolved report could not be fetched' }));
+      .then(reports => res.status(200).json({ success: true, message: 'Approved report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Approved report could not be fetched' }));
   }
 
   /**
-   * @description -This method get all unresolved report
+   * @description -This method get disapprove report of a particular article
    * @param {object} req - The request payload sent from the router
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - status, message and report detail
    */
-  static getAllUnresolvedReport(req, res) {
+  static getDisapproveArticleReport(req, res) {
+    const data = reqReportParams(req);
+
     return Report.findAll({
       order: [
         ['createdAt', 'DESC'],
       ],
       where: {
-        resolved: false,
+        articleSlug: data.articleSlug,
+        approve: false,
       }
     })
-      .then(reports => res.status(200).json({ success: true, message: 'Unresolved report fetched successfully', reports }))
-      .catch(() => res.status(500).json({ success: false, message: 'Unresolved report could not be fetched' }));
+      .then(reports => res.status(200).json({ success: true, message: 'Disapproved report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Disapproved report could not be fetched' }));
+  }
+
+  /**
+   * @description -This method get approved report
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and report detail
+   */
+  static getAllApproveReport(req, res) {
+    return Report.findAll({
+      order: [
+        ['createdAt', 'DESC'],
+      ],
+      where: {
+        approve: true,
+      }
+    })
+      .then(reports => res.status(200).json({ success: true, message: 'Approved report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Approved report could not be fetched' }));
+  }
+
+  /**
+   * @description -This method get all disapprove report
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status, message and report detail
+   */
+  static getAllDisapproveReport(req, res) {
+    return Report.findAll({
+      order: [
+        ['createdAt', 'DESC'],
+      ],
+      where: {
+        approve: false,
+      }
+    })
+      .then(reports => res.status(200).json({ success: true, message: 'Disapproved report fetched successfully', reports }))
+      .catch(() => res.status(500).json({ success: false, message: 'Disapproved report could not be fetched' }));
   }
 }

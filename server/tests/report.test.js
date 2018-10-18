@@ -72,23 +72,9 @@ describe('Report', () => {
         reportId = res.body.report.id;
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');
-        expect(res.body.report).to.be.have.property('resolved');
+        expect(res.body.report).to.be.have.property('approve');
         expect(res.body.report).to.be.have.property('title');
         expect(res.body.report).to.be.have.property('body');
-        done();
-      });
-  });
-
-  it('Should not create a report', (done) => {
-    chai.request(app)
-      .post('/api/v1/articles/slug-title-123/reports')
-      .set('x-access-token', token)
-      .send(report)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.have.property('success');
-        expect(res.body).to.be.have.property('message');
         done();
       });
   });
@@ -107,20 +93,6 @@ describe('Report', () => {
       });
   });
 
-  it('Should not edit non-existing report', (done) => {
-    chai.request(app)
-      .put('/api/v1/articles/slug-title-123/reports/100/edit')
-      .set('x-access-token', token)
-      .send(report)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.have.property('success');
-        expect(res.body).to.be.have.property('message');
-        done();
-      });
-  });
-
   it('Should edit a report', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${articleSlug}/reports/${reportId}/edit`)
@@ -129,45 +101,31 @@ describe('Report', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.report).to.be.have.property('resolved');
+        expect(res.body.report).to.be.have.property('approve');
         expect(res.body.report).to.be.have.property('title');
         expect(res.body.report).to.be.have.property('body');
         done();
       });
   });
 
-  it('Should resolve a report', (done) => {
+  it('Should approve a report', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/${articleSlug}/reports/${reportId}/resolve`)
+      .put(`/api/v1/articles/${articleSlug}/reports/${reportId}/approve`)
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
-        expect(res.body.report).to.be.have.property('resolved');
+        expect(res.body.report).to.be.have.property('approve');
         expect(res.body.report).to.be.have.property('title');
         expect(res.body.report).to.be.have.property('body');
         done();
       });
   });
 
-  it('Should not get all resolved report for an article', (done) => {
+  it('Should get all approve report for an article', (done) => {
     chai.request(app)
-      .get('/api/v1/articles/slug-title-123/reports/resolved')
-      .set('x-access-token', token)
-      .send(report)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.have.property('success');
-        expect(res.body).to.be.have.property('message');
-        done();
-      });
-  });
-
-  it('Should get all resolved report for an article', (done) => {
-    chai.request(app)
-      .get(`/api/v1/articles/${articleSlug}/reports/resolved`)
+      .get(`/api/v1/articles/${articleSlug}/reports/approve`)
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -180,23 +138,9 @@ describe('Report', () => {
       });
   });
 
-  it('Should not get all unresolved report for an article', (done) => {
+  it('Should get all disapprove report for an article', (done) => {
     chai.request(app)
-      .get('/api/v1/articles/slug-title-123/reports/unresolved')
-      .set('x-access-token', token)
-      .send(report)
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.have.property('success');
-        expect(res.body).to.be.have.property('message');
-        done();
-      });
-  });
-
-  it('Should get all unresolved report for an article', (done) => {
-    chai.request(app)
-      .get(`/api/v1/articles/${articleSlug}/reports/unresolved`)
+      .get(`/api/v1/articles/${articleSlug}/reports/disapprove`)
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -209,9 +153,9 @@ describe('Report', () => {
       });
   });
 
-  it('Should get all unresolved report for an article', (done) => {
+  it('Should get all disapprove report for an article', (done) => {
     chai.request(app)
-      .get(`/api/v1/articles/${articleSlug}/reports/unresolved`)
+      .get(`/api/v1/articles/${articleSlug}/reports/disapprove`)
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -224,9 +168,9 @@ describe('Report', () => {
       });
   });
 
-  it('Should get all resolved report', (done) => {
+  it('Should get all approve report', (done) => {
     chai.request(app)
-      .get('/api/v1/reports/resolved')
+      .get('/api/v1/reports/approve')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {
@@ -239,9 +183,9 @@ describe('Report', () => {
       });
   });
 
-  it('Should get all unresolved report', (done) => {
+  it('Should get all disapprove report', (done) => {
     chai.request(app)
-      .get('/api/v1/reports/unresolved')
+      .get('/api/v1/reports/disapprove')
       .set('x-access-token', token)
       .send(report)
       .end((err, res) => {

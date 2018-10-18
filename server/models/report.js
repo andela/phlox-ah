@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.TEXT
     },
-    resolved: {
+    approve: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

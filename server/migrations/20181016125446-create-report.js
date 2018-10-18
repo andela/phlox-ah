@@ -33,7 +33,7 @@ module.exports = {
       allowNull: false,
       type: Sequelize.TEXT
     },
-    resolved: {
+    approve: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },

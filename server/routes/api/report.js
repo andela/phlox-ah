@@ -10,11 +10,11 @@ const router = express.Router();
 router.post('/articles/:articleSlug/reports', checkToken, isValidReportData, ReportController.createReport);
 router.get('/articles/:articleSlug/reports', checkToken, ReportController.getArticleReport);
 router.put('/articles/:articleSlug/reports/:reportId/edit', checkToken, ReportController.editReport);
-router.put('/articles/:articleSlug/reports/:reportId/resolve', checkToken, ReportController.resolveReport);
-router.get('/articles/:articleSlug/reports/resolved', checkToken, ReportController.getResolvedArticleReport);
-router.get('/articles/:articleSlug/reports/unresolved', checkToken, ReportController.getUnresolvedArticleReport);
-router.get('/reports/resolved', checkToken, ReportController.getAllResolvedReport);
-router.get('/reports/unresolved', checkToken, ReportController.getAllUnresolvedReport);
+router.put('/articles/:articleSlug/reports/:reportId/approve', checkToken, ReportController.approveReport);
+router.get('/articles/:articleSlug/reports/approve', checkToken, ReportController.getApproveArticleReport);
+router.get('/articles/:articleSlug/reports/disapprove', checkToken, ReportController.getDisapproveArticleReport);
+router.get('/reports/approve', checkToken, ReportController.getAllApproveReport);
+router.get('/reports/disapprove', checkToken, ReportController.getAllDisapproveReport);
 router.get('/reports', checkToken, ReportController.getAllReport);
 
 
