@@ -15,7 +15,7 @@ describe('Notification', () => {
       message: 'test notification message'
     })
       .then(() => done())
-      .catch(e => console.log(e));
+      .catch();
   });
 
   describe('get notifications', () => {
