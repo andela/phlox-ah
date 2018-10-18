@@ -16,6 +16,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'commentId',
       onDelete: 'CASCADE',
     });
+    Reply.hasMany(models.LikeReply, {
+      foreignKey: 'replyId',
+      as: 'likes',
+      onDelete: 'CASCADE',
+    });
   };
   return Reply;
 };

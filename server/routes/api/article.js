@@ -19,7 +19,8 @@ router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
 router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, RateController.rateArticle);
-router.post('/articles/:slug/:likeType', checkToken, LikeController.likeArticle);
+router.post('/articles/:slug/like', checkToken, LikeController.likeArticle);
+router.post('/articles/:slug/dislike', checkToken, LikeController.dislikeArticle);
 
 router.get('/search', SearchController.searchWith);
 export default router;
