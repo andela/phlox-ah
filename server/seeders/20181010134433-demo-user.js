@@ -4,6 +4,7 @@ module.exports = {
     email: 'jd@something.com',
     password: 'secret123',
     isVerified: true,
+    emailNotification: true,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -12,6 +13,7 @@ module.exports = {
     email: 'janedoe@something.com',
     password: 'secret123',
     isVerified: true,
+    emailNotification: true,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
