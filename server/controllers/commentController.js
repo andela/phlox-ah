@@ -1,6 +1,7 @@
 import Model from '../models';
 import CommentHelpers from '../helpers/comment';
 import CommentsHistoryController from './commentHistoryController';
+import Notification from './notificationController';
 
 const {
   User, Article, ArticleComment, Reply: ReplyArticleComment
@@ -34,6 +35,7 @@ export default class CommentController {
       })
       .then((comment) => {
         if (comment) {
+          Notification.notifyLikers(data.articleSlug, data.userId);
           return res.status(201).json({ success: true, message: 'Comment added successfully', comment });
         }
         return res.status(404).json({ success: false, message: 'Article could not be found' });
