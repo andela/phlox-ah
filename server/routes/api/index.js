@@ -8,6 +8,8 @@ import socialLogin from './socialLogin';
 import bookmark from './bookmark';
 import admin from './admin';
 import commentsHistory from './commentsHistory';
+import notifications from './notifications';
+
 
 const router = express.Router();
 
@@ -20,6 +22,8 @@ router.use('/', socialLogin);
 router.use('/', bookmark);
 router.use('/', admin);
 router.use('/', commentsHistory);
+router.use('/', notifications);
+
 
 router.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {
