@@ -54,6 +54,12 @@ export default (sequelize, DataTypes) => {
     Article.hasMany(models.Bookmark, {
       foreignKey: 'articleId'
     });
+    Article.hasMany(models.HighlightAndComment, {
+      foreignKey: 'articleSlug',
+      sourceKey: 'slug',
+      onDelete: 'CASCADE',
+      as: 'highlightedComments'
+    });
 
     Article.belongsToMany(models.Tag, { as: 'Tags', through: 'ArticlesTags', foreignKey: 'articleId' });
   };

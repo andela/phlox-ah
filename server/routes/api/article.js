@@ -16,6 +16,7 @@ router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations
 router.get('/articles/feed', ArticleController.getAllArticles);
 router.get('/articles', checkToken, ArticleController.getUserArticles);
 router.get('/articles/:slug', ArticleController.getSingleArticle);
+router.get('/articles/feed/:slug', checkToken, ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
 router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, RateController.rateArticle);
