@@ -54,7 +54,6 @@ export default class HighlightAndCommentController {
     const { articleSlug } = req.params;
     HighlightAndComment.findOne({
       where: {
-        // selectedText, articleSlug, userId: req.user.id, id: req.params.highlightCommentId
         selectedText, articleSlug, userId: req.user.id, id: req.params.highlightCommentId
       },
     }).then((highlight) => {
