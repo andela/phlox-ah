@@ -58,7 +58,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleSlug',
       onDelete: 'CASCADE',
     });
-
+    Article.hasMany(models.Shares, {
+      foreignKey: 'articleSlug',
+      onDelete: 'CASCADE',
+    });
     Article.belongsToMany(models.Tag, { as: 'Tags', through: 'ArticlesTags', foreignKey: 'articleId' });
   };
   return Article;
