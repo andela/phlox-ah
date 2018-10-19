@@ -1,4 +1,3 @@
-// add isVerified to the model file, it will be use to check if the user is verified.
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
@@ -67,6 +66,11 @@ export default (sequelize, DataTypes) => {
     verifyToken: {
       type: DataTypes.STRING
     },
+    role: {
+      type: DataTypes.ENUM,
+      defaultValue: 'User',
+      values: ['Admin', 'Author', 'User']
+    }
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {
@@ -99,6 +103,10 @@ export default (sequelize, DataTypes) => {
     });
     User.hasMany(models.HighlightAndComment, {
       foreignKey: 'userId'
+    });
+    User.hasMany(models.CommentsHistory, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
     });
   };
   return User;

@@ -60,6 +60,10 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'highlightedComments'
     });
+    Article.hasMany(models.CommentsHistory, {
+      foreignKey: 'articleSlug',
+      onDelete: 'CASCADE',
+    });
 
     Article.belongsToMany(models.Tag, { as: 'Tags', through: 'ArticlesTags', foreignKey: 'articleId' });
   };

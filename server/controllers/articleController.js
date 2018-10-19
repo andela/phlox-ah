@@ -69,7 +69,14 @@ export default class ArticleController {
         ],
         include: [
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
-          { model: Like, as: 'likes' }
+          {
+            model: Like,
+            as: 'likes',
+            include: [{
+              model: User,
+              attributes: ['username', 'email']
+            }]
+          }
         ]
       })
         .then(articles => ({
@@ -101,7 +108,14 @@ export default class ArticleController {
         ],
         include: [
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
-          { model: Like, as: 'likes' }
+          {
+            model: Like,
+            as: 'likes',
+            include: [{
+              model: User,
+              attributes: ['username', 'email']
+            }]
+          }
         ]
       })
         .then(articles => ({
@@ -137,7 +151,14 @@ export default class ArticleController {
           ],
         },
         { model: Tag, as: 'Tags', through: 'ArticlesTags' },
-        { model: Like, as: 'likes' },
+        {
+          model: Like,
+          as: 'likes',
+          include: [{
+            model: User,
+            attributes: ['username', 'email']
+          }]
+        },
         {
           model: HighlightAndComment,
           as: 'highlightedComments',

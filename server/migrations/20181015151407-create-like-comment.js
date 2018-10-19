@@ -1,6 +1,6 @@
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Likes', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('LikeComments', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -11,6 +11,14 @@ module.exports = {
       allowNull: true,
       type: Sequelize.BOOLEAN
     },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
     userId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
@@ -20,24 +28,16 @@ module.exports = {
         as: 'userId'
       },
     },
-    articleSlug: {
-      type: Sequelize.STRING,
+    commentId: {
+      type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'Articles',
-        key: 'slug',
-        as: 'articleSlug'
+        model: 'ArticleComments',
+        key: 'id',
+        as: 'commentId'
       },
     },
-
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE
-    },
-    updatedAt: {
-      allowNull: false,
-      type: Sequelize.DATE
-    }
   }),
-  down: queryInterface => queryInterface.dropTable('Likes')
+
+  down: queryInterface => queryInterface.dropTable('LikeComments')
 };

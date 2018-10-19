@@ -1,28 +1,29 @@
 import Model from '../models';
 
-const { Like, Article } = Model;
+const { LikeComment, ArticleComment } = Model;
 
 /**
-  * @class LikeControler
-  * @description like and dislike an article
+  * @class LikeCommentControler
+  * @description like and dislike a comment
   */
-export default class LikeController {
+export default class LikeCommentController {
   /**
-  * @description -This method likes an article
+  * @description -This method likes a comment
   * @param {object} req - The request payload sent from the router
   * @param {object} res - The response payload sent back from the controller
   * @returns {object} - status, message and reaction details
   */
-  static likeArticle(req, res) {
-    const message = 'you liked this article';
-    Article.findOne({
-      where: { slug: req.params.slug }
-    }).then((article) => {
-      if (article) {
-        Like.findOrCreate({
+  static likeComment(req, res) {
+    const message = 'you liked this comment';
+
+    ArticleComment.findOne({
+      where: { id: req.params.commentId }
+    }).then((comment) => {
+      if (comment) {
+        LikeComment.findOrCreate({
           where: {
             userId: req.user.id,
-            articleSlug: req.params.slug
+            commentId: req.params.commentId
           },
           defaults: {
             like: true
@@ -33,7 +34,7 @@ export default class LikeController {
               if (reaction.like === true) {
                 reaction.like = null;
                 reaction.save();
-                res.status(200).json({ reaction, message: 'you unliked this article' });
+                res.status(200).json({ reaction, message: 'you unliked this comment' });
               } else {
                 reaction.like = true;
                 reaction.save();
@@ -46,28 +47,28 @@ export default class LikeController {
             }
           });
       } else {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'comment does not exist', status: 'failed' });
       }
     });
   }
 
   /**
-  * @description -This method dislikes an article
+  * @description -This method dislikes a comment
   * @param {object} req - The request payload sent from the router
   * @param {object} res - The response payload sent back from the controller
   * @returns {object} - status, message and reaction details
   */
-  static dislikeArticle(req, res) {
-    const message = 'you disliked this article';
+  static dislikeComment(req, res) {
+    const message = 'you disliked this comment';
 
-    Article.findOne({
-      where: { slug: req.params.slug }
-    }).then((article) => {
-      if (article) {
-        Like.findOrCreate({
+    ArticleComment.findOne({
+      where: { id: req.params.commentId }
+    }).then((comment) => {
+      if (comment) {
+        LikeComment.findOrCreate({
           where: {
             userId: req.user.id,
-            articleSlug: req.params.slug
+            commentId: req.params.commentId
           },
           defaults: {
             like: false
@@ -78,7 +79,7 @@ export default class LikeController {
               if (reaction.like === false) {
                 reaction.like = null;
                 reaction.save();
-                res.status(200).json({ reaction, message: 'you unliked this article' });
+                res.status(200).json({ reaction, message: 'you unliked this comment' });
               } else {
                 reaction.like = false;
                 reaction.save();
@@ -91,7 +92,7 @@ export default class LikeController {
             }
           });
       } else {
-        res.status(404).json({ message: 'article does not exist', status: 'failed' });
+        res.status(404).json({ message: 'comment does not exist', status: 'failed' });
       }
     });
   }
