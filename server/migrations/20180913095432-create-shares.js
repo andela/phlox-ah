@@ -3,19 +3,14 @@ module.exports = {
     id: {
       allowNull: false,
       autoIncrement: true,
-      primaryKey: true,
       type: Sequelize.INTEGER
     },
     userId: {
       type: Sequelize.INTEGER
     },
-    message: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
     articleSlug: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     createdAt: {
       allowNull: false,

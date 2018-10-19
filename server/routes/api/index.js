@@ -9,6 +9,7 @@ import bookmark from './bookmark';
 import admin from './admin';
 import commentsHistory from './commentsHistory';
 import notifications from './notifications';
+import shares from './shares';
 
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.use('/', bookmark);
 router.use('/', admin);
 router.use('/', commentsHistory);
 router.use('/', notifications);
+router.use('/', shares);
 
 
 router.use((err, req, res, next) => {
