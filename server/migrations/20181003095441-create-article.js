@@ -43,6 +43,15 @@ module.exports = {
         as: 'userId'
       },
     },
+    categoryId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Categories',
+        key: 'id',
+        as: 'categoryId'
+      },
+    },
     ratingAverage: {
       allowNull: true,
       defaultValue: 0,
