@@ -83,9 +83,9 @@ export default class CategoryController {
     })
       .spread((categories, created) => {
         if (!created) {
-          res.status(200).json({ status: false, message: 'this category already exists' });
+          res.status(200).json({ success: false, message: 'this category already exists' });
         } else {
-          res.status(200).json({ status: true, categories, message: 'category created successfully' });
+          res.status(200).json({ success: true, categories, message: 'category created successfully' });
         }
       });
   }
