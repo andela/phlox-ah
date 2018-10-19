@@ -25,6 +25,7 @@ module.exports = {
     password: bcrypt.hashSync('password', 10),
     isVerified: true,
     role: 'User',
+    emailNotification: true,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -34,6 +35,7 @@ module.exports = {
     password: bcrypt.hashSync('password', 10),
     isVerified: true,
     role: 'Author',
+    emailNotification: true,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -43,6 +45,7 @@ module.exports = {
     password: bcrypt.hashSync('password', 10),
     isVerified: true,
     role: 'Admin',
+    emailNotification: true,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
