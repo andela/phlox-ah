@@ -7,7 +7,7 @@ import { computeOffset, computeTotalPages } from '../helpers/article';
 import Notification from './notificationController';
 
 const {
-  Article, Tag, Like, ArticleComment, User, HighlightAndComment
+  Article, Tag, Like, ArticleComment, User, Highlight
 } = Model;
 
 const LIMIT = 15;
@@ -160,8 +160,8 @@ export default class ArticleController {
           }]
         },
         {
-          model: HighlightAndComment,
-          as: 'highlightedComments',
+          model: Highlight,
+          as: 'highlights',
           where: { userId },
           required: false
         }

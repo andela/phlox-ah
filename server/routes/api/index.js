@@ -6,7 +6,7 @@ import tag from './tag';
 import comment from './comment';
 import socialLogin from './socialLogin';
 import bookmark from './bookmark';
-import highlightAndComment from './highlightAndComment';
+import highlight from './highlight';
 import admin from './admin';
 import commentsHistory from './commentsHistory';
 
@@ -19,7 +19,7 @@ router.use('/', tag);
 router.use('/', user);
 router.use('/', socialLogin);
 router.use('/', bookmark);
-router.use('/', highlightAndComment);
+router.use('/', highlight);
 router.use('/', admin);
 router.use('/', commentsHistory);
 

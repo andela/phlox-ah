@@ -101,7 +101,7 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Bookmark, {
       foreignKey: 'userId'
     });
-    User.hasMany(models.HighlightAndComment, {
+    User.hasMany(models.Highlight, {
       foreignKey: 'userId'
     });
     User.hasMany(models.CommentsHistory, {

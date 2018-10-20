@@ -1,11 +1,11 @@
 import Model from '../models';
 
-const { HighlightAndComment, Article } = Model;
+const { Highlight, Article } = Model;
 /**
   * @class TagController
   * @description CRUD operations on Article
   */
-export default class HighlightAndCommentController {
+export default class HighlightController {
   /**
   * @description -This method adds a bookmark for an authenticated user
   * @param {object} req - The request payload sent from the router
@@ -21,7 +21,7 @@ export default class HighlightAndCommentController {
       if (!article) {
         res.status(404).json({ message: 'article does not exist', success: false });
       } else if (article.body.includes(selectedText)) {
-        HighlightAndComment.findOrCreate({
+        Highlight.findOrCreate({
           where: {
             articleSlug,
             selectedText,
@@ -30,11 +30,11 @@ export default class HighlightAndCommentController {
           },
           attributes: ['userId', 'articleSlug', 'selectedText', 'comment']
         })
-          .spread((highlightComment, created) => {
+          .spread((highlight, created) => {
             if (!created) {
-              res.status(409).json({ success: false, message: 'Text has already been highlighted', highlightComment });
+              res.status(409).json({ success: false, message: 'Text has already been highlighted', highlight });
             } else {
-              res.status(201).json({ success: true, message: 'Text has been highlighted', highlightComment });
+              res.status(201).json({ success: true, message: 'Text has been highlighted', highlight });
             }
           });
       } else {
@@ -52,9 +52,9 @@ export default class HighlightAndCommentController {
   static editComment(req, res) {
     const { selectedText, comment } = req.body;
     const { articleSlug } = req.params;
-    HighlightAndComment.findOne({
+    Highlight.findOne({
       where: {
-        selectedText, articleSlug, userId: req.user.id, id: req.params.highlightCommentId
+        selectedText, articleSlug, userId: req.user.id, id: req.params.highlightId
       },
     }).then((highlight) => {
       if (!highlight) {
@@ -63,8 +63,8 @@ export default class HighlightAndCommentController {
         highlight.update({
           selectedText, articleSlug, comment, userId: req.user.id
         })
-          .then((updatedHighlightComment) => {
-            res.status(200).json({ success: true, message: 'Text comment has been changed', updatedHighlightComment });
+          .then((updatedHighlight) => {
+            res.status(200).json({ success: true, message: 'Text comment has been changed', updatedHighlight });
           })
           .catch(error => res.status(500).json(error));
       }
@@ -79,8 +79,8 @@ export default class HighlightAndCommentController {
   */
   static deleteComment(req, res) {
     const { articleSlug } = req.params;
-    HighlightAndComment.findOne({
-      where: { articleSlug, id: req.params.highlightCommentId, userId: req.user.id },
+    Highlight.findOne({
+      where: { articleSlug, id: req.params.highlightId, userId: req.user.id },
     }).then((highlight) => {
       if (!highlight) {
         res.status(404).json({ message: 'highlight does not exist', success: false });

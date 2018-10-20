@@ -2,7 +2,7 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
-import { user, article } from '../helpers/highlightAndComment';
+import { user, article } from '../helpers/highlight';
 
 
 chai.use(chaiHttp);
@@ -48,12 +48,12 @@ describe('Highlight and comment', () => {
       .set('x-access-token', token)
       .send({ selectedText: 'the description', comment: 'The first comment' })
       .end((err, res) => {
-        createdHighlightId = res.body.highlightComment.id;
+        createdHighlightId = res.body.highlight.id;
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.be.equal('Text has been highlighted');
-        expect(res.body.highlightComment.selectedText).to.be.equal('the description');
-        expect(res.body.highlightComment.articleSlug).to.be.equal(articleSlug);
+        expect(res.body.highlight.selectedText).to.be.equal('the description');
+        expect(res.body.highlight.articleSlug).to.be.equal(articleSlug);
         done();
       });
   });
@@ -67,8 +67,8 @@ describe('Highlight and comment', () => {
         expect(res.status).to.equal(409);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.be.equal('Text has already been highlighted');
-        expect(res.body.highlightComment.selectedText).to.be.equal('the description');
-        expect(res.body.highlightComment.articleSlug).to.be.equal(articleSlug);
+        expect(res.body.highlight.selectedText).to.be.equal('the description');
+        expect(res.body.highlight.articleSlug).to.be.equal(articleSlug);
         done();
       });
   });
@@ -81,7 +81,7 @@ describe('Highlight and comment', () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.be.equal('article retrieved successfully');
-        expect(res.body.article.highlightedComments[0].comment).to.be.equal('The first comment');
+        expect(res.body.article.highlights[0].comment).to.be.equal('The first comment');
         done();
       });
   });
@@ -95,7 +95,7 @@ describe('Highlight and comment', () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.be.equal('Text comment has been changed');
-        expect(res.body.updatedHighlightComment.comment).to.be.equal('The first comment has been changed');
+        expect(res.body.updatedHighlight.comment).to.be.equal('The first comment has been changed');
         done();
       });
   });

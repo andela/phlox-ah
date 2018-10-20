@@ -1,10 +1,10 @@
 import Joi from 'joi';
 import checkJoiValidation from '../helpers/validations/checkJoiValidation';
 /**
- * @class HighlightAndCommentValidations
+ * @class HighlightValidations
   * @description Validate comment on highlighted article submitted by user
  */
-class HighlightAndCommentValidations {
+class HighlightValidations {
   /**
    *
    *
@@ -33,4 +33,4 @@ class HighlightAndCommentValidations {
   }
 }
 
-export default HighlightAndCommentValidations;
+export default HighlightValidations;

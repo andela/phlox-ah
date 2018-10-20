@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
-  const HighlightAndComment = sequelize.define('HighlightAndComment', {
+  const Highlight = sequelize.define('Highlight', {
     articleSlug: {
       type: DataTypes.STRING,
       allowNull: false
@@ -18,16 +18,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {});
-  HighlightAndComment.associate = (models) => {
-    HighlightAndComment.belongsTo(models.User, {
+  Highlight.associate = (models) => {
+    Highlight.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    HighlightAndComment.belongsTo(models.Article, {
+    Highlight.belongsTo(models.Article, {
       foreignKey: 'articleSlug',
       targetKey: 'slug',
       onDelete: 'CASCADE',
     });
   };
-  return HighlightAndComment;
+  return Highlight;
 };
