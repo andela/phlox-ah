@@ -7,6 +7,7 @@ import RateValidations from '../../middlewares/rateValidations';
 import Authenticator from '../../middlewares/authenticator';
 import LikeController from '../../controllers/likeController';
 import SearchController from '../../controllers/searchController';
+import CategoryController from '../../controllers/categoryController';
 
 const { checkToken, checkStatToken } = Authenticator;
 
@@ -16,6 +17,10 @@ router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations
 router.get('/articles/feed', ArticleController.getAllArticles);
 router.get('/articles', checkToken, ArticleController.getUserArticles);
 router.get('/articles/:slug', checkStatToken, ArticleController.getSingleArticle);
+router.get('/categories', checkToken, CategoryController.getAllCategories);
+router.post('/categories', checkToken, CategoryController.createCategory);
+router.get('/:categoryName/articles', checkToken, CategoryController.getArticlesByCategory);
+router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
 router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValidations.validateUpdateArticle, ArticleController.updateArticle);
 router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, RateController.rateArticle);

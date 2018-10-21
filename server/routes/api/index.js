@@ -5,14 +5,18 @@ import profile from './profile';
 import tag from './tag';
 import stats from './stats';
 import comment from './comment';
+import report from './report';
 import socialLogin from './socialLogin';
 import bookmark from './bookmark';
 import admin from './admin';
 import commentsHistory from './commentsHistory';
+import notifications from './notifications';
+
 
 const router = express.Router();
 
 router.use('/', comment);
+router.use('/', report);
 router.use('/', article);
 router.use('/', profile);
 router.use('/', tag);
@@ -22,6 +26,8 @@ router.use('/', socialLogin);
 router.use('/', bookmark);
 router.use('/', admin);
 router.use('/', commentsHistory);
+router.use('/', notifications);
+
 
 router.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {

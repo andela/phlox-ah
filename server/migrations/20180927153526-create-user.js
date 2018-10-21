@@ -49,6 +49,11 @@ module.exports = {
       defaultValue: 'User',
       values: ['Admin', 'Author', 'User']
     },
+    emailNotification: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
