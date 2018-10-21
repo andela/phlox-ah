@@ -27,5 +27,22 @@ export default {
         next();
       });
     }
+  },
+  checkStatToken(req, res, next) {
+    // add 'authorization' option to the request headers
+    const token = req.headers['x-access-token'] || req.headers.authorization;
+    if (token) {
+      jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
+        if (err) {
+          if (err.message.includes('signature')) {
+            res.status(403).json({ message: 'Invalid token supplied' });
+          } else {
+            res.status(403).json({ message: err });
+          }
+        }
+        req.user = decoded.user;
+      });
+    }
+    next();
   }
 };

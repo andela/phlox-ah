@@ -7,7 +7,7 @@ import { computeOffset, computeTotalPages } from '../helpers/article';
 import Notification from './notificationController';
 
 const {
-  Article, Tag, Like, ArticleComment, User
+  Article, Tag, Like, ArticleComment, User, Stats
 } = Model;
 
 const LIMIT = 15;
@@ -157,6 +157,14 @@ export default class ArticleController {
     }).then((article) => {
       if (!article) {
         res.status(404).json({ message: 'article does not exist', success: false });
+      } else if (req.user) {
+        Stats.findOrCreate({ where: { userId: req.user.id, articleId: article.id } })
+          .spread((found, created) => {
+            if (created) {
+              return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+            }
+            return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+          });
       } else {
         res.status(200).json({ message: 'article retrieved successfully', success: true, article });
       }
