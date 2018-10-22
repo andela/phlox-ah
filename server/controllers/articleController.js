@@ -1,5 +1,6 @@
 import slug from 'slug';
 import uuid from 'uuid-random';
+import jwt from 'jsonwebtoken';
 import Model from '../models';
 import getTagIds from '../helpers/tags/getTagIds';
 import readingTime from '../helpers/readTime';
@@ -146,6 +147,7 @@ export default class ArticleController {
    * @returns {object} - status, message and list of articles
    */
   static getSingleArticle(req, res) {
+    let userId;
     Article.findOne({
       where: { slug: req.params.slug },
       include: [
@@ -169,16 +171,22 @@ export default class ArticleController {
     }).then((article) => {
       if (!article) {
         res.status(404).json({ message: 'article does not exist', success: false });
-      } else if (req.user) {
-        Stats.findOrCreate({ where: { userId: req.user.id, articleId: article.id } })
-          .spread((found, created) => {
-            if (created) {
-              return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
-            }
-            return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
-          });
       } else {
-        res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+        const token = req.headers['x-access-token'] || req.headers.authorization;
+        if (token) {
+          jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
+            userId = decoded.user.id;
+          });
+          Stats.findOrCreate({ where: { userId, articleId: article.id } })
+            .spread((found, created) => {
+              if (created) {
+                return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+              }
+              return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+            });
+        } else {
+          res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+        }
       }
     })
       .catch(error => res.status(500).json(error));
