@@ -63,7 +63,7 @@ describe('Categories', () => {
         done();
       });
   });
-  it('Should get all articles in a categoriy', (done) => {
+  it('Should get all articles in a category', (done) => {
     chai.request(app)
       .get('/api/v1/religion/articles')
       .set('x-access-token', token)

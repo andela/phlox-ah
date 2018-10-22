@@ -18,25 +18,38 @@ const article = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
   description: 'This is the description',
-  tags: []
+  tags: [],
+  categoryId: 3
+};
+
+const publishedArticle = {
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  description: 'This is the description',
+  tags: [],
+  categoryId: 3,
+  status: 'published'
 };
 
 const noTitle = {
   body: faker.lorem.paragraph(),
   description: faker.lorem.sentence(),
-  tags: []
+  tags: [],
+  categoryId: 3
 };
 
 const noBody = {
   title: faker.lorem.sentence(),
   description: faker.lorem.sentence(),
-  tags: []
+  tags: [],
+  categoryId: 3
 };
 
 const noDescription = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
-  tags: []
+  tags: [],
+  categoryId: 3
 };
 
 let token = '';
@@ -52,7 +65,7 @@ describe('Articles', () => {
       });
   });
 
-  it('Should create an article', (done) => {
+  it('Should create an article as draft', (done) => {
     chai.request(app)
       .post('/api/v1/articles')
       .set('x-access-token', token)
@@ -61,6 +74,20 @@ describe('Articles', () => {
         slug = res.body.article.slug;
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');
+        expect(res.body.article.status).to.be.equal('draft');
+        done();
+      });
+  });
+  it('Should update article to publish', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${slug}`)
+      .set('x-access-token', token)
+      .send(publishedArticle)
+      .end((err, res) => {
+        slug = res.body.article.slug;
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body.article.status).to.be.equal('published');
         done();
       });
   });
@@ -105,7 +132,7 @@ describe('Articles', () => {
   });
   it('Should get articles of logged in users', (done) => {
     chai.request(app)
-      .get('/api/v1/articles')
+      .get('/api/v1/myarticles')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -115,7 +142,7 @@ describe('Articles', () => {
   });
   it('Should get articles of logged in users and the number of pages', (done) => {
     chai.request(app)
-      .get('/api/v1/articles?page=1')
+      .get('/api/v1/myarticles?page=1')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -127,7 +154,7 @@ describe('Articles', () => {
   });
   it('Should not get articles for a wrong page number', (done) => {
     chai.request(app)
-      .get('/api/v1/articles?page=abc')
+      .get('/api/v1/myarticles?page=abc')
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);

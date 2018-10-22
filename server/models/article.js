@@ -25,9 +25,22 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    categoryId: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
     ratingAverage: {
       allowNull: true,
       type: DataTypes.FLOAT
+    },
+    status: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      defaultValue: 'draft'
     }
   }, {});
 

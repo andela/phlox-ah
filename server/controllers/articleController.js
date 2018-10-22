@@ -68,9 +68,9 @@ export default class ArticleController {
   */
   static getAllArticles(req, res) {
     const page = computeOffset(req);
-
     Article.findAll()
       .then(data => Article.findAll({
+        where: { status: 'published' },
         limit: LIMIT,
         offset: LIMIT * (page - 1),
         order: [
@@ -107,10 +107,15 @@ export default class ArticleController {
    */
   static getUserArticles(req, res) {
     const page = computeOffset(req);
-
+    let whereParams;
+    if (req.params.status) {
+      whereParams = { status: req.params.status, userId: req.user.id };
+    } else {
+      whereParams = { userId: req.user.id };
+    }
     Article.findAll({ where: { userId: req.user.id } })
       .then(data => Article.findAll({
-        where: { userId: req.user.id },
+        where: whereParams,
         limit: LIMIT,
         offset: LIMIT * (page - 1),
         order: [
@@ -146,8 +151,14 @@ export default class ArticleController {
    * @returns {object} - status, message and list of articles
    */
   static getSingleArticle(req, res) {
+    let whereParams;
+    if (req.params.status) {
+      whereParams = { slug: req.params.slug, status: req.params.status, userId: req.user.id };
+    } else {
+      whereParams = { slug: req.params.slug, status: 'published' };
+    }
     Article.findOne({
-      where: { slug: req.params.slug },
+      where: whereParams,
       include: [
         {
           model: ArticleComment,
@@ -168,7 +179,7 @@ export default class ArticleController {
       ]
     }).then((article) => {
       if (!article) {
-        res.status(404).json({ message: 'article does not exist', success: false });
+        res.status(404).json({ message: 'article cannot be found', success: false });
       } else {
         res.status(200).json({ message: 'article retrieved successfully', success: true, article });
       }
@@ -195,7 +206,7 @@ export default class ArticleController {
         where: { slug: req.params.slug, userId: req.user.id },
       }).then((article) => {
         if (!article) {
-          res.status(404).json({ message: 'article does not exist', success: false });
+          res.status(404).json({ message: 'article cannot be found', success: false });
         } else {
           article.update(req.body)
             .then((updatedArticle) => {
