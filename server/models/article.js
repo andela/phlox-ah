@@ -58,6 +58,7 @@ export default (sequelize, DataTypes) => {
     });
     Article.hasMany(models.Report, {
       foreignKey: 'articleSlug',
+      onDelete: 'CASCADE',
     });
     Article.hasMany(models.Bookmark, {
       foreignKey: 'articleId'
