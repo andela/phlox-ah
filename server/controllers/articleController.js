@@ -7,7 +7,7 @@ import { computeOffset, computeTotalPages } from '../helpers/article';
 import Notification from './notificationController';
 
 const {
-  Article, Tag, Like, ArticleComment, User, Highlight
+  Article, Tag, Like, ArticleComment, User, Category, Highlight
 } = Model;
 
 const LIMIT = 15;
@@ -24,14 +24,23 @@ export default class ArticleController {
   * @returns {object} - status, message and article detail
   */
   static createArticle(req, res) {
-    const { title, body, description } = req.body;
+    const {
+      title, body, description, categoryId
+    } = req.body;
     const readTime = readingTime(body); // calculate the time it will take to read the article
     const imgUrl = (req.file ? req.file.secure_url : '');
     const articleSlug = `${slug(title)}-${uuid()}`;
     // this function gets the tag ids of the tags sent in the request
     getTagIds(req, res).then((tagIds) => {
       Article.create({
-        title, body, userId: req.user.id, description, slug: articleSlug, imgUrl, readTime
+        title,
+        body,
+        userId: req.user.id,
+        description,
+        slug: articleSlug,
+        imgUrl,
+        readTime,
+        categoryId
       }).then((article) => {
         article.setTags(tagIds).then(() => {
           article.getTags({ attributes: ['id', 'name'] }).then((associatedTags) => {
@@ -69,6 +78,7 @@ export default class ArticleController {
         ],
         include: [
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+          { model: Category },
           {
             model: Like,
             as: 'likes',
@@ -107,6 +117,7 @@ export default class ArticleController {
           ['createdAt', 'DESC'],
         ],
         include: [
+          { model: Category },
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
           {
             model: Like,
@@ -150,6 +161,7 @@ export default class ArticleController {
             { model: User, attributes: ['username', 'email'], }
           ],
         },
+        { model: Category },
         { model: Tag, as: 'Tags', through: 'ArticlesTags' },
         {
           model: Like,

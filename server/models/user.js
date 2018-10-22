@@ -70,6 +70,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       defaultValue: 'User',
       values: ['Admin', 'Author', 'User']
+    },
+    emailNotification: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {});
   User.associate = (models) => {
@@ -83,6 +88,9 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Like, {
       foreignKey: 'userId',
       as: 'likes'
+    });
+    User.hasMany(models.Notification, {
+      foreignKey: 'userId',
     });
     User.hasOne(models.Profile, {
       foreignKey: 'userId',

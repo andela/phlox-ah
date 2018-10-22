@@ -37,6 +37,11 @@ export default (sequelize, DataTypes) => {
       targetKey: 'id',
       onDelete: 'CASCADE'
     });
+    Article.belongsTo(models.Category, {
+      foreignKey: 'categoryId',
+      targetKey: 'id',
+      onDelete: 'CASCADE'
+    });
     Article.hasMany(models.ArticleComment, {
       foreignKey: 'articleSlug',
       sourceKey: 'slug',
@@ -50,6 +55,9 @@ export default (sequelize, DataTypes) => {
     Article.hasMany(models.Rate, {
       foreignKey: 'articleId',
       as: 'rates'
+    });
+    Article.hasMany(models.Report, {
+      foreignKey: 'articleSlug',
     });
     Article.hasMany(models.Bookmark, {
       foreignKey: 'articleId'
