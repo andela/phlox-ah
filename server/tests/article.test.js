@@ -140,6 +140,17 @@ describe('Articles', () => {
         done();
       });
   });
+  it('Should get articles of logged in users when status is sent', (done) => {
+    chai.request(app)
+      .get('/api/v1/myarticles/published')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body.articles[0].status).to.be.equal('published');
+        done();
+      });
+  });
   it('Should get articles of logged in users and the number of pages', (done) => {
     chai.request(app)
       .get('/api/v1/myarticles?page=1')
