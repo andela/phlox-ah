@@ -7,7 +7,7 @@ import { computeOffset, computeTotalPages } from '../helpers/article';
 import Notification from './notificationController';
 
 const {
-  Article, Tag, Like, ArticleComment, User, Category
+  Article, Tag, Like, ArticleComment, User, Category, Highlight
 } = Model;
 
 const LIMIT = 15;
@@ -146,6 +146,12 @@ export default class ArticleController {
    * @returns {object} - status, message and list of articles
    */
   static getSingleArticle(req, res) {
+    let userId;
+    if (req.user) {
+      userId = req.user.id;
+    } else {
+      userId = null;
+    }
     Article.findOne({
       where: { slug: req.params.slug },
       include: [
@@ -164,6 +170,12 @@ export default class ArticleController {
             model: User,
             attributes: ['username', 'email']
           }]
+        },
+        {
+          model: Highlight,
+          as: 'highlights',
+          where: { userId },
+          required: false
         }
       ]
     }).then((article) => {
