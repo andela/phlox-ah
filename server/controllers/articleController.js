@@ -265,4 +265,50 @@ export default class ArticleController {
       }
     });
   }
+
+  /**
+   * @description -Method to set user preference
+   * @param {object} req - The request payload sent to the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - json data
+   */
+  static getArticleByPreference(req, res) {
+    const page = computeOffset(req);
+    User.find({
+      where: { id: req.user.id }
+    })
+      .then((user) => {
+        user.getCategories({
+        })
+          .then((categories) => {
+            const categoryIds = categories.map(category => category.id);
+            Article.findAll({
+              where: {
+                categoryId: categoryIds
+              },
+              limit: LIMIT,
+              offset: LIMIT * (page - 1),
+              order: [
+                ['createdAt', 'DESC'],
+              ],
+              include: [
+                { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+                { model: Category },
+                {
+                  model: Like,
+                  as: 'likes',
+                  include: [{
+                    model: User,
+                    attributes: ['username', 'email']
+                  }]
+                }
+              ]
+            })
+              .then(articles => res.status(200).json({
+                success: true,
+                message: articles
+              }));
+          });
+      });
+  }
 }
