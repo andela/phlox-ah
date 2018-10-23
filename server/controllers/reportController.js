@@ -19,7 +19,6 @@ export default class ReportController {
 
     return Article.findOne({
       where: {
-        userId: data.userId,
         slug: data.articleSlug,
       }
     })

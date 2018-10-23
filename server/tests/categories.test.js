@@ -1,25 +1,29 @@
 /* eslint-disable prefer-destructuring */
-import faker from 'faker';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
 
 chai.use(chaiHttp);
-let token = '';
-
-const user = {
-  username: faker.internet.userName(),
-  email: faker.internet.email(),
-  password: 'password'
-};
+let adminToken;
+let authorToken;
 
 describe('Categories', () => {
   before((done) => {
     chai.request(app)
-      .post('/api/v1/signup')
-      .send(user)
+      .post('/api/v1/login')
+      .send({ emailOrUsername: 'jack@something.com', password: 'password' })
       .end((err, res) => {
-        token = res.body.token;
+        authorToken = res.body.token;
+        done();
+      });
+  });
+
+  before((done) => {
+    chai.request(app)
+      .post('/api/v1/login')
+      .send({ emailOrUsername: 'jackson@something.com', password: 'password' })
+      .end((err, res) => {
+        adminToken = res.body.token;
         done();
       });
   });
@@ -27,7 +31,6 @@ describe('Categories', () => {
   it('Should get all categories', (done) => {
     chai.request(app)
       .get('/api/v1/categories')
-      .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
@@ -38,7 +41,7 @@ describe('Categories', () => {
   it('Should add to categories', (done) => {
     chai.request(app)
       .post('/api/v1/categories')
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send({
         category: 'bollywood'
       })
@@ -52,7 +55,7 @@ describe('Categories', () => {
   it('Should not add to categories if categories exist', (done) => {
     chai.request(app)
       .post('/api/v1/categories')
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send({
         category: 'bollywood'
       })
@@ -63,10 +66,23 @@ describe('Categories', () => {
         done();
       });
   });
-  it('Should get all articles in a category', (done) => {
+  it('Should not add to categories if user is not an admin', (done) => {
+    chai.request(app)
+      .post('/api/v1/categories')
+      .set('x-access-token', authorToken)
+      .send({
+        category: 'bollywood'
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.be.equal('No Permission to Access this Resources');
+        done();
+      });
+  });
+  it('Should get all articles in a categoriy', (done) => {
     chai.request(app)
       .get('/api/v1/religion/articles')
-      .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
@@ -74,10 +90,9 @@ describe('Categories', () => {
         done();
       });
   });
-  it('Should not get articles with an invalid  category', (done) => {
+  it('Should not get articles with an invalid category', (done) => {
     chai.request(app)
       .get('/api/v1/religionsis/articles')
-      .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
@@ -88,7 +103,6 @@ describe('Categories', () => {
   it('Should not get articles when categories do not have articles', (done) => {
     chai.request(app)
       .get('/api/v1/culture/articles')
-      .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(404);
         expect(res.body).to.be.an('object');
