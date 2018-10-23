@@ -10,19 +10,19 @@ module.exports = {
     userId: {
       allowNull: false,
       type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
       references: {
         model: 'Users',
         key: 'id',
-        onDelete: 'CASCADE',
       },
     },
     articleSlug: {
       allowNull: false,
       type: Sequelize.STRING,
+      onDelete: 'CASCADE',
       references: {
         model: 'Articles',
         key: 'slug',
-        onDelete: 'CASCADE',
       },
     },
     title: {

@@ -8,6 +8,7 @@ import Authenticator from '../../middlewares/authenticator';
 import LikeController from '../../controllers/likeController';
 import SearchController from '../../controllers/searchController';
 import CategoryController from '../../controllers/categoryController';
+import permit from '../../middlewares/permission';
 
 const { checkToken } = Authenticator;
 
@@ -16,10 +17,9 @@ const router = express.Router();
 router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations.validateCreateArticle, ArticleController.createArticle);
 router.get('/articles/feed', ArticleController.getAllArticles);
 router.get('/articles', checkToken, ArticleController.getUserArticles);
-router.get('/articles/:slug', ArticleController.getSingleArticle);
-router.get('/categories', checkToken, CategoryController.getAllCategories);
-router.post('/categories', checkToken, CategoryController.createCategory);
-router.get('/:categoryName/articles', checkToken, CategoryController.getArticlesByCategory);
+router.get('/categories', CategoryController.getAllCategories);
+router.post('/categories', checkToken, permit('Admin'), CategoryController.createCategory);
+router.get('/:categoryName/articles', CategoryController.getArticlesByCategory);
 router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.get('/articles/feed/:slug', checkToken, ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
