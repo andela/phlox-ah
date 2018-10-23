@@ -1,4 +1,3 @@
-// add isVerified to the model file, it will be use to check if the user is verified.
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
@@ -108,6 +107,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'followed',
     });
     User.hasMany(models.Bookmark, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.Highlight, {
       foreignKey: 'userId'
     });
     User.hasMany(models.CommentsHistory, {
