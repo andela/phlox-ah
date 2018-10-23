@@ -116,6 +116,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    User.hasMany(models.Shares, {
+      foreignKey: 'userId'
+    });
   };
   return User;
 };

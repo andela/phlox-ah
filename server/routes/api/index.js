@@ -11,6 +11,7 @@ import highlight from './highlight';
 import admin from './admin';
 import commentsHistory from './commentsHistory';
 import notifications from './notifications';
+import shares from './shares';
 
 
 const router = express.Router();
@@ -27,6 +28,7 @@ router.use('/', highlight);
 router.use('/', admin);
 router.use('/', commentsHistory);
 router.use('/', notifications);
+router.use('/', shares);
 
 
 router.use((err, req, res, next) => {
