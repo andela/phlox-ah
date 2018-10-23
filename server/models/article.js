@@ -63,6 +63,12 @@ export default (sequelize, DataTypes) => {
     Article.hasMany(models.Bookmark, {
       foreignKey: 'articleId'
     });
+    Article.hasMany(models.Highlight, {
+      foreignKey: 'articleSlug',
+      sourceKey: 'slug',
+      onDelete: 'CASCADE',
+      as: 'highlights'
+    });
     Article.hasMany(models.CommentsHistory, {
       foreignKey: 'articleSlug',
       onDelete: 'CASCADE',

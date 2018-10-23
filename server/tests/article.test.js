@@ -64,7 +64,17 @@ describe('Articles', () => {
         done();
       });
   });
-  it('Should get a specific article', (done) => {
+  it('Should get a specific article for', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/${slug}`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        done();
+      });
+  });
+  it('Should get a specific article and add logged in user view choice', (done) => {
     chai.request(app)
       .get(`/api/v1/articles/${slug}`)
       .end((err, res) => {
