@@ -40,7 +40,13 @@ export default (sequelize, DataTypes) => {
     status: {
       allowNull: false,
       type: DataTypes.STRING,
-      defaultValue: 'draft'
+      defaultValue: 'draft',
+      validate: {
+        isIn: {
+          args: [['draft', 'published']],
+          msg: 'status must be either draft or published'
+        }
+      }
     }
   }, {});
 

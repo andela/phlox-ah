@@ -107,15 +107,15 @@ export default class ArticleController {
    */
   static getUserArticles(req, res) {
     const page = computeOffset(req);
-    let whereParams;
+    let query;
     if (req.params.status) {
-      whereParams = { status: req.params.status, userId: req.user.id };
+      query = { status: req.params.status, userId: req.user.id };
     } else {
-      whereParams = { userId: req.user.id };
+      query = { userId: req.user.id };
     }
     Article.findAll({ where: { userId: req.user.id } })
       .then(data => Article.findAll({
-        where: whereParams,
+        where: query,
         limit: LIMIT,
         offset: LIMIT * (page - 1),
         order: [
@@ -151,14 +151,14 @@ export default class ArticleController {
    * @returns {object} - status, message and list of articles
    */
   static getSingleArticle(req, res) {
-    let whereParams;
+    let query;
     if (req.params.status) {
-      whereParams = { slug: req.params.slug, status: req.params.status, userId: req.user.id };
+      query = { slug: req.params.slug, status: req.params.status, userId: req.user.id };
     } else {
-      whereParams = { slug: req.params.slug, status: 'published' };
+      query = { slug: req.params.slug, status: 'published' };
     }
     Article.findOne({
-      where: whereParams,
+      where: query,
       include: [
         {
           model: ArticleComment,

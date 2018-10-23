@@ -31,6 +31,15 @@ const publishedArticle = {
   status: 'published'
 };
 
+const articleWithWrongStatus = {
+  title: faker.lorem.sentence(),
+  body: faker.lorem.paragraph(),
+  description: 'This is the description',
+  tags: [],
+  categoryId: 3,
+  status: 'active'
+};
+
 const noTitle = {
   body: faker.lorem.paragraph(),
   description: faker.lorem.sentence(),
@@ -78,7 +87,19 @@ describe('Articles', () => {
         done();
       });
   });
-  it('Should update article to publish', (done) => {
+  it('Should not update an article with invalid status', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${slug}`)
+      .set('x-access-token', token)
+      .send(articleWithWrongStatus)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        expect(res.body).to.be.an('object');
+        expect(res.body.errors[0].message).to.be.equal('status must be either draft or published');
+        done();
+      });
+  });
+  it('Should update an article to publish', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${slug}`)
       .set('x-access-token', token)
