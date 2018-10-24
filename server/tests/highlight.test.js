@@ -75,7 +75,7 @@ describe('Highlight and comment', () => {
 
   it('Should get highlighted comment', (done) => {
     chai.request(app)
-      .get(`/api/v1/articles/feed/${articleSlug}`)
+      .get(`/api/v1/articles/draft/${articleSlug}`)
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
