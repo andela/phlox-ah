@@ -16,7 +16,8 @@ const validArticle = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
   description: 'This is the description',
-  tags: []
+  tags: [],
+  categoryId: 3
 };
 
 let token = '';

@@ -58,6 +58,11 @@ module.exports = {
     category: 'fashion',
     createdAt: new Date(),
     updatedAt: new Date()
+  },
+  {
+    category: 'general',
+    createdAt: new Date(),
+    updatedAt: new Date()
   }], {}),
 
   down: queryInterface => queryInterface.bulkDelete('Categories', null, {})

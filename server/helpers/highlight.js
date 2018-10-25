@@ -41,5 +41,6 @@ export const article = {
   title: faker.lorem.sentence(),
   body: 'This is the description for this article',
   description: 'This is the description',
-  tags: []
+  tags: [],
+  categoryId: 1
 };
