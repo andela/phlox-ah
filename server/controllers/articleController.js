@@ -275,4 +275,28 @@ export default class ArticleController {
       }
     });
   }
+
+  /**
+   * @description -This method deletes reported article by the admins
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status and message
+   */
+  static deleteReportedArticle(req, res) {
+    Article.findOne({
+      where: { slug: req.params.slug },
+    }).then((article) => {
+      if (!article) {
+        res.status(404).json({ message: 'article does not exist', success: false });
+      } else {
+        article.setTags([]).then(() => {
+          article.destroy()
+            .then(() => {
+              res.status(204).end();
+            })
+            .catch(error => res.status(500).json(error));
+        });
+      }
+    });
+  }
 }

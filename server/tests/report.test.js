@@ -4,16 +4,11 @@ import app from '../index';
 
 chai.use(chaiHttp);
 
-let token = '';
+let userToken;
+let adminToken;
+let authorToken;
 let articleSlug = '';
 let reportId = null;
-
-const user = {
-  username: 'dimeji199',
-  email: 'dimeji019@ola.com',
-  password: 'password009'
-};
-
 
 const article = {
   title: 'How to use the faker package',
@@ -38,11 +33,30 @@ const editReport = {
 describe('Report', () => {
   before((done) => {
     chai.request(app)
-      .post('/api/v1/signup')
-      .send(user)
+      .post('/api/v1/login')
+      .send({ emailOrUsername: 'jane@something.com', password: 'password' })
       .end((err, res) => {
-        const { token: validToken } = res.body;
-        token = validToken;
+        userToken = res.body.token;
+        done();
+      });
+  });
+
+  before((done) => {
+    chai.request(app)
+      .post('/api/v1/login')
+      .send({ emailOrUsername: 'jack@something.com', password: 'password' })
+      .end((err, res) => {
+        authorToken = res.body.token;
+        done();
+      });
+  });
+
+  before((done) => {
+    chai.request(app)
+      .post('/api/v1/login')
+      .send({ emailOrUsername: 'jackson@something.com', password: 'password' })
+      .end((err, res) => {
+        adminToken = res.body.token;
         done();
       });
   });
@@ -50,7 +64,7 @@ describe('Report', () => {
   it('Should create an article', (done) => {
     chai.request(app)
       .post('/api/v1/articles')
-      .set('x-access-token', token)
+      .set('x-access-token', authorToken)
       .send(article)
       .end((err, res) => {
         articleSlug = res.body.article.slug;
@@ -67,7 +81,7 @@ describe('Report', () => {
   it('Should create a report', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/${articleSlug}/reports`)
-      .set('x-access-token', token)
+      .set('x-access-token', userToken)
       .send(report)
       .end((err, res) => {
         reportId = res.body.report.id;
@@ -83,7 +97,7 @@ describe('Report', () => {
   it('Should not create a report', (done) => {
     chai.request(app)
       .post('/api/v1/articles/slug-title-123/reports')
-      .set('x-access-token', token)
+      .set('x-access-token', userToken)
       .send({})
       .end((err, res) => {
         expect(res.status).to.equal(422);
@@ -97,7 +111,7 @@ describe('Report', () => {
   it('Should edit a report', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${articleSlug}/reports/${reportId}/edit`)
-      .set('x-access-token', token)
+      .set('x-access-token', userToken)
       .send(editReport)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -112,7 +126,7 @@ describe('Report', () => {
   it('Should approve a report', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${articleSlug}/reports/${reportId}/approve`)
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -127,7 +141,7 @@ describe('Report', () => {
   it('Should get all approve report for an article', (done) => {
     chai.request(app)
       .get(`/api/v1/articles/${articleSlug}/reports/approve`)
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -142,7 +156,7 @@ describe('Report', () => {
   it('Should get all disapprove report for an article', (done) => {
     chai.request(app)
       .get(`/api/v1/articles/${articleSlug}/reports/disapprove`)
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -157,7 +171,7 @@ describe('Report', () => {
   it('Should get all disapprove report for an article', (done) => {
     chai.request(app)
       .get(`/api/v1/articles/${articleSlug}/reports/disapprove`)
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -172,7 +186,7 @@ describe('Report', () => {
   it('Should get all approve report', (done) => {
     chai.request(app)
       .get('/api/v1/reports/approve')
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -187,7 +201,7 @@ describe('Report', () => {
   it('Should get all disapprove report', (done) => {
     chai.request(app)
       .get('/api/v1/reports/disapprove')
-      .set('x-access-token', token)
+      .set('x-access-token', adminToken)
       .send(report)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -195,6 +209,57 @@ describe('Report', () => {
         expect(res.body).to.be.have.property('success');
         expect(res.body).to.be.have.property('message');
         expect(res.body).to.be.have.property('reports');
+        done();
+      });
+  });
+
+  it('Should not be able to delete reported article if role is User', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/admins/articles/${articleSlug}/reports`)
+      .set('x-access-token', userToken)
+      .send(report)
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
+        expect(res.body).to.be.an('object');
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('No Permission to Access this Resources');
+        done();
+      });
+  });
+
+  it('Should not be able to delete reported article if role is Author', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/admins/articles/${articleSlug}/reports`)
+      .set('x-access-token', authorToken)
+      .send(report)
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
+        expect(res.body).to.be.an('object');
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('No Permission to Access this Resources');
+        done();
+      });
+  });
+
+  it('Should return no article found if Admin trys to delete no-existing article', (done) => {
+    chai.request(app)
+      .delete('/api/v1/admins/articles/node-for-beginners/reports')
+      .set('x-access-token', adminToken)
+      .send(report)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('article does not exist');
+        done();
+      });
+  });
+
+  it('Should be able to delete reported article if role is Admin', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/admins/articles/${articleSlug}/reports`)
+      .set('x-access-token', adminToken)
+      .send(report)
+      .end((err, res) => {
+        expect(res.status).to.equal(204);
         done();
       });
   });
