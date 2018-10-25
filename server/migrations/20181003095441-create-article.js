@@ -45,6 +45,7 @@ module.exports = {
     },
     categoryId: {
       type: Sequelize.INTEGER,
+      allowNull: false,
       onDelete: 'CASCADE',
       references: {
         model: 'Categories',
@@ -56,6 +57,11 @@ module.exports = {
       allowNull: true,
       defaultValue: 0,
       type: Sequelize.FLOAT
+    },
+    status: {
+      type: Sequelize.STRING,
+      defaultValue: 'draft',
+      allowNull: false
     },
     createdAt: {
       allowNull: false,

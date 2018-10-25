@@ -21,14 +21,15 @@ class ArticleValidations {
       body: Joi.string().min(6).required(),
       description: Joi.string().min(6).max(250).required(),
       tags: Joi.array(),
+      categoryId: Joi.number().required()
     };
     // this tells Joi to proceed to check for all errors in user input before giving out a response
     const joiOptions = { abortEarly: false };
     const {
-      title, body, description, tags
+      title, body, description, tags, categoryId
     } = req.body;
     checkJoiValidation({
-      title, body, description, tags
+      title, body, description, tags, categoryId
     }, joiSchema, joiOptions, res, next);
   }
 

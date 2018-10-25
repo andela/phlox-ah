@@ -7,6 +7,7 @@ module.exports = {
     userId: 1,
     categoryId: 1,
     readTime: 1,
+    status: 'published',
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -18,6 +19,7 @@ module.exports = {
     userId: 2,
     categoryId: 2,
     readTime: 1,
+    status: 'published',
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -29,6 +31,7 @@ module.exports = {
     userId: 1,
     categoryId: 3,
     readTime: 1,
+    status: 'published',
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),

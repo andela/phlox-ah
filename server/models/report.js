@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
       defaultValue: false,
     },
   }, {});
-  Report.associate = function (models) {
+  Report.associate = (models) => {
     Report.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',

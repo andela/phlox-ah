@@ -8,27 +8,35 @@ const validArticle = {
   body: faker.lorem.paragraph(),
   description: faker.lorem.sentence(),
   slug: faker.lorem.sentence(),
-  readTime: 3
+  readTime: 3,
+  userId: 1,
+  categoryId: 1
 };
 
 const noTitle = {
   body: faker.lorem.paragraph(),
   description: faker.lorem.sentence(),
-  readTime: 3
+  readTime: 3,
+  userId: 1,
+  categoryId: 1
 };
 
 const noBody = {
   title: faker.lorem.sentence(),
   description: faker.lorem.sentence(),
   slug: faker.lorem.sentence(),
-  readTime: 3
+  readTime: 3,
+  userId: 1,
+  categoryId: 1
 };
 
 const noDescription = {
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraph(),
   slug: faker.lorem.sentence(),
-  readTime: 3
+  readTime: 3,
+  userId: 1,
+  categoryId: 1
 };
 
 
