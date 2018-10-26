@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'categoryId',
       as: 'articles'
     });
+    Category.belongsToMany(models.User, {
+      through: 'Preferences',
+      foreignKey: 'categoryId',
+      onDelete: 'CASCADE'
+    });
   };
   return Category;
 };

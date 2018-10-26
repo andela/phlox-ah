@@ -119,6 +119,11 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Shares, {
       foreignKey: 'userId'
     });
+    User.belongsToMany(models.Category, {
+      through: 'Preferences',
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
   };
   return User;
 };

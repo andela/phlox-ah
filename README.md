@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/andela/phlox-ah.svg?branch=master)](https://travis-ci.org/andela/phlox-ah)
 [![Validated by Hound](https://img.shields.io/badge/Validated_By-Hound_CI-06576D.svg)](https://houndci.com)
-[![Coverage Status](https://coveralls.io/repos/github/andela/phlox-ah/badge.svg?branch=chore%2F160451494%2Fintegrate-coveralls)](https://coveralls.io/github/andela/phlox-ah?branch=staging)
+[![Coverage Status](https://coveralls.io/repos/github/andela/phlox-ah/badge.svg?branch=staging)](https://coveralls.io/github/andela/phlox-ah?branch=staging)
 
 Authors Haven - A Social platform for the creative at heart.
 =======

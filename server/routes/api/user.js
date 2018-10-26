@@ -27,6 +27,8 @@ router.get('/users/:username', checkToken, UserController.getOneUser);
 
 router.get('/followers', checkToken, UserController.followers);
 
+router.post('/preferences', checkToken, UserController.setUserPreference);
+
 /* Test route */
 router.get('/test', checkToken, (req, res) => res.status(200).json('This is a protected route'));
 export default router;
