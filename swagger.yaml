@@ -20,7 +20,15 @@ tags:
     description: Article operations
   - name: Profile
     description: Profile operations
-
+  - name: Bookmark
+    description: Bookmark operations
+  - name: Comment
+    description: Commet operations
+  - name: CommentHistory
+    description: CommentHistory operations
+  - name: Tag
+    description: Tag operations
+  
 paths:
   /signup:
     post:
@@ -491,6 +499,863 @@ paths:
                   message:
                     type: string
                     example: Internal Server Error
+
+  /categories:
+    get:
+      tags:
+        - Article
+      summary: Get all article categories
+      description: Get all article categories from the database
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: categories retrieved successfully
+
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Categories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+                    
+    post:
+      tags:
+        - Article
+      summary: Create a new category
+      description: Create a new category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  example: Sports
+
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+
+                  message:
+                    type: string
+                    example: category created successfully
+
+                  article:
+                    $ref: '#/components/schemas/Categories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  
+  /{categoryName}/articles:
+    get:
+      tags:
+        - Article
+      summary: Get all articles in a category
+      description: Get all article categories from the database
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: categories retrieved successfully
+
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Categories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{slug}/rate:
+    get:
+      tags:
+        - Article
+      summary: Rates an article
+      description: Rates an article from 0 to 5
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: Article has been rated
+
+                  rate:
+                    $ref: '#/components/schemas/Rates'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{slug}/like:
+    get:
+      tags:
+        - Article
+      summary: Likes an article
+      description: Likes an article 
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: you liked this article
+
+                  reaction
+                    $ref: '#/components/schemas/Likes'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{slug}/dislike:
+    get:
+      tags:
+        - Article
+      summary: Dislikes an article
+      description: Dislikes an article
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: you disliked this article
+
+                  categories:
+                    $ref: '#/components/schemas/Likes'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+      
+  /search:
+    get:
+      tags:
+        - Article
+      summary: searches for an article
+      description: searches for an article based on query params
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: found result
+
+                  searchResult:
+                    $ref: '#/components/schemas/Articles'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  /bookmarks:
+    get:
+      tags:
+        - Bookmark
+      summary: shows bookmarks
+      description: shows bookmarks for an authenticated user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: bookmarks retrieved succeasfully
+
+                  bookmarks:
+                    $ref: '#/components/schemas/Bookmarks'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+    
+    post:
+      tags:
+        - Bookmark
+      summary: adds article to bookmarks
+      description: adds an article to bookm for an authenticated user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: this article has been bookmarked
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+      
+    delete:
+      tags:
+        - Bookmark
+      summary: deletes bookmarks
+      description: deletes bookmarks for an authenticated user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  
+  /articles/{articleSlug}/comments:
+    get:
+      tags:
+        - Comment
+      summary: get article comments
+      description: get comments of an article
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: comments fetched succeasfully
+
+                  comments:
+                    $ref: '#/components/schemas/Comments'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+    
+    post:
+      tags:
+        - Comment
+      summary: comments on an article
+      description: comments on an article
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: comment added succesfully
+
+                  comment:
+                    $ref: '#/components/schemas/Comments'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{articleSlug}/comments/{commentId}/edit:
+    put:
+      tags:
+        - Comment
+      summary: updates article comments
+      description: updates a commenta of an article
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: comment updated successfully
+
+                  comment:
+                    $ref: '#/components/schemas/Comments'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  /articles/{articleSlug}/comments/{commentId}/like:
+    post:
+      tags:
+        - Comment
+      summary: likes an article comment
+      description: likes an article comment
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: you liked this comment
+
+                  reaction:
+                    $ref: '#/components/schemas/Likes'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+            
+  /articles/{articleSlug}/comments/{commentId}/dislike:
+    post:
+      tags:
+        - Comment
+      summary: dislikes an article comment
+      description: dislikes an article comment
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: you disliked this comment
+
+                reaction:
+                  $ref: '#/components/schemas/Likes'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  
+  /articles/{articleSlug}/comments/{commentId}/myhistory:
+    get:
+      tags:
+        - CommentHistory
+      summary: gets comment history of logged in user
+      description: gets comment history of logged in user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: comment history retrieved
+
+                  commentHistory:
+                    $ref: '#/components/schemas/CommentsHistories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{articleSlug}/comments/{commentId}/allhistory:
+    get:
+      tags:
+        - CommentHistory
+      summary: gets all comment history of a user
+      description: gets all comment history of a user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: all comment histories retrieved
+
+                  commentHistory:
+                    $ref: '#/components/schemas/CommentsHistories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  
+  /tags:
+    get:
+      tags:
+        - Tag
+      summary: gets all tags on the platform
+      description: gets all tags on the platform
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: all tags retrieved
+
+                  tags:
+                    $ref: '#/components/schemas/Tags'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+    post:
+        tags:
+          - Tag
+        summary: creates tags 
+        description: create tags
+
+        requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  type: array
+                  example: ['ball','music']
+
+
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+
+                    message:
+                      type: string
+                      example: tags created successfully
+
+                    
+
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+
+                    message:
+                      type: string
+                      example: Internal Server Error
+  
+  /tags/{name}:
+    get:
+      tags:
+        - Tag
+      summary: gets all tags on the platform
+      description: gets all tags on the platform
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: tag retrieved
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+    delete:
+        tags:
+          - Tag
+        summary: deletes tags 
+        description: deletes tags
+
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+
+                    
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+
+                    message:
+                      type: string
+                      example: Internal Server Error
 
   /profile:
     post:
@@ -1094,6 +1959,405 @@ components:
           type: string
           format: date-time
           example: '2016-04-16T16:06:05Z'
+
+    ArticleComments:
+        description: ArticleComment Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleSlug:
+            type: string
+            example: slug-of-article
+
+          commentId:
+            type: integer
+            example: 2
+
+          comment:
+            type: string
+            example: This is a nice post
+            
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    ArticlesTags:
+        description: ArticlesTag Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          name:
+            type: string
+            example: unit-testing
+           
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    Bookmarks:
+        description: Bookmark Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleId:
+            type: integer
+            example: 2
+
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    Categories:
+        description: Category Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          category:
+            type: string
+            example: Technology
+            
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    CommentsHistories:
+        description: CommentsHistory Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleSlug:
+            type: string
+            example: slug-of-article
+
+          commentId:
+            type: integer
+            example: 2
+
+          comment:
+            type: string
+            example: This is a nice post
+            
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    Followings:
+        description: Following Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          followed:
+            type: integer
+            example: 2
+    
+          follower:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    Likes:
+        description: Like Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleSlug:
+            type: string
+            example: slug-of-article
+
+          like:
+            type: boolean
+            example: true
+            
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+    LikeCommentss:
+        description: LikeComment Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          commentId:
+            type: integer
+            example: 4
+
+          like:
+            type: boolean
+            example: true
+            
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    LikeReplies:
+      description: LikeReply Model
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        replyId:
+          type: integer
+          example: 3
+
+        like:
+          type: boolean
+          example: true
+          
+        userId:
+          type: integer
+          example: 1
+
+        createdAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+    Notifications:
+        description: Notification Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleSlug:
+            type: string
+            example: slug-of-article
+
+          seen:
+            type: boolean
+            example: true
+          
+          message:
+            type: string
+            example: you have been followed
+            
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+          
+    Rates:
+        description: Rate Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleId:
+            type: integer
+            example: 4
+
+          rating:
+            type: float
+            example: 1.5
+            
+          userId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+    
+    Replies:
+        description: Reply Model
+        properties:
+          id:
+            type: integer
+            example: 1
+
+          articleSlug:
+            type: string
+            example: slug-of-article
+
+          comment:
+            type: string
+            example: I agree with the comment
+            
+          userId:
+            type: integer
+            example: 1
+
+          commentId:
+            type: integer
+            example: 1
+
+          createdAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+          updatedAt:
+            type: string
+            format: date-time
+            example: '2016-04-16T16:06:05Z'
+
+    Reports:
+      description: Report Model
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        title:
+          type: string
+          example: Offensive Article
+
+        approve:
+          type: boolean
+          example: false
+
+        body:
+          type: string
+          minLength: 6
+          example: It's been two weeks now, after so much consumption of time management books
+
+        userId:
+          type: integer
+          example: 1
+        
+        articleSlug:
+            type: string
+            example: slug-of-article
+
+        createdAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+    
+    Tags:
+      description: Tag Model
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        name:
+          type: string
+          example: babel
+
+        createdAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2016-04-16T16:06:05Z'
+    
 
 security:
   - BearerAuth: []
