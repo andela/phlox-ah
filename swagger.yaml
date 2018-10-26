@@ -660,7 +660,9 @@ paths:
                     example: Article has been rated
 
                   rate:
-                    $ref: '#/components/schemas/Rates'
+                    type: object
+                    items:
+                      $ref: '#/components/schemas/Rates'
 
         '500':
           description: Internal Server Error
@@ -700,8 +702,10 @@ paths:
                     type: string
                     example: you liked this article
 
-                  reaction
-                    $ref: '#/components/schemas/Likes'
+                  reaction:
+                    type: object
+                    items:
+                      $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -823,7 +827,9 @@ paths:
                     example: bookmarks retrieved succeasfully
 
                   bookmarks:
-                    $ref: '#/components/schemas/Bookmarks'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bookmarks'
 
         '500':
           description: Internal Server Error
@@ -861,6 +867,11 @@ paths:
                   message:
                     type: string
                     example: this article has been bookmarked
+
+                  bookmarks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bookmarks'
 
         '500':
           description: Internal Server Error
@@ -934,7 +945,9 @@ paths:
                     example: comments fetched succeasfully
 
                   comments:
-                    $ref: '#/components/schemas/Comments'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleComments'
 
         '500':
           description: Internal Server Error
@@ -973,8 +986,10 @@ paths:
                     type: string
                     example: comment added succesfully
 
-                  comment:
-                    $ref: '#/components/schemas/Comments'
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleComments'
 
         '500':
           description: Internal Server Error
@@ -1015,7 +1030,9 @@ paths:
                     example: comment updated successfully
 
                   comment:
-                    $ref: '#/components/schemas/Comments'
+                    type: object
+                    items:
+                      $ref: '#/components/schemas/ArticleComments'
 
         '500':
           description: Internal Server Error
@@ -1055,7 +1072,9 @@ paths:
                     example: you liked this comment
 
                   reaction:
-                    $ref: '#/components/schemas/Likes'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -1095,8 +1114,10 @@ paths:
                     type: string
                     example: you disliked this comment
 
-                reaction:
-                  $ref: '#/components/schemas/Likes'
+                  Likes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -1136,8 +1157,10 @@ paths:
                     type: string
                     example: comment history retrieved
 
-                  commentHistory:
-                    $ref: '#/components/schemas/CommentsHistories'
+                  history:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CommentHistories'
 
         '500':
           description: Internal Server Error
@@ -1177,8 +1200,10 @@ paths:
                     type: string
                     example: all comment histories retrieved
 
-                  commentHistory:
-                    $ref: '#/components/schemas/CommentsHistories'
+                  histories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CommentHistories'
 
         '500':
           description: Internal Server Error
@@ -1218,8 +1243,10 @@ paths:
                     type: string
                     example: all tags retrieved
 
-                  tags:
-                    $ref: '#/components/schemas/Tags'
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Categories'
 
         '500':
           description: Internal Server Error
