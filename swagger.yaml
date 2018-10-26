@@ -746,9 +746,7 @@ paths:
                     example: you disliked this article
 
                   categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                    $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -788,10 +786,8 @@ paths:
                     type: string
                     example: found result
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  searchResult:
+                    $ref: '#/components/schemas/Articles'
 
         '500':
           description: Internal Server Error

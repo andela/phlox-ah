@@ -15,6 +15,7 @@ const { checkToken } = Authenticator;
 const router = express.Router();
 /* Article Endpoint */
 router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations.validateCreateArticle, ArticleController.createArticle);
+router.get('/articles/preferences', checkToken, ArticleController.getArticleByPreference);
 router.get('/articles/feed', ArticleController.getAllArticles);
 router.get('/myarticles', checkToken, ArticleController.getUserArticles);
 router.get('/myarticles/:status', checkToken, ArticleController.getUserArticles);
@@ -28,5 +29,6 @@ router.put('/articles/:slug', checkToken, upload.single('imgUrl'), ArticleValida
 router.post('/articles/:slug/rate', checkToken, RateValidations.validateRating, RateController.rateArticle);
 router.post('/articles/:slug/like', checkToken, LikeController.likeArticle);
 router.post('/articles/:slug/dislike', checkToken, LikeController.dislikeArticle);
+
 router.get('/search', SearchController.searchWith);
 export default router;
