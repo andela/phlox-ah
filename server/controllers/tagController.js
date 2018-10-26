@@ -48,7 +48,9 @@ export default class TagController {
     Tag.findOne({
       where: { name: req.params.name },
       include: [
-        { model: Article, as: 'Articles', through: 'ArticlesTags' }
+        {
+          model: Article, as: 'Articles', through: 'ArticlesTags', where: { status: 'published' }
+        }
       ]
     })
       .then(tag => res.status(200).json({ message: 'Tag retrieved successfully', success: false, tag }))

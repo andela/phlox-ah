@@ -20,7 +20,8 @@ const article = {
   title: 'How to use the faker package',
   body: 'faker.js contains a super useful generator method Faker.fake for combining faker API methods using a mustache string format.',
   description: 'Fake package is an handy package when it comes to generation random data.',
-  tags: []
+  tags: [],
+  categoryId: 1
 };
 
 

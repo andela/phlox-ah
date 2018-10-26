@@ -1,3 +1,4 @@
+
 import Model from '../models';
 
 const {
@@ -34,10 +35,10 @@ export default class CategoryController {
     Category.findOne({
       where: { category: categoryName.toLowerCase() },
     })
-      .then((article) => {
-        if (article) {
+      .then((category) => {
+        if (category) {
           return Article.findAll({
-            where: { categoryId: article.id },
+            where: { categoryId: category.id, status: 'published' },
             include: [
               { model: Category },
               { model: Tag, as: 'Tags', through: 'ArticlesTags' },
@@ -57,10 +58,11 @@ export default class CategoryController {
       .then((articles) => {
         if (articles.length === 0) {
           res.status(404).json({ message: 'there are no articles on this category', success: false });
+        } else {
+          res.status(200).json({
+            message: 'articles retrieved successfully', success: true, articles
+          });
         }
-        res.status(200).json({
-          message: 'articles retrieved successfully', success: true, articles
-        });
       })
       .catch(error => res.status(500).json(error));
   }

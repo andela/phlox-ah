@@ -1,6 +1,6 @@
-
+/* eslint-disable no-unused-vars */
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Reports', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Highlights', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -9,33 +9,25 @@ module.exports = {
     },
     userId: {
       allowNull: false,
-      type: Sequelize.INTEGER,
-      onDelete: 'CASCADE',
-      references: {
-        model: 'Users',
-        key: 'id',
-      },
+      type: Sequelize.INTEGER
     },
     articleSlug: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.STRING,
       onDelete: 'CASCADE',
       references: {
         model: 'Articles',
         key: 'slug',
+        as: 'articleSlug',
       },
     },
-    title: {
-      allowNull: false,
-      type: Sequelize.STRING
-    },
-    body: {
+    selectedText: {
       allowNull: false,
       type: Sequelize.TEXT
     },
-    approve: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
+    comment: {
+      allowNull: false,
+      type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
@@ -46,5 +38,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Reports')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Highlights')
 };
