@@ -39,7 +39,7 @@ export default class SearchController {
           }
           Article.findAll({
             attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
-            where: { userId: usersIds },
+            where: { userId: usersIds, status: 'published' },
           })
             .then((searchResult) => {
               if (searchResult.length === 0) {
@@ -59,7 +59,7 @@ export default class SearchController {
     } else if (article) {
       Article.findAll({
         attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
-        where: { title: { [Op.iLike]: `%${article}%` } },
+        where: { title: { [Op.iLike]: `%${article}%` }, status: 'published' },
         include: [{
           model: User,
           attributes: ['id', 'username'],
@@ -90,6 +90,7 @@ export default class SearchController {
         include: [{
           model: Article,
           attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
+          where: { status: 'published' },
           as: 'Articles',
           through: 'ArticlesTags'
         }]

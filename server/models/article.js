@@ -25,9 +25,28 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    categoryId: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
     ratingAverage: {
       allowNull: true,
       type: DataTypes.FLOAT
+    },
+    status: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      defaultValue: 'draft',
+      validate: {
+        isIn: {
+          args: [['draft', 'published']],
+          msg: 'status must be either draft or published'
+        }
+      }
     }
   }, {});
 
@@ -58,9 +77,16 @@ export default (sequelize, DataTypes) => {
     });
     Article.hasMany(models.Report, {
       foreignKey: 'articleSlug',
+      onDelete: 'CASCADE',
     });
     Article.hasMany(models.Bookmark, {
       foreignKey: 'articleId'
+    });
+    Article.hasMany(models.Highlight, {
+      foreignKey: 'articleSlug',
+      sourceKey: 'slug',
+      onDelete: 'CASCADE',
+      as: 'highlights'
     });
     Article.hasMany(models.CommentsHistory, {
       foreignKey: 'articleSlug',

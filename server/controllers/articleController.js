@@ -1,5 +1,6 @@
 import slug from 'slug';
 import uuid from 'uuid-random';
+import jwt from 'jsonwebtoken';
 import Model from '../models';
 import getTagIds from '../helpers/tags/getTagIds';
 import readingTime from '../helpers/readTime';
@@ -7,7 +8,7 @@ import { computeOffset, computeTotalPages } from '../helpers/article';
 import Notification from './notificationController';
 
 const {
-  Article, Tag, Like, ArticleComment, User, Category
+  Article, Tag, Like, ArticleComment, User, Stats, Category, Highlight
 } = Model;
 
 const LIMIT = 15;
@@ -68,9 +69,9 @@ export default class ArticleController {
   */
   static getAllArticles(req, res) {
     const page = computeOffset(req);
-
     Article.findAll()
       .then(data => Article.findAll({
+        where: { status: 'published' },
         limit: LIMIT,
         offset: LIMIT * (page - 1),
         order: [
@@ -107,10 +108,15 @@ export default class ArticleController {
    */
   static getUserArticles(req, res) {
     const page = computeOffset(req);
-
+    let query;
+    if (req.params.status) {
+      query = { status: req.params.status, userId: req.user.id };
+    } else {
+      query = { userId: req.user.id };
+    }
     Article.findAll({ where: { userId: req.user.id } })
       .then(data => Article.findAll({
-        where: { userId: req.user.id },
+        where: query,
         limit: LIMIT,
         offset: LIMIT * (page - 1),
         order: [
@@ -146,8 +152,19 @@ export default class ArticleController {
    * @returns {object} - status, message and list of articles
    */
   static getSingleArticle(req, res) {
+    let query, userId;
+    if (req.params.status) {
+      query = { slug: req.params.slug, status: req.params.status, userId: req.user.id };
+    } else {
+      query = { slug: req.params.slug, status: 'published' };
+    }
+    if (req.user) {
+      userId = req.user.id;
+    } else {
+      userId = null;
+    }
     Article.findOne({
-      where: { slug: req.params.slug },
+      where: query,
       include: [
         {
           model: ArticleComment,
@@ -164,13 +181,33 @@ export default class ArticleController {
             model: User,
             attributes: ['username', 'email']
           }]
+        },
+        {
+          model: Highlight,
+          as: 'highlights',
+          where: { userId },
+          required: false
         }
       ]
     }).then((article) => {
       if (!article) {
-        res.status(404).json({ message: 'article does not exist', success: false });
+        res.status(404).json({ message: 'article cannot be found', success: false });
       } else {
-        res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+        const token = req.headers['x-access-token'] || req.headers.authorization;
+        if (token) {
+          jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
+            userId = decoded.user.id;
+          });
+          Stats.findOrCreate({ where: { userId, articleId: article.id } })
+            .spread((found, created) => {
+              if (created) {
+                return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+              }
+              return res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+            });
+        } else {
+          res.status(200).json({ message: 'article retrieved successfully', success: true, article });
+        }
       }
     })
       .catch(error => res.status(500).json(error));
@@ -195,7 +232,7 @@ export default class ArticleController {
         where: { slug: req.params.slug, userId: req.user.id },
       }).then((article) => {
         if (!article) {
-          res.status(404).json({ message: 'article does not exist', success: false });
+          res.status(404).json({ message: 'article cannot be found', success: false });
         } else {
           article.update(req.body)
             .then((updatedArticle) => {
@@ -224,6 +261,30 @@ export default class ArticleController {
   static deleteArticle(req, res) {
     Article.findOne({
       where: { slug: req.params.slug, userId: req.user.id },
+    }).then((article) => {
+      if (!article) {
+        res.status(404).json({ message: 'article does not exist', success: false });
+      } else {
+        article.setTags([]).then(() => {
+          article.destroy()
+            .then(() => {
+              res.status(204).end();
+            })
+            .catch(error => res.status(500).json(error));
+        });
+      }
+    });
+  }
+
+  /**
+   * @description -This method deletes reported article by the admins
+   * @param {object} req - The request payload sent from the router
+   * @param {object} res - The response payload sent back from the controller
+   * @returns {object} - status and message
+   */
+  static deleteReportedArticle(req, res) {
+    Article.findOne({
+      where: { slug: req.params.slug },
     }).then((article) => {
       if (!article) {
         res.status(404).json({ message: 'article does not exist', success: false });

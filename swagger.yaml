@@ -546,8 +546,8 @@ paths:
     post:
       tags:
         - Article
-      summary: Create a new article
-      description: Create a new article
+      summary: Create a new category
+      description: Create a new category
       requestBody:
         required: true
         content:
@@ -659,10 +659,8 @@ paths:
                     type: string
                     example: Article has been rated
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  rate:
+                    $ref: '#/components/schemas/Rates'
 
         '500':
           description: Internal Server Error
@@ -702,10 +700,8 @@ paths:
                     type: string
                     example: you liked this article
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  reaction
+                    $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -746,9 +742,7 @@ paths:
                     example: you disliked this article
 
                   categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                    $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -788,10 +782,8 @@ paths:
                     type: string
                     example: found result
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  searchResult:
+                    $ref: '#/components/schemas/Articles'
 
         '500':
           description: Internal Server Error
@@ -830,10 +822,8 @@ paths:
                     type: string
                     example: bookmarks retrieved succeasfully
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  bookmarks:
+                    $ref: '#/components/schemas/Bookmarks'
 
         '500':
           description: Internal Server Error
@@ -854,7 +844,7 @@ paths:
       tags:
         - Bookmark
       summary: adds article to bookmarks
-      description: adds an article to bookmarks for an authenticated user
+      description: adds an article to bookm for an authenticated user
 
       responses:
         '200':
@@ -871,11 +861,6 @@ paths:
                   message:
                     type: string
                     example: this article has been bookmarked
-
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
 
         '500':
           description: Internal Server Error
@@ -909,11 +894,6 @@ paths:
                   success:
                     type: boolean
                     example: true
-
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
 
         '500':
           description: Internal Server Error
@@ -953,10 +933,8 @@ paths:
                     type: string
                     example: comments fetched succeasfully
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  comments:
+                    $ref: '#/components/schemas/Comments'
 
         '500':
           description: Internal Server Error
@@ -995,10 +973,8 @@ paths:
                     type: string
                     example: comment added succesfully
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  comment:
+                    $ref: '#/components/schemas/Comments'
 
         '500':
           description: Internal Server Error
@@ -1038,10 +1014,8 @@ paths:
                     type: string
                     example: comment updated successfully
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  comment:
+                    $ref: '#/components/schemas/Comments'
 
         '500':
           description: Internal Server Error
@@ -1080,10 +1054,8 @@ paths:
                     type: string
                     example: you liked this comment
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                  reaction:
+                    $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -1123,10 +1095,8 @@ paths:
                     type: string
                     example: you disliked this comment
 
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Categories'
+                reaction:
+                  $ref: '#/components/schemas/Likes'
 
         '500':
           description: Internal Server Error
@@ -1142,7 +1112,250 @@ paths:
                   message:
                     type: string
                     example: Internal Server Error
-            
+  
+  /articles/{articleSlug}/comments/{commentId}/myhistory:
+    get:
+      tags:
+        - CommentHistory
+      summary: gets comment history of logged in user
+      description: gets comment history of logged in user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: comment history retrieved
+
+                  commentHistory:
+                    $ref: '#/components/schemas/CommentsHistories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /articles/{articleSlug}/comments/{commentId}/allhistory:
+    get:
+      tags:
+        - CommentHistory
+      summary: gets all comment history of a user
+      description: gets all comment history of a user
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: all comment histories retrieved
+
+                  commentHistory:
+                    $ref: '#/components/schemas/CommentsHistories'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+  
+  /tags:
+    get:
+      tags:
+        - Tag
+      summary: gets all tags on the platform
+      description: gets all tags on the platform
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: all tags retrieved
+
+                  tags:
+                    $ref: '#/components/schemas/Tags'
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+    post:
+        tags:
+          - Tag
+        summary: creates tags 
+        description: create tags
+
+        requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  type: array
+                  example: ['ball','music']
+
+
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+
+                    message:
+                      type: string
+                      example: tags created successfully
+
+                    
+
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+
+                    message:
+                      type: string
+                      example: Internal Server Error
+  
+  /tags/{name}:
+    get:
+      tags:
+        - Tag
+      summary: gets all tags on the platform
+      description: gets all tags on the platform
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  message:
+                    type: string
+                    example: tag retrieved
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  message:
+                    type: string
+                    example: Internal Server Error
+    delete:
+        tags:
+          - Tag
+        summary: deletes tags 
+        description: deletes tags
+
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+
+                    
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+
+                    message:
+                      type: string
+                      example: Internal Server Error
 
   /profile:
     post:
