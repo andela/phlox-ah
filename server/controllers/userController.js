@@ -76,7 +76,7 @@ export default class UserController {
         }
         const { username } = user;
         const resetToken = crypto.randomBytes(16).toString('hex');
-        const url = `http://${req.headers.host}/api/reset_password/${resetToken}`;
+        const url = `${process.env.PAGE_URL}/reset_password/${resetToken}`;
         const options = {
           email,
           subject: 'Password Reset',
@@ -88,7 +88,7 @@ export default class UserController {
         })
           .then(() => {
             sendMail(options);
-            return res.status(200).json({ success: true, message: 'A password reset link has been sent ot your email' });
+            return res.status(200).json({ success: true, message: 'A password reset link has been sent to your email' });
           });
       });
   }
@@ -102,6 +102,7 @@ export default class UserController {
   static resetPassword(req, res) {
     const resetToken = req.params.token;
     const { password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
     User.find({ where: { resetToken } })
       .then((user) => {
@@ -113,7 +114,7 @@ export default class UserController {
           return res.status(400).json({ success: false, message: 'This link has expired' });
         }
 
-        user.update({ password, resetToken: null, expireAt: null })
+        user.update({ password: hashedPassword, resetToken: null, expireAt: null })
           .then(updatedUser => res.status(200).json({ success: true, message: 'Password has been successfully updated', updatedUser }));
       });
   }
