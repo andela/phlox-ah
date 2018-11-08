@@ -234,6 +234,7 @@ describe('Articles', () => {
       .set('x-access-token', token)
       .send(article)
       .end((err, res) => {
+        slug = res.body.article.slug;
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
         done();

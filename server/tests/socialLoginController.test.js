@@ -17,32 +17,30 @@ describe('Social login controller test', () => {
     SocialLoginController.passportCallback('accessToken', 'refreshToken', profile, done);
   });
 
-  it('it should return a user who signed up via social media', (done) => {
+  it('it should return a token and redirect to the frontend url when a user sign up via social media', (done) => {
     chai.request(app)
       .post('/api/v1/login/response')
+      .redirects(0)
       .send({ id: 1, email: 'nelson@yahoo.com', username: 'nelson', created: true })
       .end((err, res) => {
-        expect(res.status).to.equal(201);
+        const { token } = res.headers;
+        expect(res.status).to.equal(302);
+        expect(res).to.redirectTo(`${process.env.FRONTEND_URL}?token=${token}`);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('user');
-        expect(res.body).to.have.property('token');
-        expect(res.body).to.have.nested.property('user.email');
-        expect(res.body).to.have.nested.property('user.username');
         done();
       });
   });
 
-  it('it should return a user who loged in via social media', (done) => {
+  it('it should return a token and redirect to the frontend url when a user login via social media', (done) => {
     chai.request(app)
       .post('/api/v1/login/response')
-      .send({ id: 1, email: 'nelson@yahoo.com', username: 'nelson', })
+      .redirects(0)
+      .send({ id: 1, email: 'nelson@yahoo.com', username: 'nelson' })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        const { token } = res.headers;
+        expect(res.status).to.equal(302);
+        expect(res).to.redirectTo(`${process.env.FRONTEND_URL}?token=${token}`);
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('user');
-        expect(res.body).to.have.property('token');
-        expect(res.body).to.have.nested.property('user.email');
-        expect(res.body).to.have.nested.property('user.username');
         done();
       });
   });
