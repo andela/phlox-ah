@@ -76,7 +76,7 @@ export default class UserController {
         }
         const { username } = user;
         const resetToken = crypto.randomBytes(16).toString('hex');
-        const url = `${process.env.PAGE_URL}/reset_password/${resetToken}`;
+        const url = `${process.env.FRONTEND_URL}/reset_password/${resetToken}`;
         const options = {
           email,
           subject: 'Password Reset',

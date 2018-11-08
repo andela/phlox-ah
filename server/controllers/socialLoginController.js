@@ -40,9 +40,9 @@ class SocialLoginController {
     const token = generateToken(user);
     // if a new user was created
     if (req.user.created) {
-      return res.status(201).send({ success: true, message: 'you have successfully signed up', user, token });
+      return res.status(302).header('token', token).redirect(`${process.env.FRONTEND_URL}?token=${token}`);
     }
-    return res.status(200).send({ success: true, message: 'you are logged in', user, token });
+    return res.status(302).header('token', token).redirect(`${process.env.FRONTEND_URL}?token=${token}`);
   }
 
   /**
