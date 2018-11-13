@@ -16,7 +16,7 @@ describe('Admin', () => {
   before((done) => {
     chai.request(app)
       .post('/api/v1/login')
-      .send({ emailOrUsername: 'jane@something.com', password: 'password' })
+      .send({ emailOrUsername: 'jane@something.com', password: 'Password1!' })
       .end((err, res) => {
         userToken = res.body.token;
         done();
@@ -26,7 +26,7 @@ describe('Admin', () => {
   before((done) => {
     chai.request(app)
       .post('/api/v1/login')
-      .send({ emailOrUsername: 'jack@something.com', password: 'password' })
+      .send({ emailOrUsername: 'jack@something.com', password: 'Password1!' })
       .end((err, res) => {
         authorToken = res.body.token;
         done();
@@ -36,7 +36,7 @@ describe('Admin', () => {
   before((done) => {
     chai.request(app)
       .post('/api/v1/login')
-      .send({ emailOrUsername: 'jackson@something.com', password: 'password' })
+      .send({ emailOrUsername: 'jackson@something.com', password: 'Password1!' })
       .end((err, res) => {
         adminToken = res.body.token;
         done();

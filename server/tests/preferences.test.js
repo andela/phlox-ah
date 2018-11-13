@@ -9,7 +9,7 @@ let token = '';
 const user = {
   username: 'dimeji191',
   email: 'dimeji02@ola.com',
-  password: 'password009'
+  password: 'Password1!'
 };
 
 const preferences = {
