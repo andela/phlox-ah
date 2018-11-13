@@ -22,7 +22,7 @@ module.exports = {
   {
     username: 'jannny',
     email: 'jane@something.com',
-    password: bcrypt.hashSync('password', 10),
+    password: bcrypt.hashSync('Password1!', 10),
     isVerified: true,
     role: 'User',
     emailNotification: true,
@@ -32,7 +32,7 @@ module.exports = {
   {
     username: 'jackdoe',
     email: 'jack@something.com',
-    password: bcrypt.hashSync('password', 10),
+    password: bcrypt.hashSync('Password1!', 10),
     isVerified: true,
     role: 'Author',
     emailNotification: true,
@@ -42,7 +42,7 @@ module.exports = {
   {
     username: 'jackson',
     email: 'jackson@something.com',
-    password: bcrypt.hashSync('password', 10),
+    password: bcrypt.hashSync('Password1!', 10),
     isVerified: true,
     role: 'Admin',
     emailNotification: true,

@@ -12,7 +12,7 @@ let replyCommentId = null;
 const user = {
   username: 'dimeji19',
   email: 'dimeji01@ola.com',
-  password: 'password009'
+  password: 'Password1!'
 };
 
 

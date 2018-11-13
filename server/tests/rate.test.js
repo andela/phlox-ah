@@ -10,7 +10,7 @@ let token = '';
 const user = {
   username: faker.internet.userName(),
   email: faker.internet.email(),
-  password: 'password'
+  password: 'Password1!'
 };
 
 describe('Rates', () => {

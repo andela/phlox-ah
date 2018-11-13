@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 const user = {
   emailOrUsername: 'jack@something.com',
-  password: 'password'
+  password: 'Password1!'
 };
 
 let token = '';
