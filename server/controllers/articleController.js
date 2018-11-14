@@ -81,6 +81,14 @@ export default class ArticleController {
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
           { model: Category },
           {
+            model: User,
+            include: [{
+              model: Profile,
+              attributes: ['profileImage']
+            }],
+            attributes: ['username']
+          },
+          {
             model: Like,
             as: 'likes',
             include: [{
@@ -125,6 +133,14 @@ export default class ArticleController {
         include: [
           { model: Category },
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+          {
+            model: User,
+            include: [{
+              model: Profile,
+              attributes: ['profileImage']
+            }],
+            attributes: ['username']
+          },
           {
             model: Like,
             as: 'likes',
