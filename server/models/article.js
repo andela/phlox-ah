@@ -37,6 +37,10 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.FLOAT
     },
+    featured: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
     status: {
       allowNull: false,
       type: DataTypes.STRING,

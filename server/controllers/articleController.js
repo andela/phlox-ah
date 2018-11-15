@@ -373,4 +373,66 @@ export default class ArticleController {
       }
     });
   }
+
+  /**
+    * @description -This method gets most popular(rated) arricles
+    * @param {object} req - The request payload sent from the router
+    * @param {object} res - The response payload sent back from the controller
+    * @returns {object} - status and message
+  */
+  static popularArticles(req, res) {
+    Article.findAll({
+      where: { status: 'published' },
+      limit: 4,
+      order: [
+        ['ratingAverage', 'DESC'],
+      ],
+    }).then((articles) => {
+      res.status(200).json({ message: 'articles retrieved successfully', success: true, articles });
+    });
+  }
+
+  /**
+    * @description -This method sets an article as featured by the admins
+    * @param {object} req - The request payload sent from the router
+    * @param {object} res - The response payload sent back from the controller
+    * @returns {object} - status and message
+  */
+  static setFeaturedArticle(req, res) {
+    const { featured } = req.body;
+    Article.findOne({
+      where: { slug: req.params.slug },
+    }).then((article) => {
+      if (!article) {
+        res.status(404).json({ message: 'article cannot be found', success: false });
+      } else {
+        article.update({ featured })
+          .then((updatedArticle) => {
+            res.status(200).json({
+              message: 'article featured state modified', success: true, article: updatedArticle
+            });
+          })
+          .catch(error => res.status(500).json(error));
+      }
+    })
+      .catch(error => res.status(500).json(error));
+  }
+
+  /**
+    * @description -This method gets featured articles
+    * @param {object} req - The request payload sent from the router
+    * @param {object} res - The response payload sent back from the controller
+    * @returns {object} - status and message
+  */
+  static featuredArticles(req, res) {
+    Article.findAll({
+      where: { status: 'published', featured: 1 },
+      limit: 4,
+      order: [
+        ['createdAt', 'DESC'],
+      ],
+    }).then((articles) => {
+      res.status(200).json({ message: 'featured articles retrieved', success: true, articles });
+    });
+  }
 }

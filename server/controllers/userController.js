@@ -39,7 +39,7 @@ export default class UserController {
             id: user.dataValues.id, username: user.username, email: user.email, role: user.role
           });
           // set the url
-          const url = `http://${req.headers.host}/api/v1/users/verify/${verifyToken}`;
+          const url = `${process.env.FRONTEND_URL}/user/verify/${verifyToken}`;
           // send verification mail to user
           sendMail({
             email: user.email,

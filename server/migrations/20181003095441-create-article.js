@@ -58,6 +58,11 @@ module.exports = {
       defaultValue: 0,
       type: Sequelize.FLOAT
     },
+    featured: {
+      allowNull: false,
+      defaultValue: 0,
+      type: Sequelize.INTEGER
+    },
     status: {
       type: Sequelize.STRING,
       defaultValue: 'draft',

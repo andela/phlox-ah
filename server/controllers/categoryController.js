@@ -17,7 +17,17 @@ export default class CategoryController {
   * @returns {object} - status, message and categories
   */
   static getAllCategories(req, res) {
-    Category.findAll()
+    Category.findAll({
+      include: [
+        {
+          model: Article,
+          as: 'articles',
+          order: [
+            [Article, 'createdAt', 'DESC']
+          ]
+        },
+      ]
+    })
       .then(categories => res.status(200).json({
         message: 'categories retrieved successfully', success: true, categories
       }))
