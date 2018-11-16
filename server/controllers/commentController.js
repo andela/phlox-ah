@@ -114,6 +114,10 @@ export default class CommentController {
       where: { articleSlug: req.params.articleSlug },
       include: [{
         model: User,
+        include: [{
+          model: Profile,
+          attributes: ['firstName', 'lastName', 'profileImage']
+        }],
         attributes: ['username', 'email']
       }, {
         model: LikeComment,

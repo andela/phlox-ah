@@ -22,6 +22,8 @@ router.get('/myarticles/:status', checkToken, ArticleController.getUserArticles)
 router.get('/categories', CategoryController.getAllCategories);
 router.post('/categories', checkToken, permit('Admin'), CategoryController.createCategory);
 router.get('/:categoryName/articles', CategoryController.getArticlesByCategory);
+router.get('/articles/popular', ArticleController.popularArticles);
+router.get('/articles/featured', ArticleController.featuredArticles);
 router.get('/articles/:slug', ArticleController.getSingleArticle);
 router.get('/articles/:status/:slug', checkToken, ArticleController.getSingleArticle);
 router.delete('/articles/:slug', checkToken, ArticleController.deleteArticle);
