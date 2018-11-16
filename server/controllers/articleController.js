@@ -406,7 +406,7 @@ export default class ArticleController {
         article.update({ featured })
           .then((updatedArticle) => {
             res.status(200).json({
-              message: 'article featured state modified', success: true, article: updatedArticle
+              message: 'article updated', success: true, article: updatedArticle
             });
           })
           .catch(error => res.status(500).json(error));
