@@ -12,6 +12,9 @@ const getTagIds = (req, res) => {
     // eslint-disable-next-line prefer-destructuring
     tags = req.body.tags;
   }
+  if (!tags.length) {
+    return Promise.resolve([]);
+  }
   const promise = new Promise((resolve, reject) => {
     Tag.findAll({
       where: {

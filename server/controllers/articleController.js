@@ -247,12 +247,9 @@ export default class ArticleController {
     // calculate the time it will take to read the updated article
     const readTime = readingTime(req.body.body ? req.body.body : '');
     const imgUrl = (req.file ? req.file.secure_url : '');
-    let articleSlug;
-    if (req.body.title) {
-      articleSlug = `${slug(req.body.title)}-${uuid()}`;
-      req.body.slug = articleSlug;
+    if (imgUrl) {
+      req.body.imgUrl = imgUrl;
     }
-    req.body.imgUrl = imgUrl;
     req.body.readTime = readTime;
     // this function gets the tag ids of the tags sent in the request
     getTagIds(req, res).then((tagIds) => {
