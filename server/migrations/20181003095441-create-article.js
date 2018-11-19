@@ -59,7 +59,7 @@ module.exports = {
       type: Sequelize.FLOAT
     },
     featured: {
-      allowNull: false,
+      allowNull: true,
       defaultValue: 0,
       type: Sequelize.INTEGER
     },

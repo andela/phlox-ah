@@ -13,7 +13,7 @@ const { isValidData } = CommentValidations;
 
 router.post('/articles/:articleSlug/comments', checkToken, isValidData, CommentController.createArticleComment);
 
-router.get('/articles/:articleSlug/comments', checkToken, CommentController.getArticleComment);
+router.get('/articles/:articleSlug/comments', CommentController.getArticleComment);
 
 router.post('/articles/:articleSlug/comments/:commentId/reply', checkToken, isValidData, CommentController.replyArticleComment);
 
