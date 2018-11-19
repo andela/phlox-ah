@@ -95,4 +95,26 @@ export default class LikeController {
       }
     });
   }
+
+  /**
+  * @description -This method gets the lke status
+  * @param {object} req - The request payload sent from the router
+  * @param {object} res - The response payload sent back from the controller
+  * @returns {object} - status and reaction details
+  */
+  static getLikeStatus(req, res) {
+    Like.find({
+      where: {
+        userId: req.user.id,
+        articleSlug: req.params.slug
+      }
+    })
+      .then((like) => {
+        if (like) {
+          return res.status(200).json({ success: true, status: like.like });
+        }
+        return res.status(200).json({ success: true, status: null });
+      })
+      .catch(error => res.status(500).json(error));
+  }
 }
