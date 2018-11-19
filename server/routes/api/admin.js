@@ -11,5 +11,6 @@ const router = express.Router();
 
 router.post('/admins/role', checkToken, permit('Admin'), RoleValidation.setRole, AdminController.changeRole);
 router.delete('/admins/articles/:slug/reports', checkToken, permit('Admin'), ArticleController.deleteReportedArticle);
+router.put('/admins/articles/featured/:slug', checkToken, permit('Admin'), ArticleController.setFeaturedArticle);
 
 export default router;

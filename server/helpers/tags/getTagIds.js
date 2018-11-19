@@ -5,11 +5,21 @@ const { Tag } = Model;
 
 /* eslint-disable no-unused-vars */
 const getTagIds = (req, res) => {
+  let tags;
+  if (typeof req.body.tags === 'string') {
+    tags = JSON.parse(req.body.tags);
+  } else {
+    // eslint-disable-next-line prefer-destructuring
+    tags = req.body.tags;
+  }
+  if (!tags.length) {
+    return Promise.resolve([]);
+  }
   const promise = new Promise((resolve, reject) => {
     Tag.findAll({
       where: {
         name: {
-          [Sequelize.Op.or]: req.body.tags
+          [Sequelize.Op.or]: tags
         }
       },
       // eslint-disable-next-line

@@ -8,7 +8,7 @@ import { computeOffset, computeTotalPages } from '../helpers/article';
 import Notification from './notificationController';
 
 const {
-  Article, Tag, Like, ArticleComment, User, Stats, Category, Highlight
+  Article, Tag, Like, ArticleComment, User, Stats, Category, Highlight, Profile
 } = Model;
 
 const LIMIT = 15;
@@ -81,6 +81,14 @@ export default class ArticleController {
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
           { model: Category },
           {
+            model: User,
+            include: [{
+              model: Profile,
+              attributes: ['profileImage']
+            }],
+            attributes: ['username']
+          },
+          {
             model: Like,
             as: 'likes',
             include: [{
@@ -125,6 +133,14 @@ export default class ArticleController {
         include: [
           { model: Category },
           { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+          {
+            model: User,
+            include: [{
+              model: Profile,
+              attributes: ['profileImage']
+            }],
+            attributes: ['username']
+          },
           {
             model: Like,
             as: 'likes',
@@ -171,6 +187,14 @@ export default class ArticleController {
           include: [
             { model: User, attributes: ['username', 'email'], }
           ],
+        },
+        {
+          model: User,
+          include: [{
+            model: Profile,
+            attributes: ['profileImage']
+          }],
+          attributes: ['username']
         },
         { model: Category },
         { model: Tag, as: 'Tags', through: 'ArticlesTags' },
@@ -223,12 +247,9 @@ export default class ArticleController {
     // calculate the time it will take to read the updated article
     const readTime = readingTime(req.body.body ? req.body.body : '');
     const imgUrl = (req.file ? req.file.secure_url : '');
-    let articleSlug;
-    if (req.body.title) {
-      articleSlug = `${slug(req.body.title)}-${uuid()}`;
-      req.body.slug = articleSlug;
+    if (imgUrl) {
+      req.body.imgUrl = imgUrl;
     }
-    req.body.imgUrl = imgUrl;
     req.body.readTime = readTime;
     // this function gets the tag ids of the tags sent in the request
     getTagIds(req, res).then((tagIds) => {
@@ -347,6 +368,68 @@ export default class ArticleController {
             .catch(error => res.status(500).json(error));
         });
       }
+    });
+  }
+
+  /**
+    * @description -This method gets most popular(rated) arricles
+    * @param {object} req - The request payload sent from the router
+    * @param {object} res - The response payload sent back from the controller
+    * @returns {object} - status and message
+  */
+  static popularArticles(req, res) {
+    Article.findAll({
+      where: { status: 'published' },
+      limit: 4,
+      order: [
+        ['ratingAverage', 'DESC'],
+      ],
+    }).then((articles) => {
+      res.status(200).json({ message: 'articles retrieved successfully', success: true, articles });
+    });
+  }
+
+  /**
+    * @description -This method sets an article as featured by the admins
+    * @param {object} req - The request payload sent from the router
+    * @param {object} res - The response payload sent back from the controller
+    * @returns {object} - status and message
+  */
+  static setFeaturedArticle(req, res) {
+    const { featured } = req.body;
+    Article.findOne({
+      where: { slug: req.params.slug },
+    }).then((article) => {
+      if (!article) {
+        res.status(404).json({ message: 'article cannot be found', success: false });
+      } else {
+        article.update({ featured })
+          .then((updatedArticle) => {
+            res.status(200).json({
+              message: 'article updated', success: true, article: updatedArticle
+            });
+          })
+          .catch(error => res.status(500).json(error));
+      }
+    })
+      .catch(error => res.status(500).json(error));
+  }
+
+  /**
+    * @description -This method gets featured articles
+    * @param {object} req - The request payload sent from the router
+    * @param {object} res - The response payload sent back from the controller
+    * @returns {object} - status and message
+  */
+  static featuredArticles(req, res) {
+    Article.findAll({
+      where: { status: 'published', featured: 1 },
+      limit: 4,
+      order: [
+        ['createdAt', 'DESC'],
+      ],
+    }).then((articles) => {
+      res.status(200).json({ message: 'featured articles retrieved', success: true, articles });
     });
   }
 }

@@ -8,12 +8,12 @@ import app from '../index';
 
 chai.use(chaiHttp);
 
-const hash = bcrypt.hashSync('password', 10);
+const hash = bcrypt.hashSync('Password1!', 10);
 
 const verifyUser = {
   username: faker.internet.userName(),
   email: faker.internet.email().toLowerCase(),
-  password: 'password',
+  password: 'Password1!',
   verifyToken: faker.random.uuid()
 };
 
@@ -27,7 +27,7 @@ const verifiedUser = {
 const testUser = {
   username: faker.internet.userName(),
   email: 'john.doe@gmail.com',
-  password: 'password',
+  password: 'Password1!',
   resetToken: 'e4d67ba83bfb46e42d6397a2a325cf0bd',
   expireAt: new Date(new Date().getTime() + (10 * 60 * 1000)),
 };
@@ -35,7 +35,7 @@ const testUser = {
 const user = {
   username: 'testuser',
   email: 'testuser@andela.com',
-  password: 'password'
+  password: 'Password1!'
 };
 
 let token = '';
@@ -136,7 +136,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(422);
           expect(res.body).to.not.have.property('token');
-          expect(res.body.message).to.be.an('array').that.include('password is not allowed to be empty');
+          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters');
           done();
         });
     });
@@ -152,7 +152,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(422);
           expect(res.body).to.not.have.property('token');
-          expect(res.body.message).to.be.an('array').that.include('password must only contain alpha-numeric characters');
+          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters');
           done();
         });
     });
@@ -168,7 +168,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(422);
           expect(res.body).to.not.have.property('token');
-          expect(res.body.message).to.be.an('array').that.include('password length must be at least 8 characters long');
+          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters');
           done();
         });
     });
@@ -179,7 +179,7 @@ describe('Users', () => {
         .send({
           username: 'u',
           email: faker.internet.email(),
-          password: 'password'
+          password: 'Password!'
         })
         .end((err, res) => {
           expect(res.status).to.equal(422);
@@ -195,7 +195,7 @@ describe('Users', () => {
         .send({
           username: faker.internet.userName(),
           email: faker.internet.email(),
-          password: 'password'
+          password: 'Password1!'
         })
         .end((err, res) => {
           expect(res.status).to.equal(201);
@@ -211,7 +211,7 @@ describe('Users', () => {
         .send({
           username: faker.internet.userName(),
           email: user.email,
-          password: 'password'
+          password: 'Password1!'
         })
         .end((err, res) => {
           expect(res.status).to.equal(409);
@@ -227,7 +227,7 @@ describe('Users', () => {
         .send({
           username: user.username,
           email: faker.internet.email(),
-          password: 'password'
+          password: 'Password1!'
         })
         .end((err, res) => {
           expect(res.status).to.equal(409);
@@ -263,7 +263,7 @@ describe('Users', () => {
     it('Should successfully reset user password', (done) => {
       chai.request(app)
         .put(`/api/v1/reset_password/${testUser.resetToken}`)
-        .send({ password: 'newPassword' })
+        .send({ password: 'newPassword1!' })
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('Password has been successfully updated');
@@ -274,7 +274,7 @@ describe('Users', () => {
     it('Should return error message if link is wrong', (done) => {
       chai.request(app)
         .put('/api/v1/reset_password/e4d67ba83bfb46e42d6397a2a325cf0bsawefrsawrf')
-        .send({ password: 'newPassword' })
+        .send({ password: 'newPassword1!' })
         .end((err, res) => {
           expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('This link is invalid');
@@ -348,7 +348,7 @@ describe('Users', () => {
     it('should login a user and return a token', (done) => {
       chai.request(app)
         .post('/api/v1/login')
-        .send({ emailOrUsername: 'frank@gmail.com', password: 'password' })
+        .send({ emailOrUsername: 'frank@gmail.com', password: 'Password1!' })
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('token');
@@ -359,7 +359,7 @@ describe('Users', () => {
     it('Should return error message when user tries to login in with invalid email/username', (done) => {
       chai.request(app)
         .post('/api/v1/login')
-        .send({ emailOrUsername: 'wronguser', password: 'password' })
+        .send({ emailOrUsername: 'wronguser', password: 'Password!' })
         .end((err, res) => {
           expect(res.body).to.be.an('object');
           expect(res).to.have.status(404);

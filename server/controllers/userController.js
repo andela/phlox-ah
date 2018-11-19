@@ -39,7 +39,7 @@ export default class UserController {
             id: user.dataValues.id, username: user.username, email: user.email, role: user.role
           });
           // set the url
-          const url = `http://${req.headers.host}/api/v1/users/verify/${verifyToken}`;
+          const url = `${process.env.FRONTEND_URL}/user/verify/${verifyToken}`;
           // send verification mail to user
           sendMail({
             email: user.email,
@@ -76,7 +76,7 @@ export default class UserController {
         }
         const { username } = user;
         const resetToken = crypto.randomBytes(16).toString('hex');
-        const url = `${process.env.FRONTEND_URL}/reset_password/${resetToken}`;
+        const url = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
         const options = {
           email,
           subject: 'Password Reset',
@@ -266,7 +266,6 @@ export default class UserController {
       .findOne({ where: { id: req.user.id }, include: ['followed', 'follower'] })
       .then((user) => {
         const { followed, follower } = user;
-
         return res.status(200).json({
           success: true,
           message: 'Follows/Followers',

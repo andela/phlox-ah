@@ -26,9 +26,12 @@ class UserValidations {
       req.body.username = req.body.username.replace(/\s/g, '');
     }
 
+
     const joiSchema = {
       email: Joi.string().email().required(),
-      password: Joi.string().alphanum().min(8).required(),
+      password: Joi.string().regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).error(() => ({
+        message: 'Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters'
+      })),
       username: Joi.string().min(2).required(),
     };
     // this tells Joi to proceed to check for all errors in user input before giving out a response

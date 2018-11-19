@@ -4,7 +4,7 @@ import CommentsHistoryController from './commentHistoryController';
 import Notification from './notificationController';
 
 const {
-  User, Article, ArticleComment, LikeComment, LikeReply, Reply: ReplyArticleComment
+  User, Article, ArticleComment, LikeComment, LikeReply, Reply: ReplyArticleComment, Profile
 } = Model;
 
 const { reqCommentParams, reqReplyParams } = CommentHelpers;
@@ -114,6 +114,10 @@ export default class CommentController {
       where: { articleSlug: req.params.articleSlug },
       include: [{
         model: User,
+        include: [{
+          model: Profile,
+          attributes: ['firstName', 'lastName', 'profileImage']
+        }],
         attributes: ['username', 'email']
       }, {
         model: LikeComment,
