@@ -288,7 +288,7 @@ describe('Users', () => {
         .send({ email: testUser.email })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.message).to.equal('A password reset link has been sent ot your email');
+          expect(res.body.message).to.equal('A password reset link has been sent to your email');
           done();
         });
     });
