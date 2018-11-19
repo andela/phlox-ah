@@ -14,6 +14,7 @@ const { checkToken } = Authenticator;
 
 const router = express.Router();
 /* Article Endpoint */
+router.get('/articles/:slug/status', checkToken, LikeController.getLikeStatus);
 router.post('/articles', checkToken, upload.single('imgUrl'), ArticleValidations.validateCreateArticle, ArticleController.createArticle);
 router.get('/articles/preferences', checkToken, ArticleController.getArticleByPreference);
 router.get('/articles/feed', ArticleController.getAllArticles);
