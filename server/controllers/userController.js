@@ -207,8 +207,8 @@ export default class UserController {
 
         Followings.findOrCreate({
           where: {
-            follower: user.id,
-            followed: id
+            follower: id,
+            followed: user.id
           }
         })
           .spread((following, created) => {
@@ -241,8 +241,8 @@ export default class UserController {
         }
         Followings.findOne({
           where: {
-            follower: user.id,
-            followed: id
+            follower: id,
+            followed: user.id
           }
         })
           .then((following) => {
