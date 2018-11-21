@@ -7,8 +7,8 @@ const { checkToken } = Authenticator;
 
 const router = express.Router();
 /* Tag Endpoint */
-router.get('/tags', checkToken, TagController.showAllTags);
-router.get('/tags/:name', checkToken, TagController.showOneTag);
+router.get('/tags', TagController.showAllTags);
+router.get('/tags/:name', TagController.showOneTag);
 router.post('/tags', checkToken, TagValidations.validateTag, TagController.createTag);
 router.delete('/tags/:name', checkToken, TagController.deleteTag);
 

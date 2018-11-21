@@ -1,6 +1,6 @@
 import Model from '../models';
 
-const { Tag, Article } = Model;
+const { Tag, Article, User } = Model;
 /**
   * @class TagController
   * @description CRUD operations on Article
@@ -49,7 +49,13 @@ export default class TagController {
       where: { name: req.params.name },
       include: [
         {
-          model: Article, as: 'Articles', through: 'ArticlesTags', where: { status: 'published' }
+          model: Article,
+          as: 'Articles',
+          through: 'ArticlesTags',
+          where: { status: 'published' },
+          include: [
+            { model: User, attributes: ['username', 'email'], }
+          ],
         }
       ]
     })
