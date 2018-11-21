@@ -136,7 +136,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(422);
           expect(res.body).to.not.have.property('token');
-          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, 1 number and must be at least 8 characters');
+          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters');
           done();
         });
     });
@@ -152,7 +152,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(422);
           expect(res.body).to.not.have.property('token');
-          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, 1 number and must be at least 8 characters');
+          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters');
           done();
         });
     });
@@ -168,7 +168,7 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.status).to.equal(422);
           expect(res.body).to.not.have.property('token');
-          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, 1 number and must be at least 8 characters');
+          expect(res.body.message).to.be.an('array').that.include('Password must contain a minimum of 1 uppercase letter, 1 lowercase letter, a special character, 1 number and must be at least 8 characters');
           done();
         });
     });

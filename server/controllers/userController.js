@@ -207,8 +207,8 @@ export default class UserController {
 
         Followings.findOrCreate({
           where: {
-            follower: user.id,
-            followed: id
+            follower: id,
+            followed: user.id
           }
         })
           .spread((following, created) => {
@@ -241,8 +241,8 @@ export default class UserController {
         }
         Followings.findOne({
           where: {
-            follower: user.id,
-            followed: id
+            follower: id,
+            followed: user.id
           }
         })
           .then((following) => {
@@ -266,7 +266,6 @@ export default class UserController {
       .findOne({ where: { id: req.user.id }, include: ['followed', 'follower'] })
       .then((user) => {
         const { followed, follower } = user;
-
         return res.status(200).json({
           success: true,
           message: 'Follows/Followers',
