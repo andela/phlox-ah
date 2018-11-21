@@ -74,6 +74,7 @@ describe('Comment', () => {
   it('Should get all comments of an article', (done) => {
     chai.request(app)
       .get(`/api/v1/articles/${articleSlug}/comments`)
+      .set('x-access-token', token)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('object');
