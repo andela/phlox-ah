@@ -386,9 +386,9 @@ export default class ArticleController {
       ],
       include: [
         {
-          model: model.User,
+          model: User,
           include: [{
-            model: model.Profile,
+            model: Profile,
             attributes: ['profileImage']
           }],
           attributes: ['username']
@@ -440,9 +440,9 @@ export default class ArticleController {
       ],
       include: [
         {
-          model: model.User,
+          model: User,
           include: [{
-            model: model.Profile,
+            model: Profile,
             attributes: ['profileImage']
           }],
           attributes: ['username']
