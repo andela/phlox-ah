@@ -322,7 +322,17 @@ export default class UserController {
  */
   static followers(req, res) {
     Followings
-      .findAll({ where: { followed: req.user.id }, include: [{ model: User, attributes: ['id', 'email'], }] })
+      .findAll({
+        where: { follower: req.user.id },
+        include: [{
+          model: User,
+          attributes: ['id', 'username', 'email'],
+          include: [{
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'profileImage', 'gender', 'contact', 'bio']
+          }],
+        }]
+      })
       .then((result) => {
         const followers = result.map(follower => follower.User);
         res.status(200).json({ success: true, followers });
