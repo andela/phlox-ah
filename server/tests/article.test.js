@@ -150,6 +150,26 @@ describe('Articles', () => {
         done();
       });
   });
+  it('Should get all popular articles', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/popular')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.equal('articles retrieved successfully');
+        done();
+      });
+  });
+  it('Should get all featured articles', (done) => {
+    chai.request(app)
+      .get('/api/v1/articles/featured')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body.message).to.equal('featured articles retrieved');
+        done();
+      });
+  });
   it('Should get all articles and the number of pages', (done) => {
     chai.request(app)
       .get('/api/v1/articles/feed?page=1')

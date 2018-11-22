@@ -24,7 +24,10 @@ export default class CategoryController {
           as: 'articles',
           order: [
             [Article, 'createdAt', 'DESC']
-          ]
+          ],
+          include: [
+            { model: User, attributes: ['username', 'email'], }
+          ],
         },
       ]
     })

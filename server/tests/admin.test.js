@@ -120,4 +120,20 @@ describe('Admin', () => {
         });
     });
   });
+
+  describe('Set an article as featured', () => {
+    it('should set article as featured', (done) => {
+      chai.request(app)
+        .put('/api/v1/admins/articles/featured/title-of-article1')
+        .set('x-access-token', adminToken)
+        .send({ featured: 1 })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.message).to.be.equal('article updated');
+          expect(res.body.article.featured).to.be.equal(1);
+          done();
+        });
+    });
+  });
 });
