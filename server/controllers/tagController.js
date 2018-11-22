@@ -1,6 +1,6 @@
 import Model from '../models';
 
-const { Tag, Article } = Model;
+const { Tag, Article, User } = Model;
 /**
   * @class TagController
   * @description CRUD operations on Article
@@ -34,7 +34,7 @@ export default class TagController {
   */
   static showAllTags(req, res) {
     Tag.findAll()
-      .then(tags => res.status(200).json({ message: 'Tags retrieved successfully', success: false, tags }))
+      .then(tags => res.status(200).json({ message: 'Tags retrieved successfully', success: true, tags }))
       .catch(error => res.status(500).json(error));
   }
 
@@ -49,11 +49,17 @@ export default class TagController {
       where: { name: req.params.name },
       include: [
         {
-          model: Article, as: 'Articles', through: 'ArticlesTags', where: { status: 'published' }
+          model: Article,
+          as: 'Articles',
+          through: 'ArticlesTags',
+          where: { status: 'published' },
+          include: [
+            { model: User, attributes: ['username', 'email'], }
+          ],
         }
       ]
     })
-      .then(tag => res.status(200).json({ message: 'Tag retrieved successfully', success: false, tag }))
+      .then(tag => res.status(200).json({ message: 'Tag retrieved successfully', success: true, tag }))
       .catch(error => res.status(500).json(error));
   }
 

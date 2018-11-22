@@ -36,6 +36,7 @@ describe('Tags', () => {
         expect(res.status).to.equal(201);
         expect(res.body).to.be.an('object');
         expect(res.body.message).to.be.equal('Tags created successfully');
+        expect(res.body.success).to.equals(true);
         done();
       });
   });
@@ -88,6 +89,7 @@ describe('Tags', () => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(200);
         expect(res.body.message).to.equals('Tags retrieved successfully');
+        expect(res.body.success).to.equals(true);
         done();
       });
   });
@@ -101,6 +103,7 @@ describe('Tags', () => {
         expect(res.body).to.be.an('object');
         expect(res).to.have.status(200);
         expect(res.body.message).to.equals('Tag retrieved successfully');
+        expect(res.body.success).to.equals(true);
         done();
       });
   });
