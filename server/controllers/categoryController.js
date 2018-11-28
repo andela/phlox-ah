@@ -22,9 +22,13 @@ export default class CategoryController {
         {
           model: Article,
           as: 'articles',
+          where: { status: 'published' },
           order: [
             [Article, 'createdAt', 'DESC']
-          ]
+          ],
+          include: [
+            { model: User, attributes: ['username', 'email'], }
+          ],
         },
       ]
     })

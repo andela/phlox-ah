@@ -384,6 +384,16 @@ export default class ArticleController {
       order: [
         ['ratingAverage', 'DESC'],
       ],
+      include: [
+        {
+          model: User,
+          include: [{
+            model: Profile,
+            attributes: ['profileImage']
+          }],
+          attributes: ['username']
+        },
+      ]
     }).then((articles) => {
       res.status(200).json({ message: 'articles retrieved successfully', success: true, articles });
     });
@@ -428,6 +438,16 @@ export default class ArticleController {
       order: [
         ['createdAt', 'DESC'],
       ],
+      include: [
+        {
+          model: User,
+          include: [{
+            model: Profile,
+            attributes: ['profileImage']
+          }],
+          attributes: ['username']
+        },
+      ]
     }).then((articles) => {
       res.status(200).json({ message: 'featured articles retrieved', success: true, articles });
     });
