@@ -215,7 +215,7 @@ export default class UserController {
             if (!created) {
               return res.status(400).json({ success: false, message: `You already follow ${username}` });
             }
-            return res.status(200).json({ success: true, message: `You are now following ${username}` });
+            return res.status(200).json({ success: true, message: `You are now following ${username}`, user: foundUser });
           });
       });
   }
@@ -250,7 +250,7 @@ export default class UserController {
               return res.status(400).json({ success: false, message: `You are not following ${foundUser.username}` });
             }
             following.destroy()
-              .then(() => res.status(200).json({ success: true, message: `You are no longer following ${foundUser.username}` }));
+              .then(() => res.status(200).json({ success: true, message: `You are no longer following ${foundUser.username}`, user: foundUser }));
           });
       });
   }
@@ -261,17 +261,22 @@ export default class UserController {
    * @param {object} res - The response payload sent back from the controller
    * @returns {object} - json data
    */
-  static followList(req, res) {
-    User
-      .findOne({ where: { id: req.user.id }, include: ['followed', 'follower'] })
-      .then((user) => {
-        const { followed, follower } = user;
-        return res.status(200).json({
-          success: true,
-          message: 'Follows/Followers',
-          following: followed,
-          followers: follower
-        });
+  static followingList(req, res) {
+    Followings
+      .findAll({
+        where: { followed: req.user.id },
+        include: [{
+          model: User,
+          attributes: ['id', 'username', 'email'],
+          include: [{
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'profileImage', 'gender', 'contact', 'bio']
+          }],
+        }],
+      })
+      .then((result) => {
+        const following = result.map(follower => follower.User);
+        res.status(200).json({ success: true, following });
       });
   }
 
