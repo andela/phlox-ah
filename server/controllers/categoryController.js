@@ -27,6 +27,7 @@ export default class CategoryController {
             [Article, 'createdAt', 'DESC']
           ],
           include: [
+            { model: Tag, as: 'Tags', through: 'ArticlesTags' },
             { model: User, attributes: ['username', 'email'], }
           ],
         },
