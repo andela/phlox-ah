@@ -54,6 +54,7 @@ export default class TagController {
           through: 'ArticlesTags',
           where: { status: 'published' },
           include: [
+            { model: Tag, as: 'Tags', through: 'ArticlesTags' },
             { model: User, attributes: ['username', 'email'], }
           ],
         }
