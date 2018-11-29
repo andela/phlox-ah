@@ -385,6 +385,7 @@ export default class ArticleController {
         ['ratingAverage', 'DESC'],
       ],
       include: [
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' },
         {
           model: User,
           include: [{
@@ -439,6 +440,7 @@ export default class ArticleController {
         ['createdAt', 'DESC'],
       ],
       include: [
+        { model: Tag, as: 'Tags', through: 'ArticlesTags' },
         {
           model: User,
           include: [{
