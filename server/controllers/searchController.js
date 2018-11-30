@@ -60,7 +60,9 @@ export default class SearchController {
       Article.findAll({
         attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
         where: { title: { [Op.iLike]: `%${article}%` }, status: 'published' },
-        include: [{
+        include: [
+          { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+          {
           model: User,
           attributes: ['id', 'username'],
           include: [{
@@ -92,7 +94,11 @@ export default class SearchController {
           attributes: ['id', 'title', 'body', 'slug', 'description', 'imgUrl', 'readTime', 'ratingAverage'],
           where: { status: 'published' },
           as: 'Articles',
-          through: 'ArticlesTags'
+          through: 'ArticlesTags',
+          include: [
+            { model: Tag, as: 'Tags', through: 'ArticlesTags' },
+            { model: User, attributes: ['username', 'email'], }
+          ],
         }]
       })
         .then((searchResult) => {
